@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
-import FilterIcon from '../../assets/icons/filterIcon.svg'
-import DialogBox from '../DialogBox/Dialog'
-import FilterDialog from '../DialogBox/FilterDialog'
+import FilterIcon from '../../../assets/icons/filterIcon.svg'
+import DialogBox from '../../DialogBox/Dialog'
+import FilterDialog from './FilterDialog'
 
 const Filter: React.FC<any> = () => {
     const [open, setOpen] = useState<boolean>(false)

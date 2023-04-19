@@ -10,8 +10,8 @@ import Slider from '@mui/material/Slider';
 import FormGroup from '@mui/material/FormGroup';
 import Checkbox from '@mui/material/Checkbox';
 
-import { Btn } from "../utils/Btn";
-import Search from "../utils/Search";
+import { Btn } from "../../utils/Btn";
+import Search from "../../utils/Search";
 import { Grid } from "@mui/material";
 
 enum sortBy {

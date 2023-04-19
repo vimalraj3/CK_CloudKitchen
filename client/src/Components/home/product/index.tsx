@@ -1,8 +1,8 @@
 import Title from './Title'
 import Filter from './Filter'
 import ProductCard from './ProductCard'
-import { Btns } from '../utils/Btn'
-import Search from '../utils/Search'
+import { Btns } from '../../utils/Btn'
+import Search from '../../utils/Search'
 
 
 const productTempData = [

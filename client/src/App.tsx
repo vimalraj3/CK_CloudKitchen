@@ -8,10 +8,9 @@ import Products from './Components/Products'
 import Home from './Components/home/Home'
 import Nav from './Components/Nav'
 import ProductFrom from './Components/ProductFrom'
+import Footer from './Components/footer'
 
 function App() {
-
-  // axios.get('http://localhost:3000/')
   return (
     <div className="app">
       {/* <Nav /> */}
@@ -23,6 +22,7 @@ function App() {
             <Route path='/product/add' element={<ProductFrom />} />
           </Route>
         </Routes >
+        <Footer />
       </BrowserRouter >
     </div>
   )
