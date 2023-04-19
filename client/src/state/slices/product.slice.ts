@@ -3,11 +3,11 @@ import { InitialProductState } from "../../types/product.types";
 
 const initialState: InitialProductState = {
   loading: false,
-  data: JSON.parse(localStorage.getItem("Todo") || " "),
+  data: JSON.parse(localStorage.getItem("Product") || " "),
 };
 
 export const productSlice = createSlice({
-  name: "Todo",
+  name: "Product",
   initialState: initialState,
   reducers: {
     request: (state) => {
@@ -17,7 +17,7 @@ export const productSlice = createSlice({
     success: (state, action) => {
       state.loading = true;
       state.data = action.payload;
-      localStorage.setItem("product", JSON.stringify(action.payload));
+      localStorage.setItem("Product", JSON.stringify(action.payload));
     },
 
     failed: (state, action) => {

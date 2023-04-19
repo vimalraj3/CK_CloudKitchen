@@ -17,3 +17,9 @@ export type ICart = {
 };
 
 export type ServerError = { message: string; success: boolean };
+
+export interface InitialUserState {
+  loading: boolean;
+  data?: IUser;
+  error?: any;
+}

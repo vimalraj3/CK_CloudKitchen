@@ -22,6 +22,8 @@ class LoginController {
   @post("/login")
   async postLogin(req: Request, res: Response, next: NextFunction) {
     const { email, password } = req.body;
+    console.log("login --- ", email, password);
+
     const isVaildInput: boolean = checkValidator(email, password, true);
     if (!isVaildInput) {
       res.status(400).json({
