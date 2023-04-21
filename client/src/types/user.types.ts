@@ -1,13 +1,14 @@
 import { IProduct } from "./product.types";
+import { ServerError } from "./error.types";
 
-export interface IUser extends Document {
+export interface IUser {
   email: string;
   userName?: string;
   googleId?: string;
   avatar?: string;
   products?: IProduct[];
   storeName?: string;
-  cart?: [ICart];
+  cart?: ICart[];
   _id: string;
 }
 
@@ -16,10 +17,13 @@ export type ICart = {
   quantity: number;
 };
 
-export type ServerError = { message: string; success: boolean };
-
 export interface InitialUserState {
   loading: boolean;
-  data?: IUser;
-  error?: any;
+  data: IUser | null;
+  error: ServerError | null;
+}
+
+export interface Login {
+  email: string;
+  password: string;
 }

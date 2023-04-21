@@ -1,3 +1,4 @@
+import { ServerError } from "./error.types";
 import { IUser } from "./user.types";
 
 export interface IProduct {
@@ -17,5 +18,5 @@ export interface IProduct {
 export interface InitialProductState {
   loading: boolean;
   data?: IProduct;
-  error?: any;
+  error?: ServerError;
 }

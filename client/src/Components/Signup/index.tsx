@@ -33,9 +33,9 @@ function index() {
         <>
             <Nav dark={true} bgColor={"#f8f8f8"} />
             <Container>
-                <div className="flex  justify-center">
-                    <div className="w-[50%] flex justify-center items-center">
-                        <Form width="60%" >
+                <div className="w-[100%] flex md:justify-center min-h-[60svh]">
+                    <div className="w-[100%] md:w-[50%] lg:w-[40%] xl:w-[35%] flex justify-center items-center">
+                        <Form width="100%" >
                             <TextInput onChange={handleChange} name="username" required />
                             <TextInput onChange={handleChange} required />
                             <PasswordInput onChange={handleChange} required />

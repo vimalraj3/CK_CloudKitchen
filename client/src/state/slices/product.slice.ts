@@ -3,7 +3,6 @@ import { InitialProductState } from "../../types/product.types";
 
 const initialState: InitialProductState = {
   loading: false,
-  data: JSON.parse(localStorage.getItem("Product") || " "),
 };
 
 export const productSlice = createSlice({

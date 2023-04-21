@@ -9,34 +9,61 @@ import { Btn } from "../utils/Btn"
 import { Divider } from "../utils/Divider"
 import { Link } from "react-router-dom"
 import GoogleIcon from '@mui/icons-material/Google';
-interface Login {
-    email: string;
-    password: string;
-}
+import { useAppDispatch, useAppSelector } from "../../hooks"
+import { loginUser } from "../../state/slices/user.slice"
+import { IUser, Login } from "../../types/user.types"
+import thunk from "redux-thunk"
+import { AnyAction, AsyncThunkAction, AsyncThunkOptions } from "@reduxjs/toolkit"
+import { useDispatch } from "react-redux"
+import { AppDispatch } from "../../state/store"
 
 function index() {
+
+    const dispatch = useAppDispatch();
+    const { data } = useAppSelector((state) => state?.userState)
+
     const [user, setUser] = useState<Login>({
         email: '',
         password: ''
     })
 
-    const handleChange = (key: string, value: string) => {
+    const handleChange = async (key: string, value: string) => {
         setUser(prev => {
             return prev = {
                 ...prev,
                 [key]: value
             }
         })
-        console.log(user);
+    }
+
+    const checkInputs = () => {
+        return
+    }
+
+    const handleSubmit = async () => {
+        console.log(import.meta.env.VITE_REACT_SER_URL, "baseurl");
+        const resultAction = await dispatch(loginUser(user))
+        if (loginUser.fulfilled.match(resultAction)) {
+            // show toast success
+        }
+        else {
+            if (resultAction.payload) {
+                // resultaciton.payload.errormessage
+            }
+            else {
+                // resultaciton.error
+
+            }
+        }
     }
 
     return (
         <>
             <Nav dark={true} bgColor="#f8f8f8" />
             <Container>
-                <div className="flex justify-center">
-                    <div className="w-[50%] flex justify-center items-center">
-                        <Form width="60%" >
+                <div className="flex justify-center min-h-[60svh]">
+                    <div className="w-[100%] md:w-[50%] lg:w-[40%] xl:w-[35%] flex justify-center items-center">
+                        <Form width="100%" >
                             <TextInput onChange={handleChange} required />
                             <PasswordInput onChange={handleChange} required />
                             <Btn label="Login" styles={{
@@ -49,7 +76,7 @@ function index() {
                                 fontFamily: "montserrat",
                                 backgroundColor: '#f8f8f8',
                                 fontWeight: '500'
-                            }} />
+                            }} onClick={handleSubmit} />
                             <div className="flex justify-center text-center">
                                 <div className="w-[calc(50%-18px)]">
                                     <Divider color="#c1c1c1" size="1px" />

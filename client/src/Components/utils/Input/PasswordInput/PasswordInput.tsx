@@ -31,6 +31,7 @@ export const PasswordInput: React.FC<IInput> = ({ name = "password", placeholder
                     id={name}
                     className="bg-[#f8f8f8] w-[90%] focus:outline-none"
                     placeholder={placeholder}
+                    required={required}
                 />
                 <button
                     className="px-2 bg-[#f8f8f8]"
