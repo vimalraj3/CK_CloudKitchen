@@ -12,28 +12,24 @@ dotenv.config({ path: path.resolve(process.cwd(), "./src/.env") });
 // TODO testing login signup | Products | multithearding
 import { UserSession } from "./types/temp.types";
 import { AppError } from "../utils/AppError";
+import { bodyValidator } from "./decorators/bodyValidator";
 
 @controller("/auth")
 class LoginController {
   static salt: number = parseInt(process.env.SALT) || 10;
 
   // ? api->/auth/login | method->post | find user by email -> check password match -> if user send user, not user send error message
-
   @post("/login")
+  @bodyValidator("email", "password")
   async postLogin(req: Request, res: Response, next: NextFunction) {
     const { email, password } = req.body;
     console.log("login --- ", email, password);
 
-    const isVaildInput: boolean = checkValidator(email, password, true);
-    if (!isVaildInput) {
-      res.status(400).json({
-        success: false,
-        message: `Invalid inputs`,
-      });
-    }
     const user: IUser | null = await User.findOne({
       email: email,
-    }).select("+password");
+    })
+      .select("+password")
+      .lean();
 
     if (!user) {
       res.status(404).json({
@@ -50,15 +46,10 @@ class LoginController {
           return;
         }
         (req.session as UserSession).uid = user._id;
+        delete user["password"];
         res.status(200).json({
           success: true,
-          user: {
-            name: user.userName,
-            email: user.email,
-            avatar: user.avatar,
-            cart: user.cart,
-            products: user.products,
-          },
+          user,
         });
       });
     }

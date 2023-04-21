@@ -5,10 +5,10 @@ export const checkValidator = (
   login: boolean,
   userName?: string | null
 ): boolean => {
-  if (email && !isEmail(email)) {
+  if (email !== "" && email && !isEmail(email)) {
     return false;
   }
-  if (password && password.length == 0) {
+  if (password === "" && password) {
     return false;
   }
   if (!login) {

@@ -59,8 +59,6 @@ const upload = multer({
 
 @controller("/products")
 class ProductController {
-  // ? api->/auth/login | method->post | find user by email -> check password match -> if user send user, not user send error message
-
   @get("/getallproducts")
   async getProducts(req: Request, res: Response) {
     const products: IProduct[] | null = await Product.find<IProduct>({});
@@ -86,7 +84,6 @@ class ProductController {
   async addProduct(req: Request, res: Response) {
     const { title, state, price, description, open, close } = req.body;
     const user = "";
-    console.log(req.body);
 
     const imgPath = req.file?.path;
     console.log(imgPath, "IMg dfurl");
