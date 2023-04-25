@@ -67,8 +67,9 @@ function index({ showToast }: ILoginProps) {
         }
     }
 
-    type MySchemaType = yup.InferType<typeof schema>;
-
+    const handleGoogleLogin = () => {
+        window.open(`${import.meta.env.VITE_REACT_SER_URL}/api/v1/google`, "_self")
+    };
 
     return (
         <>
@@ -94,7 +95,7 @@ function index({ showToast }: ILoginProps) {
                             )}
                         </Form>
 
-                        <button className="rounded-md p-1" style={{
+                        <button className="rounded-md p-1" onClick={handleGoogleLogin} style={{
                             width: "100%",
                             border: '#ff7e8b 2px solid',
                             display: "flex",

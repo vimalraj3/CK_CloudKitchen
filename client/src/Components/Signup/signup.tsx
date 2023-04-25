@@ -61,7 +61,10 @@ function index({ showToast }: ISignupProps) {
         }
     }
 
-    type MySchemaType = yup.InferType<typeof schema>;
+    const handleGoogleLogin = () => {
+        window.open(`${import.meta.env.VITE_REACT_SER_URL}/api/v1/google`, "_self")
+    };
+
     return (
         <>
             <Nav dark={true} bgColor={"#f8f8f8"} />
@@ -70,8 +73,6 @@ function index({ showToast }: ISignupProps) {
                     <div className="w-[100%] md:w-[50%] lg:w-[40%] xl:w-[35%] flex justify-center flex-col items-center gap-4 py-2 px-2">
                         <Form<ISignupForm> onSubmit={onSubmit} schema={schema} >
                             {({ register, errors }) => {
-                                console.log(errors);
-
                                 return <>
                                     <div>
                                         <Input type="email"   {...register("email")} />
@@ -96,7 +97,7 @@ function index({ showToast }: ISignupProps) {
                             }}
                         </Form>
 
-                        <button className="rounded-md p-1" style={{
+                        <button className="rounded-md p-1" onClick={handleGoogleLogin} style={{
                             width: "100%",
                             border: '#ff7e8b 2px solid',
                             display: "flex",
