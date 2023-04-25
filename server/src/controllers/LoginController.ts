@@ -117,8 +117,11 @@ class LoginController {
 
   @get("/getuser")
   async getUser(req: Request, res: Response) {
+    console.log("get user");
     const { uid } = req.session as UserSession;
-    const user: IUser | null = await User.findById(uid);
+    console.log("get user", uid);
+
+    const user: IUser | null = await User.findById(uid).lean();
     if (!user) {
       res.status(401).json({
         success: false,
