@@ -10,7 +10,6 @@ export const Divider: React.FC<DividerProps> = ({ size, color, margin }) => {
         color: color || `#000`,
         margin: margin || `1rem`
     }
-    console.log(props);
     return (
         <div className={`w-[100%]`}
             style={{

@@ -1,0 +1,44 @@
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import { useState, forwardRef } from "react";
+
+
+type InputProps = React.DetailedHTMLProps<
+    React.InputHTMLAttributes<HTMLInputElement>,
+    HTMLInputElement
+>;
+
+export const PasswordInput = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
+    const { name } = props;
+    const [visible, setVisible] = useState<boolean>(false)
+
+    return (
+        <div>
+            <label htmlFor={name} className="capitalize mt-2">
+                {`${name === 'repassword' ? 'confrim password' : name}:`}
+            </label>
+            <div className="w-[100%] flex  border-[#9c9c9c] border-2 rounded-md bg-[#f8f8f8] justify-between items-center mt-2 py-2 px-2 ">
+                <input
+                    type={visible ? "text" : "password"}
+                    id={name}
+                    className="bg-[#f8f8f8] w-[90%] focus:outline-none"
+                    placeholder={`Enter your ${name === 'repassword' ? 'confrim password' : name}`}
+                    ref={ref}
+                    {...props}
+                />
+                <button
+                    className="px-2 bg-[#f8f8f8]"
+                    onClick={() => setVisible(!visible)}
+                >
+                    {
+                        visible ?
+                            <VisibilityOffIcon /> :
+                            <VisibilityIcon />
+                    }
+                </button>
+            </div>
+        </div>
+    )
+}
+
+)

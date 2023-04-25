@@ -23,7 +23,18 @@ export interface InitialUserState {
   error: ServerError | null;
 }
 
-export interface Login {
+interface KeyString {
+  [key: string]: string;
+}
+/*
+  This interface is used to validate the login and signup form
+  It is used in useValidator hook
+*/
+export interface Login extends KeyString {
   email: string;
   password: string;
+}
+
+export interface SignUp extends Login {
+  userName: string;
 }

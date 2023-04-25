@@ -4,10 +4,15 @@ import { Cloudinary } from '@cloudinary/url-gen';
 import { Resize } from '@cloudinary/url-gen/actions';
 // import ImageUploader from './imgUploader/ImageUploader';
 import ImageSelector from './imgUploader/ImageSelector';
+import { IShowToast } from '../types/showToast.types';
 
 //    TODO Custom styles for dropdown, time input, number input
 
-function ProductFrom() {
+interface IProductFromProps {
+    showToast: IShowToast
+}
+
+function ProductFrom({ showToast }: IProductFromProps) {
     const [image, setImage] = useState()
     const [isOpen, setIsOpen] = useState(false)
     const [value, setValue] = useState<string>()

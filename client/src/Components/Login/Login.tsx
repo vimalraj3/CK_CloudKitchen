@@ -1,53 +1,59 @@
-import { useState } from 'react'
 import Container from "../Container"
 import Nav from "../Nav"
-import thaliImg from '../../assets/utils/thaliBig.png'
 import './styles.css'
-import { PasswordInput, Input, Form } from "../utils/Form"
+import { useState } from 'react'
+import { Form, PasswordInput, Input } from "../utils/Form"
+
 import { Btn } from "../utils/Btn"
 import { Divider } from "../utils/Divider"
-import { Link, useNavigate } from "react-router-dom"
 import GoogleIcon from '@mui/icons-material/Google';
-import { SignUp } from "../../types/user.types"
-import { signUpUser } from '../../state/slices/user.slice'
-import { useAppDispatch, useAppSelector } from '../../hooks'
-import { IShowToast } from '../../types/showToast.types'
-import * as yup from 'yup';
-import { Text } from '../utils/Text'
 
-interface ISignupProps {
+import { Link, useNavigate } from "react-router-dom"
+import { useAppDispatch, useAppSelector } from "../../hooks"
+import { loginUser } from "../../state/slices/user.slice"
+import { Login } from "../../types/user.types"
+import { IShowToast } from "../../types/showToast.types"
+import { Text } from '../utils/Text'
+import * as yup from 'yup';
+
+
+interface ILoginProps {
     showToast: IShowToast
 }
 
-interface ISignupForm extends SignUp {
-    repassword: string;
-}
 
-function index({ showToast }: ISignupProps) {
+function index({ showToast }: ILoginProps) {
+
     const navigate = useNavigate()
 
     const dispatch = useAppDispatch();
+    const { data } = useAppSelector((state) => state?.userState)
+
+    const [user, setUser] = useState<Login>({
+        email: '',
+        password: ''
+    })
+
+    const handleChange = async (key: string, value: string) => {
+        setUser(prev => {
+            return prev = {
+                ...prev,
+                [key]: value
+            }
+        })
+    }
 
     const schema = yup.object().shape({
         email: yup.string().email('Invalid email').required('Email is required'),
-        userName: yup.string().required('userName is required'),
         password: yup
             .string()
             .required('Password is required')
             .min(5, 'Password must be at least 5 characters'),
-        repassword: yup
-            .string()
-            .required('confrim Password is required')
-            .min(5, 'Password must be at least 5 characters')
-            .oneOf([yup.ref('password')], 'Passwords do not match'),
     });
 
-    const onSubmit = async (data: ISignupForm) => {
-        console.log(data);
-
-        const { email, userName, password } = data;
-        const resultAction = await dispatch(signUpUser({ email, userName, password } as SignUp))
-        if (signUpUser.fulfilled.match(resultAction)) {
+    const onSubmit = async (data: Login) => {
+        const resultAction = await dispatch(loginUser(data))
+        if (loginUser.fulfilled.match(resultAction)) {
             showToast('Welcome back', 'info');
             navigate(-1);
         }
@@ -62,38 +68,30 @@ function index({ showToast }: ISignupProps) {
     }
 
     type MySchemaType = yup.InferType<typeof schema>;
+
+
     return (
         <>
-            <Nav dark={true} bgColor={"#f8f8f8"} />
+            <Nav dark={true} bgColor="#f8f8f8" />
             <Container>
                 <div className="flex justify-center min-h-[60svh]">
                     <div className="w-[100%] md:w-[50%] lg:w-[40%] xl:w-[35%] flex justify-center flex-col items-center gap-4 py-2 px-2">
-                        <Form<ISignupForm> onSubmit={onSubmit} schema={schema} >
-                            {({ register, errors }) => {
-                                console.log(errors);
-
-                                return <>
+                        <Form<Login> onSubmit={onSubmit} schema={schema} >
+                            {({ register, errors }) => (
+                                <>
                                     <div>
-                                        <Input type="email"   {...register("email")} />
+                                        <Input type="text"   {...register("email", { required: true, maxLength: 30 })} />
                                         {errors.email && <Text message={errors.email.message as string} color="#EF4444" size="sm" />}
                                     </div>
-                                    <div>
-                                        <Input type="text"   {...register("userName")} name='userName' />
-                                        {errors.userName && <Text message={errors.userName.message as string} color="#EF4444" size="sm" />}
-                                    </div>
                                     <div className="">
-                                        < PasswordInput  {...register("password")} />
+                                        < PasswordInput  {...register("password", { required: true, minLength: 8 })} />
                                         {errors.password && <Text message={errors.password.message as string} color="#EF4444" size="sm" />}
                                     </div>
-                                    <div className="">
-                                        < PasswordInput  {...register("repassword")} name='repassword' />
-                                        {errors.repassword && <Text message={errors.repassword.message as string} color="#EF4444" size="sm" />}
-                                    </div>
-                                    <Input type="submit" value={'Sign up'} role="button" style={{
+                                    <Input type="submit" role="button" style={{
                                         cursor: 'pointer'
                                     }} />
                                 </>
-                            }}
+                            )}
                         </Form>
 
                         <button className="rounded-md p-1" style={{

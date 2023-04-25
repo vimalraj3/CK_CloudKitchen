@@ -5,7 +5,15 @@ import Hero from './Hero'
 import OfferCard from './OfferCard'
 import Product from './product'
 
-export default function Home() {
+import { IShowToast } from '../../types/showToast.types'
+interface IHome {
+    showToast: IShowToast
+}
+
+export default function Home(props: IHome) {
+    const { showToast } = props;
+    // showToast('This is a success message!', 'success');
+
     return (
         <div>
             <Hero />
