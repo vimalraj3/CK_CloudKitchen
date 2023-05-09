@@ -15,6 +15,12 @@ this function refers the root prefix in our case *\/auth\/* is root prefix😊
 ================================================
 */
 
+/**
+ * bodyValidators decorator is use to validate the body of request
+ * @export root decorator
+ * @param {string[]} keys required props of body
+ * @returns  {Function} decorator function
+ */
 export function bodyValidators(keys: string[]): any {
   return function (req: Request, res: Response, next: NextFunction) {
     console.log("hi form bodyVaildators", req.body);
@@ -50,6 +56,13 @@ export function bodyValidators(keys: string[]): any {
   };
 }
 
+
+/**
+  * controller decorator is use to assign sub path and they respective middlewares and api handler  
+ * @export controller decorator 
+ * @param {string} routePrefix root path of api
+ * @returns  {Function} 
+ */
 export function controller(routePrefix: string) {
   return function (target: Function) {
     const router = AppRouter.getInstance();

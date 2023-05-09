@@ -6,15 +6,13 @@ import {
   Action,
   isPending,
 } from "@reduxjs/toolkit";
-import { IUser, InitialUserState } from "../../types/user.types";
+import { IUser, InitialUserState, UserSession } from "../../types/user.types";
 import { Axios } from "../../axios/config";
 import { ServerError } from "../../types/error.types";
-import { produce } from "immer";
 import { Login, SignUp } from "../../types/user.types";
-import axios, { AxiosError, AxiosResponse, isAxiosError } from "axios";
-import { success } from "./product.slice";
-import { RootState } from "../store";
-
+import axios, { AxiosResponse, AxiosError, isAxiosError } from "axios";
+import { AppDispatch, RootState } from "../store";
+import { useAppDispatch } from "../../hooks";
 interface RejectedAction extends Action {
   payload: ServerError;
 }
@@ -22,11 +20,31 @@ interface RejectedAction extends Action {
 interface AsyncThunkConfig {
   rejectValue: ServerError;
 }
+
+const defaultUserSession: UserSession = {
+  email: "",
+  userName: "",
+  avatar: "",
+  auth: {
+    isAuth: false,
+    isUser: false,
+    isAdmin: false,
+  },
+  geo: {
+    region: "Location",
+  },
+};
+
 const initialState = {
   loading: false,
-  data: JSON.parse(localStorage.getItem("User") as string),
+  data: defaultUserSession,
   error: null,
 } as InitialUserState;
+
+interface ServerResponse {
+  user: IUser;
+  success: boolean;
+}
 
 /**
  * login user thunk action creator function that returns a promise of IUser type and takes user object and ThunkAPI as arguments
@@ -35,21 +53,35 @@ const initialState = {
  * @returns IUser
  */
 export const loginUser = createAsyncThunk<
-  IUser, // return type
+  UserSession, // return type
   Login, // Types for function
   {
     rejectValue: ServerError;
+    state: RootState;
   } // config
 >("user/login", async (user: Login, thunkApi) => {
   try {
-    const response = await Axios.post("/auth/login", user);
-    return response.data.user;
+    const { data } = await Axios.post<ServerResponse>("/auth/login", user);
+    console.log(data, "logoin data");
+
+    const userSession: UserSession = {
+      ...defaultUserSession,
+      ...data.user,
+      auth: {
+        isAuth: true,
+        isUser: data.user.role === "user" ? true : false,
+        isAdmin: data.user.role === "admin" ? true : false,
+      },
+      geo: {
+        region: "",
+      },
+    };
+    return userSession;
   } catch (error) {
     if (isAxiosError(error)) {
-      const err = error as AxiosError<ServerError>;
-      return thunkApi.rejectWithValue(err.response?.data as ServerError);
+      return error.response?.data;
     }
-    return { message: "something went wrong", success: false } as ServerError;
+    return { message: "something went wrong", success: false };
   }
 });
 
@@ -60,22 +92,52 @@ export const loginUser = createAsyncThunk<
  * @returns IUser
  */
 export const signUpUser = createAsyncThunk<
-  IUser, // return type
+  UserSession, // return type
   SignUp, // Types for function
   {
     rejectValue: ServerError;
   } // config
 >("user/signup", async (user: SignUp, thunkApi) => {
-  try {
-    const response = await Axios.post("/auth/signup", user);
-    return response.data.user;
-  } catch (error) {
-    if (isAxiosError(error)) {
-      const err = error as AxiosError<ServerError>;
-      return thunkApi.rejectWithValue(err.response?.data as ServerError);
-    }
-    return { message: "something went wrong", success: false } as ServerError;
-  }
+  const response = await Axios.get<ServerResponse>("/auth/getuser")
+    .then(async (res) => {
+      let locate, lat, lon;
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((position) => {
+          lat = position.coords.latitude;
+          lon = position.coords.longitude;
+        });
+        if (lat && lon) {
+          locate = await axios.get(
+            `https://api.openweathermap.org/data/2.5/weather?lat={${lat}}&lon={${lon}}&appid={${
+              import.meta.env.VITE_LOCATION_API_KEY
+            }}`
+          );
+        }
+      }
+
+      let userData = res.data.user;
+      const userSession: UserSession = {
+        ...defaultUserSession,
+        ...userData,
+        auth: {
+          ...defaultUserSession.auth,
+          isAuth: true,
+          isUser: userData.role === "user" ? true : false,
+          isAdmin: userData.role === "admin" ? true : false,
+        },
+        geo: {
+          region: locate?.data.name || "Your location",
+        },
+      };
+
+      return userSession;
+    })
+    .catch((err: ServerError) => {
+      if (isAxiosError(err)) {
+        return thunkApi.rejectWithValue(err.response?.data);
+      }
+    });
+  return response || defaultUserSession;
 });
 
 /**
@@ -97,53 +159,69 @@ export const logoutUser = createAsyncThunk(
   }
 );
 
-type CancelablePayloadAction<T> = PayloadAction<T> & {
-  abort: () => void;
-};
-
+/**   signup user thunk action creator function that returns a promise of IUser type and takes user object and ThunkAPI as arguments
+ * @param user - user object interface SingUp
+ * @param thunkApi - ThunkAPI optional
+ * @returns IUser
+ */
 export const fetchUser = createAsyncThunk<
-  IUser | ServerError,
-  void,
+  UserSession, // return type
+  void, // Types for function
   {
     rejectValue: ServerError;
     state: RootState;
-  }
+    dispatch: AppDispatch;
+  } // config
 >(
-  "user/fetchUser",
-  async (_, ThunkAPI) => {
-    try {
-      console.log(ThunkAPI.signal);
-
-      const source = axios.CancelToken.source();
-      ThunkAPI.signal.addEventListener("abort", () => {
-        source.cancel();
-      });
-      console.log("fetching user");
-
-      const response = await Axios.post<IUser, AxiosResponse<IUser>>(
-        "/auth/getuser",
-        {
-          cancelToken: source.token,
+  "user/fetch",
+  async (_, thunkApi) => {
+    const response = await Axios.get<ServerResponse>("/auth/getuser")
+      .then(async (res) => {
+        let locate, lat, lon;
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition((position) => {
+            lat = position.coords.latitude;
+            lon = position.coords.longitude;
+          });
+          if (lat && lon) {
+            locate = await axios.get(
+              `https://api.openweathermap.org/data/2.5/weather?lat={${lat}}&lon={${lon}}&appid={${
+                import.meta.env.VITE_LOCATION_API_KEY
+              }}`
+            );
+          }
         }
-      );
-      return response.data;
-    } catch (error) {
-      console.log(error);
-      if (isAxiosError(error)) {
-        const err = error as AxiosError<ServerError>;
-        return ThunkAPI.rejectWithValue(err.response?.data as ServerError);
-      }
-      return { message: "something went wrong", success: false } as ServerError;
-    }
+
+        let userData = res.data.user;
+        const userSession: UserSession = {
+          ...defaultUserSession,
+          ...userData,
+          auth: {
+            ...defaultUserSession.auth,
+            isAuth: true,
+            isUser: userData.role === "user" ? true : false,
+            isAdmin: userData.role === "admin" ? true : false,
+          },
+          geo: {
+            region: locate?.data.name || "Your location",
+          },
+        };
+
+        return userSession;
+      })
+      .catch((err: ServerError) => {
+        if (isAxiosError(err)) {
+          return thunkApi.rejectWithValue(err.response?.data);
+        }
+      });
+    return response || defaultUserSession;
   },
   {
-    condition: (arg, { getState, extra }) => {
+    condition: (args, { getState }) => {
       const { userState } = getState();
       const { loading, data } = userState;
-      console.log(loading, data);
-
-      if (loading === true || data !== null) {
-        return false;
+      if (data.userName === "") {
+        return true;
       }
     },
   }
@@ -164,27 +242,34 @@ export const userSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(loginUser.fulfilled, (state, action: PayloadAction<IUser>) => {
-        state.data = action.payload;
-        state.loading = false;
-        localStorage.setItem("User", JSON.stringify(action.payload));
-      })
-      .addCase(signUpUser.fulfilled, (state, action: PayloadAction<IUser>) => {
-        state.loading = false;
-        state.data = action.payload;
-        localStorage.setItem("User", JSON.stringify(action.payload));
-      })
-      .addCase(fetchUser.fulfilled, (state, action) => {
-        console.log("succes fectchuser");
-
-        state.loading = false;
-        state.data = action.payload as IUser;
-        localStorage.setItem("User", JSON.stringify(action.payload));
-      })
+      .addCase(
+        loginUser.fulfilled,
+        (state, action: PayloadAction<UserSession>) => {
+          state.data = action.payload;
+          state.loading = false;
+          sessionStorage.setItem("User", JSON.stringify(action.payload));
+        }
+      )
+      .addCase(
+        signUpUser.fulfilled,
+        (state, action: PayloadAction<UserSession>) => {
+          state.loading = false;
+          state.data = action.payload;
+          sessionStorage.setItem("User", JSON.stringify(action.payload));
+        }
+      )
+      .addCase(
+        fetchUser.fulfilled,
+        (state, action: PayloadAction<UserSession>) => {
+          state.loading = false;
+          state.data = action.payload;
+          sessionStorage.setItem("User", JSON.stringify(action.payload));
+        }
+      )
       .addCase(logoutUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.data = null;
-        localStorage.removeItem("User");
+        state.data = defaultUserSession;
+        sessionStorage.removeItem("User");
       })
       .addMatcher(isRejectedAction, (state, action) => {
         state.loading = false;

@@ -14,10 +14,6 @@ import { FormdataToJson } from "../middleware/FormdataToJson";
 
 dotenv.config({ path: path.resolve(process.cwd(), "./src/.env") });
 
-interface UserSession extends SessionData {
-  uid?: string | null;
-}
-
 interface HasPassword {
   password: string;
 }
@@ -100,7 +96,6 @@ class ProductController {
       .then(async (image) => {
         const product: IProduct = await Product.create({
           user,
-          storeName: (req.user as IUser).storeName,
           title,
           state,
           price,

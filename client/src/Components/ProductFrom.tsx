@@ -6,7 +6,6 @@ import { Resize } from '@cloudinary/url-gen/actions';
 import ImageSelector from './imgUploader/ImageSelector';
 import { IShowToast } from '../types/showToast.types';
 
-//    TODO Custom styles for dropdown, time input, number input
 
 interface IProductFromProps {
     showToast: IShowToast

@@ -1,8 +1,15 @@
 import mongoose, { ConnectOptions } from "mongoose";
 
+// TODO learn about pool and how to config with mongoose 😴 
+const MONGO_OPTIONS: ConnectOptions = {
+  maxPoolSize: 20,
+  minPoolSize:1,  
+};
+
+
 export  const connect = async (DB_URL:string) => {
     await mongoose
-      .connect(DB_URL)
+      .connect(DB_URL, MONGO_OPTIONS)
       .then(() => {
         return console.info(`Successfully connected to database`);
       })

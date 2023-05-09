@@ -4,12 +4,8 @@ import { ServerError } from "./error.types";
 export interface IUser {
   email: string;
   userName?: string;
-  googleId?: string;
   avatar?: string;
-  products?: IProduct[];
-  storeName?: string;
-  cart?: ICart[];
-  _id: string;
+  role?: string;
 }
 
 export type ICart = {
@@ -17,9 +13,20 @@ export type ICart = {
   quantity: number;
 };
 
+export interface UserSession extends IUser {
+  auth: {
+    isAuth: boolean;
+    isUser: boolean;
+    isAdmin: boolean;
+  };
+  geo: {
+    region: string;
+  };
+}
+
 export interface InitialUserState {
   loading: boolean;
-  data: IUser | null;
+  data: UserSession;
   error: ServerError | null;
 }
 
