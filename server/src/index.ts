@@ -10,15 +10,19 @@ import MongoStore from 'connect-mongo'
 import { env } from 'process'
 import cors, { CorsOptions } from 'cors'
 import bodyParser from 'body-parser'
+import multer from 'multer'
 
-import './middleware/passport.middleware'
 import { ErrorHandler } from './utils/ErrorHandler'
 import { AppRouter } from './AppRouter'
+
+import './middleware/passport.middleware'
+
 import './controllers/LoginController'
 import './controllers/ProductController'
 import './controllers/RootController'
+import './controllers/RestaurantController'
 
-dotenv.config({ path: path.resolve(process.cwd(), './src/.env') })
+dotenv.config({ path: path.resolve(process.cwd(), './src/.env.test') })
 
 const app = express()
 const corsOption: CorsOptions = {
@@ -49,18 +53,21 @@ var sess: SessionOptions = {
   cookie: cookieOpt,
 }
 
-app.use(bodyParser.urlencoded({ extended: false }))
-app.use(
-  bodyParser.json({
-    type: ['application/x-www-form-urlencoded', 'application/json'], // Support json encoded bodies
-  })
-)
+// app.use(bodyParser.urlencoded({ extended: false }))
+// app.use(
+//   bodyParser.json({
+//     type: ['application/x-www-form-urlencoded', 'application/json'], // Support json encoded bodies
+//   })
+// )
+app.use(bodyParser.json())
 app.use(session(sess))
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(cors(corsOption))
 app.use(AppRouter.getInstance())
 app.use(ErrorHandler)
+
+app.use('/uploads', express.static(path.resolve(__dirname, './uploads')))
 
 app.get(
   '/api/v1/google',

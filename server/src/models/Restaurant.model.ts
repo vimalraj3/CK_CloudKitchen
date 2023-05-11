@@ -1,18 +1,17 @@
-import mongoose from 'mongoose'
-import { IProduct } from './product.model'
+import mongoose, { Types } from 'mongoose'
+import { IFood } from './product.model'
 import { IUser } from './user.model'
 
 /**
  * @export interface IRestaurant
- * @extends {mongoose.Document} mongoose.Document because it is a mongoose model
- * @description Restaurant interface extends mongoose.Document because it is a mongoose model  and it is a document in the database and it has the following properties below and it is exported
+ * @description  Restaurant interface for the restaurant model
  */
-export interface IRestaurant extends mongoose.Document {
+export interface IRestaurant {
   /**
    * @type {IUser}
    * @memberof IRestaurant
    */
-  user: IUser
+  user: Types.ObjectId | IUser | string
 
   /**
    * @type {string}
@@ -82,14 +81,6 @@ export interface IRestaurant extends mongoose.Document {
   restaurantPhone: string
 
   /**
-   * @type {string}
-   * @memberof IRestaurant
-   * @description The email of the restaurant
-   * @example "example@example.com"
-   */
-  restaurantEmail: string
-
-  /**
    * @type {open: Date, close: Date}
    * @memberof IRestaurant
    * @description The hours of the restaurant
@@ -100,17 +91,11 @@ export interface IRestaurant extends mongoose.Document {
   }
 
   /**
-   * @type {IProduct[]}
+   * @type {IFood[]}
    * @memberof IRestaurant
    * @description The products of the restaurant
    */
-  foods: [
-    {
-      foodId: IProduct
-      createdAt: Date
-      updatedAt: Date
-    }
-  ]
+  foods?: Types.DocumentArray<Types.ObjectId | IFood>
 
   /**
    * @type {Date}
@@ -119,7 +104,7 @@ export interface IRestaurant extends mongoose.Document {
    * @default Date.now()
    * @example "2021-01-01T00:00:00.000Z"
    */
-  createdAt: Date
+  createdAt?: Date
 
   /**
    * @type {Date}
@@ -128,10 +113,24 @@ export interface IRestaurant extends mongoose.Document {
    * @default Date.now()
    * @example "2021-01-01T00:00:00.000Z"
    */
-  updatedAt: Date
+  updatedAt?: Date
+
+  /**
+   * @type {boolean}
+   * @memberof IRestaurant
+   * @description to identify the restaurant is verified
+   */
+  verified: boolean
+
+  /**
+   * @type {string}
+   * @memberof IRestaurant
+   * @description to send the restaurant verification link with token
+   */
+  verifyToken?: string
 }
 
-const RestaurantSchema = new mongoose.Schema({
+const RestaurantSchema = new mongoose.Schema<IRestaurant>({
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   restaurantName: { type: String, required: true },
   restaurantDescription: { type: String, required: true },
@@ -141,26 +140,26 @@ const RestaurantSchema = new mongoose.Schema({
   restaurantState: { type: String, required: true },
   restaurantZip: { type: String, required: true },
   restaurantPhone: { type: String, required: true },
-  restaurantEmail: { type: String, required: true },
   restaurantHours: {
     open: { type: Date, required: true },
     close: { type: Date, required: true },
   },
   foods: [
     {
-      foodId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Product',
-        required: true,
-      },
-      createdAt: { type: Date, default: Date.now() },
-      updatedAt: { type: Date, default: Date.now() },
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Product',
+      required: true,
     },
   ],
   createdAt: { type: Date, default: Date.now() },
   updatedAt: { type: Date, default: Date.now() },
+  verified: { type: Boolean, default: false, required: true },
+  verifyToken: { type: String, required: false },
 })
 
-const Restaurant = mongoose.model<IRestaurant>('Restaurant', RestaurantSchema)
+/**
+ * Restaurant model for the restaurant schema
+ */
+const Restaurant = mongoose.model('Restaurant', RestaurantSchema)
 
 export default Restaurant

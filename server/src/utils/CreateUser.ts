@@ -2,6 +2,9 @@ import bcrypt from "bcrypt";
 import User, { IUser } from "../models/user.model";
 import jwt, { SignOptions } from 'jsonwebtoken'
 import { EmailTemplate, sendEmail } from "./Mailer";
+import { generateJwtToken } from "./jwt";
+import { HydratedDocument } from "mongoose";
+import { AppError } from "./AppError";
 
 
 /**
@@ -28,34 +31,20 @@ export const createUser = async (
   avatar?: string
 ): Promise<IUser> => {
   const hashPassword = await bcrypt.hash(password, salt);
-  const user: IUser =  new User({
+  const user: HydratedDocument<IUser> = await User.create({
       email,
       userName,
       password: hashPassword,
       avatar,
+      verified:true,
+      role:'user',
     })
   
-  const verifyToken = jwt.sign(
-    {id: email},
-    process.env.JWT_SECRET, 
-    {expiresIn: '2h'}
-  );
-
-  user.verifyToken = verifyToken;
- 
-  await user.save();
-
-  sendEmail(email,
-     `CK, Verification link`,
-     `${process.env.CLI_URL}/verify/${verifyToken}`, 
-     EmailTemplate.verification,
-     userName);
-
   return new Promise((resolve, reject) => {
-    if (user) {
-      resolve(user);
-    } else {
-      reject(new Error(`Unable to create a user`));
-    }
-  });
+      if (user) {
+        resolve(user);
+      } else {
+        reject(new AppError(`Unable to create a user`,500));
+      }
+    });
 };

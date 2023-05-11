@@ -1,21 +1,35 @@
-import mongoose, { Schema, Document, VirtualType } from 'mongoose'
+import mongoose, { Schema, Document, VirtualType, Types, Model } from 'mongoose'
 import { IOrder } from './order.model'
 import { ICart } from './cart.model'
 import { IRestaurant } from './Restaurant.model'
 
-export interface IUser extends Document{
+export enum userRole {
+  user = 'user',
+  admin = 'admin',
+  staff = 'staff',
+}
+export interface IUser {
   email: string
   userName: string
   password?: string
   googleId?: string
   avatar?: string
-  orders?: IOrder[]
-  cart?: ICart
-  restaurant?: IRestaurant
+  orders?: Types.DocumentArray<IOrder>
+  cart?: Types.ObjectId | ICart
+  restaurant?: Types.ObjectId | IRestaurant
   verified: boolean
-  role: string
+  role: userRole
   verifyToken?: string
+  createdAt?: Date
+  _id: Types.ObjectId
 }
+
+const roleEnum = {
+  values: Object.values(userRole),
+  message: 'enum validator failed for path `{PATH}` with value `{VALUE}`',
+}
+
+// interface DocIUser extends IUser, Document{}
 
 const UserSchema: Schema = new Schema<IUser>({
   email: { type: String, required: true, unique: true },
@@ -35,7 +49,12 @@ const UserSchema: Schema = new Schema<IUser>({
     require: false,
     select: false,
   },
-  role: { type: String, required: true, default: 'user' },
+  role: {
+    type: String,
+    required: true,
+    default: userRole.user,
+    enum: roleEnum,
+  },
   restaurant: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Restaurant',
@@ -44,9 +63,8 @@ const UserSchema: Schema = new Schema<IUser>({
   },
   verified: { type: Boolean, required: true, default: false },
   verifyToken: { type: String, required: false, select: false },
+  createdAt: { type: Date, required: true, default: Date.now() },
 })
-
-
 
 const User = mongoose.model<IUser>('User', UserSchema)
 

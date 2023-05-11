@@ -1,5 +1,5 @@
-import mongoose from 'mongoose'
-import { IProduct } from './product.model'
+import mongoose, { Types } from 'mongoose'
+import { IFood } from './product.model'
 import { IUser } from './user.model'
 import { IRestaurant } from './Restaurant.model'
 
@@ -9,7 +9,7 @@ export interface ICart extends mongoose.Document {
     restaurantId: IRestaurant
     foods: [
       {
-        foodId: IProduct
+        foodId: Types.ObjectId | IFood
         quantity: number
       }
     ]

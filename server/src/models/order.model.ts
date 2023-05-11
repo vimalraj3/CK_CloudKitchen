@@ -1,19 +1,28 @@
-import mongoose, { Schema, Document } from 'mongoose'
+import mongoose, { Schema, Document, Types } from 'mongoose'
+import { IRestaurant } from './Restaurant.model'
+import { IUser } from './user.model'
+import { IPayment } from './payment.model'
 
-export interface IOrder extends Document {
-  user: string
+export interface IOrder {
+  user: Types.ObjectId | IUser
+  restaurant: Types.ObjectId | IRestaurant
   order: [
     {
-      foodId: string
+      foodId: Types.ObjectId | IRestaurant
       quantity: number
       date: Date
-      paymentId: string
+      paymentId: Types.ObjectId | IPayment
     }
   ]
 }
 
-const OrderSchema: Schema = new Schema({
+const OrderSchema: Schema = new Schema<IOrder>({
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  restaurant: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Restaurant',
+    required: true,
+  },
   order: [
     {
       foodId: {
@@ -32,6 +41,6 @@ const OrderSchema: Schema = new Schema({
   ],
 })
 
-const Order = mongoose.model<IOrder>('Order', OrderSchema)
+const Order = mongoose.model('Order', OrderSchema)
 
 export default Order

@@ -1,6 +1,5 @@
 import mongoose, { ConnectOptions } from "mongoose";
 
-// TODO learn about pool and how to config with mongoose 😴 
 const MONGO_OPTIONS: ConnectOptions = {
   maxPoolSize: 20,
   minPoolSize:1,  

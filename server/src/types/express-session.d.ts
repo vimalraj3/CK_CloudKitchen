@@ -6,10 +6,9 @@ import session, { Session } from 'express-session'
  */
 declare module 'express-session' {
   interface SessionData {
-    user:IUser,
-    uid:string,
-    passport:{
-      user:string
+    uid: string
+    passport: {
+      user: string
     }
   }
 }

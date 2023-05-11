@@ -1,13 +1,13 @@
-import mongoose from 'mongoose'
-import { IProduct } from './product.model'
+import mongoose, { Types } from 'mongoose'
+import { IFood } from './product.model'
 
-interface IPayment extends mongoose.Document {
-  user: string
+export interface IPayment {
+  user: Types.ObjectId
   payment: [
     {
       foods: [
         {
-          foodId: IProduct
+          foodId: IFood | Types.ObjectId
           quantity: number
         }
       ]
@@ -17,14 +17,14 @@ interface IPayment extends mongoose.Document {
   ]
 }
 
-const PaymentSchema = new mongoose.Schema({
+const PaymentSchema = new mongoose.Schema<IPayment>({
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   payment: [
     {
       foods: [
         {
           foodId: {
-            type: mongoose.Schema.Types.ObjectId, 
+            type: mongoose.Schema.Types.ObjectId,
             ref: 'Product',
             required: true,
           },
@@ -37,7 +37,6 @@ const PaymentSchema = new mongoose.Schema({
   ],
 })
 
-const Payment = mongoose.model<IPayment>('Payment', PaymentSchema)
+const Payment = mongoose.model('Payment', PaymentSchema)
 
 export default Payment
-

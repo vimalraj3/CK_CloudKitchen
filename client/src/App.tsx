@@ -18,6 +18,7 @@ import { fetchUser } from './state/slices/user.slice'
 import { useNavigate } from 'react-router-dom'
 import { ServerError } from './types/error.types'
 import { Account } from './Components/account/Account'
+import AddRestaurant from './Components/AddRestaurant'
 
 function App() {
   const [showToast, ToastComponent] = useToast()
@@ -52,6 +53,7 @@ function App() {
               path="/account"
               element={<Account showToast={showToast} />}
             />
+            <Route path="/cloudkitchen/add" element={<AddRestaurant />} />
           </Route>
         </Routes>
         <Footer />
