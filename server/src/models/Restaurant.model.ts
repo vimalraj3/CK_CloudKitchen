@@ -1,6 +1,7 @@
 import mongoose, { Types } from 'mongoose'
-import { IFood } from './product.model'
+import { IFood } from './food.model'
 import { IUser } from './user.model'
+import { IOrder } from './order.model'
 
 /**
  * @export interface IRestaurant
@@ -44,6 +45,8 @@ export interface IRestaurant {
    * @example "12th cross street"
    */
   restaurantAddress: string
+
+  restaurantRegion: string
 
   /**
    * @type {string}
@@ -128,6 +131,8 @@ export interface IRestaurant {
    * @description to send the restaurant verification link with token
    */
   verifyToken?: string
+
+  orders?: Types.DocumentArray<Types.ObjectId | IOrder>
 }
 
 const RestaurantSchema = new mongoose.Schema<IRestaurant>({
@@ -137,6 +142,7 @@ const RestaurantSchema = new mongoose.Schema<IRestaurant>({
   restaurantImage: { type: [String], required: true },
   restaurantAddress: { type: String, required: true },
   restaurantCity: { type: String, required: true },
+  restaurantRegion: { type: String, required: true },
   restaurantState: { type: String, required: true },
   restaurantZip: { type: String, required: true },
   restaurantPhone: { type: String, required: true },
@@ -147,7 +153,7 @@ const RestaurantSchema = new mongoose.Schema<IRestaurant>({
   foods: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Product',
+      ref: 'Food',
       required: true,
     },
   ],
@@ -155,6 +161,7 @@ const RestaurantSchema = new mongoose.Schema<IRestaurant>({
   updatedAt: { type: Date, default: Date.now() },
   verified: { type: Boolean, default: false, required: true },
   verifyToken: { type: String, required: false },
+  orders: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Order' }],
 })
 
 /**

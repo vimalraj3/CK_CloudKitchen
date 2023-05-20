@@ -18,9 +18,11 @@ import { AppRouter } from './AppRouter'
 import './middleware/passport.middleware'
 
 import './controllers/LoginController'
-import './controllers/ProductController'
+import './controllers/FoodController'
 import './controllers/RootController'
 import './controllers/RestaurantController'
+import './controllers/OrderController'
+import './controllers/CartController'
 
 dotenv.config({ path: path.resolve(process.cwd(), './src/.env.test') })
 

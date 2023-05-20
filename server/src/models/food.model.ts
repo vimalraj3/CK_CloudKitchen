@@ -13,7 +13,7 @@ export interface IFood {
     open: Date
     close: Date
   }
-  image: Types.DocumentArray<string>
+  image: string[]
   category: string
   createdAt?: Date
   updatedAt?: Date
@@ -35,6 +35,6 @@ const foodSchema: Schema = new Schema<IFood>({
   updatedAt: { type: Date, required: true, default: Date.now() },
 })
 
-const Food = mongoose.model('Food', foodSchema)
+const Food = mongoose.model<IFood>('Food', foodSchema)
 
 export default Food

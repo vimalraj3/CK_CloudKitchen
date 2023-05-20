@@ -29,8 +29,6 @@ const roleEnum = {
   message: 'enum validator failed for path `{PATH}` with value `{VALUE}`',
 }
 
-// interface DocIUser extends IUser, Document{}
-
 const UserSchema: Schema = new Schema<IUser>({
   email: { type: String, required: true, unique: true },
   userName: { type: String, required: true },
@@ -59,7 +57,6 @@ const UserSchema: Schema = new Schema<IUser>({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Restaurant',
     require: false,
-    select: false,
   },
   verified: { type: Boolean, required: true, default: false },
   verifyToken: { type: String, required: false, select: false },

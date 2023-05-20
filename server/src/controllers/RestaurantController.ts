@@ -1,12 +1,11 @@
 import { NextFunction, Request, Response } from 'express'
-import { controller, post, get, use } from './decorators'
+import { controller, post, get, use, patch, del } from './decorators'
 import Restaurant, { IRestaurant } from '../models/Restaurant.model'
 import { AppError } from '../utils/AppError'
-import multer from 'multer'
 import { uploaderSingle } from '../utils/Multer'
 import { generateJwtToken, verifyJwtToken } from '../utils/jwt'
 import { EmailTemplate, sendEmail } from '../utils/Mailer'
-import { isAuth } from '../middleware/isAuth'
+import { isAdmin, isAuth } from '../middleware/isAuth'
 import User, { IUser } from '../models/user.model'
 import { HydratedDocument, Types } from 'mongoose'
 import { uploadSingleImageCloudinary } from '../utils/Cloudinary'
@@ -18,24 +17,14 @@ import { uploadSingleImageCloudinary } from '../utils/Cloudinary'
 @controller('/restaurant')
 class RestaurantController {
   @post('/new')
+  @use(uploaderSingle)
   @use(isAuth)
   async addRestaurant(req: Request, res: Response, next: NextFunction) {
     try {
-      let imgPath: string | undefined
-      let body: IRestaurant | undefined
+      let imgPath: string | undefined = req.file?.path
+      let body: typeof req.body = req.body
 
-      uploaderSingle(req, res, (err) => {
-        if (err instanceof multer.MulterError) {
-          return next(new AppError(err.message, 500))
-        }
-        if (err) {
-          return next(new AppError('Something went wrong', 500))
-        }
-        imgPath = req.file?.path
-
-        console.log(req.body.name, 'req.body.name', JSON.stringify(req.body))
-        body = req.body
-      })
+      imgPath = req.file && req.file.path
 
       if (!imgPath || !body) {
         next(new AppError('Please upload an image', 400))
@@ -55,7 +44,9 @@ class RestaurantController {
         restaurantState,
         restaurantZip,
         restaurantPhone,
-        restaurantHours,
+        open,
+        close,
+        restaurantRegion,
       } = body
 
       const requiredFields = [
@@ -66,11 +57,13 @@ class RestaurantController {
         'restaurantState',
         'restaurantZip',
         'restaurantPhone',
-        'restaurantHours',
+        'open',
+        'close',
+        'restaurantRegion',
       ]
 
       for (const field of requiredFields) {
-        if (!body.hasOwnProperty(field)) {
+        if (!(field in body)) {
           return next(new AppError(`Field ${field} was missing`, 400))
         }
       }
@@ -89,7 +82,8 @@ class RestaurantController {
         restaurantState,
         restaurantZip,
         restaurantPhone,
-        restaurantHours,
+        restaurantRegion,
+        restaurantHours: { open, close },
         verifyToken: generateJwtToken(user?.email.toString()),
         verified: false,
       })
@@ -100,9 +94,11 @@ class RestaurantController {
         EmailTemplate.verification,
         {
           userName: req.user.userName,
-          link: `${process.env.CLIENT_URL}/restaurant/verify/${restaurant.verifyToken}`,
+          link: `${process.env.CLI_URL}/restaurant/verify/${restaurant.verifyToken}`,
         }
       )
+
+      console.log(restaurant, 'restaurant')
 
       const restaurantRequest = restaurant.save()
       const userRestaurantIdLinkRequest = User.findByIdAndUpdate(
@@ -131,7 +127,7 @@ class RestaurantController {
       const { token } = req.params
       const email = verifyJwtToken(token)
 
-      const user: HydratedDocument<IUser> | null = await User.findOne({
+      const user = await User.findOne({
         email,
       }).populate<IRestaurant>('restaurant')
 
@@ -159,6 +155,125 @@ class RestaurantController {
       return next(new AppError(`Something went wrong`, 500))
     }
   }
+
+  @get('/:id')
+  async getRestaurantById(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params
+      const restaurant = await Restaurant.findById(id)
+      if (!restaurant) return next(new AppError('No restaurant found', 404))
+      res.status(200).json({
+        success: true,
+        restaurant,
+      })
+    } catch (error) {
+      return next(new AppError(`Something went wrong`, 500))
+    }
+  }
+
+  @get('/admin/:id')
+  @use(isAdmin)
+  @use(isAuth)
+  async getRestaurantAdminById(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const { id } = req.params
+      const restaurant: HydratedDocument<IRestaurant> | null =
+        await Restaurant.findById(id).populate('orders')
+      console.log('restaurant controllers 185:', restaurant, 'restaurant')
+
+      if (!restaurant) return next(new AppError('No restaurant found', 404))
+      res.status(200).json({
+        success: true,
+        restaurant,
+      })
+    } catch (error) {
+      return next(new AppError(`Something went wrong`, 500))
+    }
+  }
+
+  @patch('/:id')
+  @use(isAdmin)
+  @use(isAuth)
+  async updateRestaurantById(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params
+      const { update } = req.body
+
+      if (!update)
+        return next(new AppError('Please provide update object', 400))
+
+      if (!req.user)
+        return next(new AppError(`Login to access this resource`, 401))
+
+      const restaurant: HydratedDocument<IRestaurant> | null =
+        await Restaurant.findOneAndUpdate(
+          { _id: id, restaurant: req.user.restaurant },
+          update,
+          { new: true }
+        )
+
+      if (!restaurant) return next(new AppError(`No Restaurant found`, 404))
+
+      res.status(200).json({ success: true, restaurant })
+    } catch (error) {
+      return next(new AppError(`Something went wrong`, 500))
+    }
+  }
+
+  @del('/:id')
+  @use(isAdmin)
+  @use(isAuth)
+  async deleteRestaurantById(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params
+
+      if (!req.user)
+        return next(new AppError(`Login to access this resource`, 401))
+
+      const restaurant: HydratedDocument<IRestaurant> | null =
+        await Restaurant.findOneAndDelete({
+          _id: id,
+          restaurant: req.user.restaurant,
+        })
+
+      if (!restaurant) return next(new AppError(`No Restaurant found`, 404))
+
+      res.status(200).json({ success: true, message: 'successfully deleted' })
+    } catch (error) {
+      return next(new AppError(`Something went wrong`, 500))
+    }
+  }
+
+  @get('/')
+  async getAllRestaurants(req: Request, res: Response, next: NextFunction) {
+    try {
+      const restaurants = await Restaurant.find({ verified: true })
+      if (!restaurants) return next(new AppError('No restaurants found', 404))
+      res.status(200).json({
+        success: true,
+        restaurants,
+      })
+    } catch (error) {
+      return next(new AppError(`Something went wrong`, 500))
+    }
+  }
 }
+
+//? ==========================================================
+//*                 Routes of Restaurant Controllers
+//? ==========================================================
+
+/**
+ * * post - restaurant/new - Create a new restaurant
+ * *  get - restaurant/:id - info of particular restaurant
+ * *  patch - restaurant/:id -  update a particular restaurant
+ * *  delete - restaurant/:id -  delete a particular restaurant
+ * *  get - restaurant/admin/:id - info of particular restaurant for admin dashboard
+ * *  get - restaurant/ -  get all restaurant info
+ */
 
 // TODO  product add, accounance

@@ -35,10 +35,10 @@ export const isAdmin = async (
   console.log(req.user, `second middleware`)
   if (!req.user) return next(new AppError('Login to access this resource', 400))
 
-  // if (req.user.role !== 'admin')
-  //   return next(
-  //     new AppError('You are not authorized to access this resource', 400)
-  //   )
+  if (req.user.role !== 'admin')
+    return next(
+      new AppError('You are not authorized to access this resource', 400)
+    )
 
   next()
 }
