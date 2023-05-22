@@ -3,15 +3,14 @@ import { IFood } from './food.model'
 import { IUser } from './user.model'
 import { IRestaurant } from './Restaurant.model'
 
+interface IFoodCart {
+  food: IFood | Types.ObjectId
+  quantity: number
+}
 export interface ICart {
   user: IUser | Types.ObjectId
   restaurantId: IRestaurant | Types.ObjectId
-  foods: [
-    {
-      food: Types.ObjectId | IFood
-      quantity: number
-    }
-  ]
+  foods: IFoodCart[]
   totalPrice: number
 }
 

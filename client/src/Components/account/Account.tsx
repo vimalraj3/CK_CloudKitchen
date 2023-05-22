@@ -3,8 +3,9 @@ import { IShowToast } from '../../types/showToast.types'
 import { InitialUserState } from '../../types/user.types'
 import Container from '../Container'
 import Nav from '../Nav'
-import { UserInfo } from './UserInfo'
-import { UserOrders } from './UserOrders'
+import { Settings } from './Sections/Settings'
+import { UserInfo } from './Sections/UserInfo'
+import { UserOrders } from './Sections/UserOrders'
 
 interface IAccountProps {
   showToast: IShowToast
@@ -21,8 +22,8 @@ export const Account: React.FC<IAccountProps> = ({ showToast }) => {
         </h3>
         <UserInfo user={user.data} />
         <UserOrders />
+        <Settings />
       </Container>
     </div>
   )
 }
-

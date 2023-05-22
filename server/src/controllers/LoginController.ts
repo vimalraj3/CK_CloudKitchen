@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import path from 'path'
-import { get, controller, post } from './decorators'
+import { get, controller, post, patch } from './decorators'
 import User, { IUser } from '../models/user.model'
 import dotenv from 'dotenv'
 import { createUser } from '../utils/CreateUser'
@@ -11,9 +11,9 @@ dotenv.config({ path: path.resolve(process.cwd(), './src/.env') })
 // TODO testing login signup | Products | multithearding
 import { AppError } from '../utils/AppError'
 import { bodyValidator } from './decorators/bodyValidator'
-import { generateJwtToken, verifyJwtToken } from '../utils/jwt'
 import { HydratedDocument } from 'mongoose'
 import { EmailTemplate, sendEmail } from '../utils/Mailer'
+import { decodedEmail, encodedEmail } from '../utils/encoder'
 
 @controller('/auth')
 class LoginController {
@@ -24,11 +24,10 @@ class LoginController {
   @bodyValidator('email', 'password')
   async postLogin(req: Request, res: Response, next: NextFunction) {
     const { email, password } = req.body
-    
-    const user: HydratedDocument<IUser> | null = await User
-      .findOne({email})
+
+    const user: HydratedDocument<IUser> | null = await User.findOne({ email })
       .select('+password')
-      .lean();
+      .lean()
 
     if (!user) {
       res.status(404).json({
@@ -63,23 +62,31 @@ class LoginController {
     try {
       const { email } = req.body
 
-      const userExist:IUser|null = await User.findOne({email}).lean();
-      
-      if(userExist)
-      {
-        next(new AppError(`User already exist`, 400));
-        return;
+      const userExist: IUser | null = await User.findOne({ email }).lean()
+
+      if (userExist) {
+        next(new AppError(`User already exist`, 400))
+        return
       }
 
-      const sent = await sendEmail(email, 'CK, Password Reset', EmailTemplate.resetPassword,{link:`${process.env.CLIENT_URL}/signup/verify/${generateJwtToken(email)}`,userName:'Valued user'});
+      const sent = await sendEmail(
+        email,
+        'CK, Password Reset',
+        EmailTemplate.resetPassword,
+        {
+          link: `${process.env.CLIENT_URL}/signup/verify/${encodedEmail(
+            email
+          )}`,
+          userName: 'Valued user',
+        }
+      )
 
-      if(sent)
-      {
+      if (sent) {
         res.status(201).json({
           success: true,
-          message: `Email sent to ${email} for verification.`
+          message: `Email sent to ${email} for verification.`,
         })
-        return;
+        return
       }
       next(new AppError(`Something went wrong`, 500))
     } catch (error) {
@@ -87,36 +94,50 @@ class LoginController {
     }
   }
 
-  @post('/setPassword/:token')
+  @post('/setpassword/:token')
   @bodyValidator('password')
-  async postSetPassword(req:Request, res:Response, next:NextFunction)
-  {
-    const {password} = req.body;
-    const {token} = req.params;
-    const email = verifyJwtToken(token);
-    const userName = email.split('@')[0];
-    const user = createUser(password, LoginController.salt, userName, email);
-    // if(user)
+  async postSetPassword(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { password } = req.body
+      const { token } = req.params
+      const email = decodedEmail(token)
+      const userName = email.split('@')[0]
+      const user = createUser(password, LoginController.salt, userName, email)
+      if (!user) {
+        return next(new AppError(`Unable to create a user`, 500))
+      }
+      res.status(200).json({
+        success: true,
+        user,
+      })
+    } catch (error) {
+      next(new AppError(`Unable to create user`, 500))
+    }
   }
 
-  @post('/forgotPassword')
+  @post('/forgotpassword')
   @bodyValidator('email')
-  async postForgotPassword(req:Request, res:Response, next:NextFunction)
-  {
+  async postForgotPassword(req: Request, res: Response, next: NextFunction) {
     try {
-      const {email} = req.body;
-      const userExist:IUser|null = await User.findOne({email}).lean();
-      if(!userExist)
-      {
-        next(new AppError(`User not found`, 404));
-        return;
+      const { email } = req.body
+      const userExist: IUser | null = await User.findOne({ email }).lean()
+      if (!userExist) {
+        next(new AppError(`User not found`, 404))
+        return
       }
-      const sent = await sendEmail(email, 'CK, Password Reset', EmailTemplate.resetPassword,{link:`${process.env.CLIENT_URL}/resetPassword/${generateJwtToken(email)}`,userName:userExist.userName});
-      if(sent)
-      {
+      const sent = await sendEmail(
+        email,
+        'CK, Password Reset',
+        EmailTemplate.resetPassword,
+        {
+          link: `${process.env.CLI_URL}/resetpassword/${encodedEmail(email)}`,
+          userName: userExist.userName,
+        }
+      )
+      if (sent) {
         res.status(201).json({
           success: true,
-          message: `Email sent to ${email} for password reset.`
+          message: `Email sent to ${email} for password reset.`,
         })
       }
     } catch (error) {
@@ -124,30 +145,29 @@ class LoginController {
     }
   }
 
-  @post('/resetPassword/:token')
+  @patch('/resetpassword/:token')
   @bodyValidator('password')
-  async postResetPassword(req:Request, res:Response, next:NextFunction){
+  async postResetPassword(req: Request, res: Response, next: NextFunction) {
     try {
-      const {password} = req.body;
-      const {token} = req.params;
-      const email = verifyJwtToken(token);
-      const user : HydratedDocument<IUser> | null = await User.findOne({email});
-      if(!user)
-      {
-        next(new AppError(`User not found`,404));
-        return;
+      const { password } = req.body
+      const { token } = req.params
+      const email = decodedEmail(token)
+      const user: HydratedDocument<IUser> | null = await User.findOne({ email })
+      if (!user) {
+        next(new AppError(`User not found`, 404))
+        return
       }
-      const hashPassword = await bcrypt.hash(password, LoginController.salt);
-      user.password = hashPassword;
+      const hashPassword = await bcrypt.hash(password, LoginController.salt)
+      user.password = hashPassword
       await user.save()
-      console.log(user, 'logincontroller 143');
-      
+      console.log(user, 'logincontroller 143')
+
       res.status(201).json({
-        success:true,
-        user 
+        success: true,
+        user,
       })
     } catch (error) {
-      next(new AppError(`Something went wrong`,500))
+      next(new AppError(`Something went wrong`, 500))
     }
   }
 
@@ -171,7 +191,7 @@ class LoginController {
 
   @get('/getuser')
   async getUser(req: Request, res: Response) {
-    const session = req.session 
+    const session = req.session
     const id = session?.uid || session.passport?.user
     const user: IUser | null = await User.findById(id).lean()
     if (!user) {
@@ -187,25 +207,26 @@ class LoginController {
     })
   }
 
-  @get('/verify/:token')
+  @post('/verify/:token')
   async verifyEmail(req: Request, res: Response, next: NextFunction) {
     try {
-      const token = req.params.token;
-      const email:string = verifyJwtToken(token);
-      if(!email)
-      {
+      const token = req.params.token
+      const email: string = encodedEmail(token)
+      if (!email) {
         next(new AppError(`Invalid token`, 401))
-        return;
+        return
       }
 
-        User.findOneAndUpdate({email},{verified:true},{runValidators:false});
-        
-        res.status(200).json({
-          success:true,
-          message:`Email verified successfully.`
-        })
-    } catch (error) {
-      
-    }
+      User.findOneAndUpdate(
+        { email },
+        { verified: true },
+        { runValidators: false }
+      )
+
+      res.status(200).json({
+        success: true,
+        message: `Email verified successfully.`,
+      })
+    } catch (error) {}
   }
 }

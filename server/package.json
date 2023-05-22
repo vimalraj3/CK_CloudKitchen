@@ -26,6 +26,7 @@
     "exprses": "^0.0.1-security",
     "form-data": "^4.0.0",
     "formidable": "^2.1.1",
+    "js-base64": "^3.7.5",
     "jsonwebtoken": "^9.0.0",
     "mailgun.js": "^8.2.1",
     "mongoose": "^7.0.3",

@@ -19,6 +19,7 @@ import { useNavigate } from 'react-router-dom'
 import { ServerError } from './types/error.types'
 import { Account } from './Components/account/Account'
 import AddRestaurant from './Components/AddRestaurant'
+import { ResetPassword } from './Components/ResetPassword/ResetPassword'
 
 function App() {
   const [showToast, ToastComponent] = useToast()
@@ -54,6 +55,10 @@ function App() {
               element={<Account showToast={showToast} />}
             />
             <Route path="/cloudkitchen/add" element={<AddRestaurant />} />
+            <Route
+              path="/resetpassword/:token"
+              element={<ResetPassword showToast={showToast} />}
+            />
           </Route>
         </Routes>
         <Footer />

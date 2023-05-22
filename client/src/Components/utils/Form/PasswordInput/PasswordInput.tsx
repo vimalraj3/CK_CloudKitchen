@@ -2,16 +2,17 @@ import VisibilityIcon from '@mui/icons-material/Visibility'
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
 import { useState, forwardRef } from 'react'
 
-type InputProps = React.DetailedHTMLProps<
+type InputProps = {
+  label?: string
+} & React.DetailedHTMLProps<
   React.InputHTMLAttributes<HTMLInputElement>,
   HTMLInputElement
-> & { label?: string }
+>
 
 export const PasswordInput = forwardRef<HTMLInputElement, InputProps>(
   (props, ref) => {
     const { name, label } = props
     const [visible, setVisible] = useState<boolean>(false)
-
     return (
       <div>
         <label htmlFor={name} className="capitalize mt-2">

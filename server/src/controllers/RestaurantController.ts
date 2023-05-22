@@ -3,7 +3,7 @@ import { controller, post, get, use, patch, del } from './decorators'
 import Restaurant, { IRestaurant } from '../models/Restaurant.model'
 import { AppError } from '../utils/AppError'
 import { uploaderSingle } from '../utils/Multer'
-import { generateJwtToken, verifyJwtToken } from '../utils/jwt'
+import { generateJwtToken, verifyJwtToken } from '../utils/encoder'
 import { EmailTemplate, sendEmail } from '../utils/Mailer'
 import { isAdmin, isAuth } from '../middleware/isAuth'
 import User, { IUser } from '../models/user.model'
@@ -248,7 +248,7 @@ class RestaurantController {
     }
   }
 
-  @get('/')
+  @get('/all')
   async getAllRestaurants(req: Request, res: Response, next: NextFunction) {
     try {
       const restaurants = await Restaurant.find({ verified: true })
@@ -275,5 +275,3 @@ class RestaurantController {
  * *  get - restaurant/admin/:id - info of particular restaurant for admin dashboard
  * *  get - restaurant/ -  get all restaurant info
  */
-
-// TODO  product add, accounance

@@ -14,7 +14,7 @@ dotenv.config({ path: path.resolve(process.cwd(), './src/.env.test') })
 const options: StrategyOptions = {
   clientID: process.env.CLIENT_ID,
   clientSecret: process.env.CLIENT_SECRET || '',
-  callbackURL: `${process.env.SER_URL}/api/v1/google/callback`,
+  callbackURL: `${process.env.SER_URL}/auth/google/callback`,
 }
 
 const CreateUser = async ({

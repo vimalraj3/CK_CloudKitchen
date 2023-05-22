@@ -69,10 +69,8 @@ app.use(cors(corsOption))
 app.use(AppRouter.getInstance())
 app.use(ErrorHandler)
 
-app.use('/uploads', express.static(path.resolve(__dirname, './uploads')))
-
 app.get(
-  '/api/v1/google',
+  '/auth/google',
   (req, res, next) => {
     res.header(
       'Access-Control-Allow-Methods',
@@ -86,7 +84,7 @@ app.get(
 )
 
 app.get(
-  '/api/v1/google/callback',
+  '/auth/google/callback',
   passport.authenticate('google', {
     failureRedirect: `${env.CLI_URL}/`,
   }),

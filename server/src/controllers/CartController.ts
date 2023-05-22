@@ -2,14 +2,12 @@ import { NextFunction, Request, Response } from 'express'
 import { get, controller, use, post, del, patch } from './decorators'
 import { IFood } from '../models/food.model'
 import { bodyValidator } from './decorators/bodyValidator'
-import { isAdmin, isAuth } from '../middleware/isAuth'
 import { AppError } from '../utils/AppError'
 import Food from '../models/food.model'
-import Restaurant, { IRestaurant } from '../models/Restaurant.model'
-import { HydratedDocument, Types } from 'mongoose'
+import { HydratedDocument } from 'mongoose'
 import Cart, { ICart } from '../models/cart.model'
-import Order, { IOrder } from '../models/order.model'
 import User, { IUser } from '../models/user.model'
+import { isAuth } from '../middleware/isAuth'
 
 // TODO  Search for a food
 
@@ -97,7 +95,7 @@ class OrderController {
     }
   }
 
-  @get('/setquantity')
+  @patch('/setquantity')
   @bodyValidator('foodId', 'quantity')
   @use(isAuth)
   async setQuantity(req: Request, res: Response, next: NextFunction) {
@@ -109,20 +107,60 @@ class OrderController {
         return
       }
 
+      if (quantity <= 0) {
+        return next(new AppError(`invalid quantity`, 401))
+      }
+
       let cart: HydratedDocument<ICart> | null = await Cart.findOne({
         user: req.user._id,
       }).populate('foods.food')
 
-      if (!cart && cart?.foods?.length === 0) {
+      if (!cart) {
         return next(new AppError(`Cart not found`, 400))
       }
 
-      const index = cart.foods.findIndex((val: any) => val.food._id === foodId)
+      const index = cart.foods.findIndex(
+        (val: any) => val._id.toString() === foodId
+      )
+
+      if (index == -1) return next(new AppError(`Food not found`, 404))
+
       cart.foods[index].quantity = quantity
 
       await cart.save()
 
-      console.log(cart.foods, 'cart foods')
+      res.status(200).json({
+        success: true,
+        cart: cart,
+      })
+    } catch (error) {
+      console.log(error)
+      next(new AppError(`Something went wrong, try again later`, 500))
+    }
+  }
+
+  @del('/delfood/:id')
+  @use(isAuth)
+  async delFood(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params
+      if (!req.user?._id) {
+        next(new AppError(`Login to access this resource`, 404))
+        return
+      }
+
+      let cart: HydratedDocument<ICart> | null = await Cart.findOne({
+        user: req.user._id,
+      }).populate('foods.food')
+
+      if (!cart) {
+        return next(new AppError(`Cart not found`, 400))
+      }
+
+      const foods = cart.foods.filter((val: any) => val._id.toString() !== id)
+
+      cart.foods = foods
+      await cart.save()
 
       res.status(200).json({
         success: true,
@@ -140,5 +178,8 @@ class OrderController {
 //? ==========================================================
 
 /**
+ * * get - cart/get - null - returns the user cart
  * * post - cart/add - foodId , quantity, restaurantId - Create a new or update a cart
+ * * patch - cart/setquantity - foodId , quantity  - set quantity to foods
+ * * delete - cart/delfood/:id - null  -  delete the cart food if exist
  */

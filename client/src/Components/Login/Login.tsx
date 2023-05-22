@@ -15,6 +15,7 @@ import { Login } from '../../types/user.types'
 import { IShowToast } from '../../types/showToast.types'
 import { Text } from '../utils/Text'
 import * as yup from 'yup'
+import ForgetPassword from '../DialogBox/ForgetBox'
 
 interface ILoginProps {
   showToast: IShowToast
@@ -102,6 +103,9 @@ function index({ showToast }: ILoginProps) {
                         size="sm"
                       />
                     )}
+                  </div>
+                  <div>
+                    <ForgetPassword showToast={showToast} />
                   </div>
                   <Input
                     type="submit"
