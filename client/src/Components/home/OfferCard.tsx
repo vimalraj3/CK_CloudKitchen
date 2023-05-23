@@ -1,7 +1,7 @@
 import dosaImg from '../../assets/home/dosa.png'
 import pizzaImg from '../../assets/home/pizza.png'
 import { Typography } from '@mui/material'
-import Underline from '../../assets/utils/Underline.svg'
+import Underline from '../../assets/utils/underline.png'
 interface IOfferCard {
   title: string
   image: string
