@@ -7,7 +7,7 @@ function Hero() {
     <>
       <div className="relative h-[60vh] w-[100%]">
         <div
-          className={`w-[100%] text-[#fff] absolute h-[100%] -z-30 bg-[url('./public/Heroimg.png')] bg-no-repeat bg-cover`}
+          className={`w-[100%] text-[#fff] absolute h-[100%] -z-30 bg-[url('./Heroimg.png')] bg-no-repeat bg-cover`}
         ></div>
         <div className="w-[100%]  h-[100%] mx-auto max-w-[1200px]">
           <Nav />
