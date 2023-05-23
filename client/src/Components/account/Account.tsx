@@ -17,7 +17,7 @@ export const Account: React.FC<IAccountProps> = ({ showToast }) => {
     <div>
       <Nav dark bgColor="#f8f8f8" />
       <Container>
-        <h3 className="text-lg md:text-4xl text-black font-bold font-cardo">
+        <h3 className="text-lg md:text-4xl text-black font-bold font-head">
           Account
         </h3>
         <UserInfo user={user.data} />

@@ -44,7 +44,7 @@ export const UserAvatar: React.FC<IUserAvatar> = ({ userName, size }) => {
         <div className="absolute top-[85%] right-10 transition-all ">
           <div className="flex flex-col items-center justify-center gap-2 bg-white rounded-md shadow-md p-2">
             {dropDown.map((item, index) => (
-              <NavLink to={item.to}>
+              <NavLink to={item.to} key={index}>
                 <div className="cursor-pointer px-3 py-1.5 text-black capitalize hover:bg-[#f8f8f8] rounded-md text-sm font-moutserrat">
                   <span>{item.name}</span>
                 </div>

@@ -35,7 +35,6 @@ Login controller handler user apis
 | `post`  | auth/forgotpassword       | email           | sent a reset password email             |
 | `post`  | auth/verify/:token        | null            | verify the user                         |
 | `patch` | auth/resetpassword/:token | password        | reset the password                      |
-| `patch` | auth/resetpassword/:token | password        | reset the password                      |
 
 ### `Food Controller 🍔`
 

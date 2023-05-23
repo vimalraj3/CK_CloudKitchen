@@ -7,8 +7,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        moutserrat: `'moutserrat', 'sans-serif'`,
-        cardo: `"cardo", serif`
+        head: `'Poppins', sans-serif`,
+        para: `'Nunito', sans-serif`
       }
     },
   },

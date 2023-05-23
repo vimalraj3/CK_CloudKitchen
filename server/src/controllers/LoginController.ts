@@ -171,7 +171,7 @@ class LoginController {
     }
   }
 
-  @get('/logout')
+  @post('/logout')
   getLogout(req: Request, res: Response) {
     console.log('Logout')
     req.session.destroy((err) => {

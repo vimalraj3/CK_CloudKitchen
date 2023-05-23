@@ -143,7 +143,7 @@ export const signUpUser = createAsyncThunk<
 /**
  * logout user thunk action creator function that returns a promise of IUser type and takes user object and ThunkAPI as arguments
  */
-export const logoutUser = createAsyncThunk(
+export const userLogout = createAsyncThunk(
   'user/logout',
   async (_, thunkApi) => {
     try {
@@ -310,7 +310,7 @@ export const userSlice = createSlice({
           sessionStorage.setItem('User', JSON.stringify(action.payload))
         }
       )
-      .addCase(logoutUser.fulfilled, (state, action) => {
+      .addCase(userLogout.fulfilled, (state, action) => {
         state.loading = false
         state.data = defaultUserSession
         sessionStorage.removeItem('User')

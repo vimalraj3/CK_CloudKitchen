@@ -3,6 +3,7 @@ import { CardContianer } from '../Cards/CardContianer'
 import { styled } from '@mui/material/styles'
 import Switch, { SwitchProps } from '@mui/material/Switch'
 import { NavLink } from 'react-router-dom'
+import { Logout } from '../../Logout/Logout'
 
 const SwitchBtn = styled((props: SwitchProps) => (
   <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />
@@ -90,9 +91,13 @@ export const Settings = () => {
   return (
     <CardContianer title="Settings">
       <SwitchOption />
-      {SettingsLinkData.map((val) => (
-        <SettingsLink name={val.name} to={val.to} />
-      ))}
+      <Logout>
+        <div className="text-blue-400 underline mb-2">Logout</div>
+      </Logout>
+      <SettingsLink
+        name={SettingsLinkData[1].name}
+        to={SettingsLinkData[1].to}
+      />
     </CardContianer>
   )
 }

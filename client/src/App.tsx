@@ -34,7 +34,7 @@ function App() {
   }, [])
 
   return (
-    <div className="app font-moutserrat">
+    <div className="app font-para">
       {/* <Nav /> */}
       <BrowserRouter>
         <Routes>

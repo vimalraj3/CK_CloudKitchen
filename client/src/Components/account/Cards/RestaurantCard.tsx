@@ -26,7 +26,7 @@ const RestaurantCardTitle: React.FC<IRestaurantCardTitleProps> = ({
   return (
     <>
       <div className="flex items-center">
-        <h3 className="font-bold font-cardo md:text-lg">{restaurant}</h3>
+        <h3 className="font-bold font-head md:text-lg">{restaurant}</h3>
         <p className="ml-2 text-green-500">•</p>
         <p className="ml-2 text-sm">Total: ${total}</p>
         <p className="ml-2 text-green-500">•</p>
@@ -49,7 +49,7 @@ const RestaurantCardItem: React.FC<IRestaurantCardItemProps> = ({
       <div className="flex items-center mt-2">
         <img src={image} alt={name} className="w-16 h-16 rounded-md" />
         <div className="ml-2">
-          <h3 className="font-bold font-cardo md:text-lg">{name}</h3>
+          <h3 className="font-bold font-head md:text-lg">{name}</h3>
           <p className="text-sm">${price}</p>
         </div>
         <p className="ml-auto text-sm">x{quantity}</p>
