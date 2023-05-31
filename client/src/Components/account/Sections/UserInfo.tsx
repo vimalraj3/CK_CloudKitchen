@@ -111,6 +111,7 @@ interface IUserEmail {
   email: string
   userName: string
 }
+
 const UserEmail: React.FC<IUserEmail> = ({ email, userName }) => {
   return (
     <div>
@@ -120,16 +121,38 @@ const UserEmail: React.FC<IUserEmail> = ({ email, userName }) => {
   )
 }
 
+interface IUserAddress {
+  name: string
+  address: string
+}
+
+export interface IAddress {
+  addressName: string
+  houseNo: string
+  streetName: string
+  city: string
+  state: string
+}
+
+const UserAddress: React.FC<IAddress> = ({ houseNo, streetName, city, state, addressName }) => {
+  return (
+    <div className='bg-[#F8F8F8] aspect-[3/4] max-w-sm'>
+      <h5>{addressName}</h5>
+    </div>
+  )
+}
+
+
 export const UserInfo: React.FC<IUserInfo> = ({ user }) => {
   return (
     <CardContianer title="">
       <h4 className='text-lg font-semibold'>User info</h4>
       <div className="flex md:flex-row gap-5 md:gap-6 items-center w-[90%] max-w-[600px] mt-2">
         <UserAvatar userName={user.userName || 'ck'} />
-        <div className="">
-          {user.email && <UserEmail email={user.email} userName={user.userName || 'ck'} />}
-        </div>
+        {user.email && <UserEmail email={user.email} userName={user.userName || 'ck'} />}
       </div>
+      <h4 className='text-lg font-semibold mt-3'>Address</h4>
+
     </CardContianer>
   )
 }

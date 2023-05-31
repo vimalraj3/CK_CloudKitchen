@@ -14,6 +14,10 @@ import { bodyValidator } from './decorators/bodyValidator'
 import { HydratedDocument } from 'mongoose'
 import { EmailTemplate, sendEmail } from '../utils/Mailer'
 import { decodedEmail, encodedEmail } from '../utils/encoder'
+import { isAuth } from '../middleware/isAuth'
+import { use } from './decorators'
+import UserAddress, { IUserAddress } from '../models/address.model'
+import { AppRouter } from '../AppRouter'
 
 @controller('/auth')
 class LoginController {
@@ -228,5 +232,88 @@ class LoginController {
         message: `Email verified successfully.`,
       })
     } catch (error) {}
+  }
+
+  @post('/address')
+  @bodyValidator(
+    'houseNo',
+    'addressName',
+    'streetName',
+    'city',
+    'state',
+    'zipCode'
+  )
+  @use(isAuth)
+  async postAddress(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { houseNo, addressName, streetName, city, state, zipCode } =
+        req.body
+      const user: IUser = req.user as IUser
+      const givenAddress = {
+        houseNo,
+        addressName,
+        streetName,
+        city,
+        state,
+        zipCode,
+      }
+
+      const isAddressExist: HydratedDocument<IUserAddress> | null =
+        await UserAddress.findOne({
+          user: user._id,
+        })
+
+      if (isAddressExist) {
+        let addressFound = false
+        isAddressExist.address.forEach((addr, i) => {
+          if (
+            houseNo == addr.houseNo &&
+            addressName == addr.addressName &&
+            streetName == addr.streetName &&
+            city == addr.city &&
+            state == addr.state &&
+            zipCode == addr.zipCode
+          ) {
+            addressFound = true
+          }
+        })
+
+        if (addressFound) {
+          // * return already address was added in user address
+          res.status(200).json({
+            success: false,
+            message: 'Address exists',
+            address: isAddressExist.address,
+          })
+        } else {
+          //* Find the user address document by user ID and update
+          const filter = { user: user._id }
+          const update = { $push: { address: givenAddress } }
+          const options = { new: true, upsert: true }
+          const updatedUserAddress: IUserAddress | null =
+            await UserAddress.findOneAndUpdate(filter, update, options)
+          if (!updatedUserAddress)
+            return next(new AppError('Something went wrong ', 500))
+
+          res.status(200).json({
+            success: true,
+            address: updatedUserAddress.address,
+          })
+        }
+      }
+
+      // * create a new user address
+      const newUserAddress = await UserAddress.create({
+        user: user._id,
+        address: [givenAddress],
+      })
+
+      res.status(200).json({
+        success: true,
+        address: newUserAddress.address,
+      })
+    } catch (error) {
+      next(new AppError(`Something went wrong`, 500))
+    }
   }
 }
