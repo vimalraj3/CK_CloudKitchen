@@ -3,12 +3,12 @@ import { controller, post, get, use, patch, del } from './decorators'
 import Restaurant, { IRestaurant } from '../models/Restaurant.model'
 import { AppError } from '../utils/AppError'
 import { uploaderSingle } from '../utils/Multer'
-import { generateJwtToken, verifyJwtToken } from '../utils/encoder'
 import { EmailTemplate, sendEmail } from '../utils/Mailer'
 import { isAdmin, isAuth } from '../middleware/isAuth'
 import User, { IUser } from '../models/user.model'
 import { HydratedDocument, Types } from 'mongoose'
 import { uploadSingleImageCloudinary } from '../utils/Cloudinary'
+import { decodedEmail, encodedEmail } from '../utils/encoder'
 
 /**
  * @class RestaurantController
@@ -84,7 +84,7 @@ class RestaurantController {
         restaurantPhone,
         restaurantRegion,
         restaurantHours: { open, close },
-        verifyToken: generateJwtToken(user?.email.toString()),
+        verifyToken: encodedEmail(user?.email.toString()),
         verified: false,
       })
 
@@ -125,7 +125,7 @@ class RestaurantController {
   async verifyRestaurant(req: Request, res: Response, next: NextFunction) {
     try {
       const { token } = req.params
-      const email = verifyJwtToken(token)
+      const email = decodedEmail(token)
 
       const user = await User.findOne({
         email,

@@ -1,10 +1,6 @@
 import bcrypt from 'bcrypt'
 import User, { IUser } from '../models/user.model'
-import jwt, { SignOptions } from 'jsonwebtoken'
-import { EmailTemplate, sendEmail } from './Mailer'
-import { generateJwtToken } from './encoder'
 import { HydratedDocument } from 'mongoose'
-import { AppError } from './AppError'
 
 /**
  * @description Create a new user and return it as a promise

@@ -17,7 +17,7 @@ const initialState: ToastState = {
 
 
 
-/** 
+/** *
     useToast hook is used to show toast messages in the application.
     It returns a function showToast and a component ToastComponent.
     showToast function is used to show the toast message.
