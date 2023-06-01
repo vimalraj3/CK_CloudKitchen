@@ -6,7 +6,12 @@ import {
   Action,
   isPending,
 } from '@reduxjs/toolkit'
-import { IUser, InitialUserState, UserSession } from '../../types/user.types'
+import {
+  IAddress,
+  IUser,
+  InitialUserState,
+  UserSession,
+} from '../../types/user.types'
 import { Axios } from '../../axios/config'
 import { ServerError } from '../../types/error.types'
 import { Login, SignUp } from '../../types/user.types'
@@ -33,6 +38,7 @@ const defaultUserSession: UserSession = {
   geo: {
     region: 'Location',
   },
+  address: [],
 }
 
 const initialState = {
@@ -98,7 +104,7 @@ export const signUpUser = createAsyncThunk<
     rejectValue: ServerError
   } // config
 >('user/signup', async (user: SignUp, thunkApi) => {
-  const response = await Axios.get<ServerResponse>('/auth/getuser')
+  const response = await Axios.post<ServerResponse>('/auth/signup')
     .then(async (res) => {
       let locate, lat, lon
       if (navigator.geolocation) {
@@ -116,6 +122,7 @@ export const signUpUser = createAsyncThunk<
       }
 
       let userData = res.data.user
+
       const userSession: UserSession = {
         ...defaultUserSession,
         ...userData,
@@ -193,6 +200,7 @@ export const fetchUser = createAsyncThunk<
         }
 
         let userData = res.data.user
+
         const userSession: UserSession = {
           ...defaultUserSession,
           ...userData,
@@ -206,6 +214,8 @@ export const fetchUser = createAsyncThunk<
             region: locate?.data.name || 'Your location',
           },
         }
+
+        console.log(userSession, 'user sessions in ')
 
         return userSession
       })
@@ -227,6 +237,43 @@ export const fetchUser = createAsyncThunk<
   }
 )
 
+// * user fetchUserAddress
+export const fetchUserAddress = createAsyncThunk<
+  IAddress[], // return type
+  void, // Types for function
+  {
+    rejectValue: ServerError
+    state: RootState
+    dispatch: AppDispatch
+  } // config
+>(
+  'user/fetchUserAddress',
+  async (_, thunkApi) => {
+    const response = await Axios.get('/auth/address')
+      .then(async (res) => {
+        console.log(res, 'response')
+
+        return res.data.address
+      })
+      .catch((err: ServerError) => {
+        if (isAxiosError(err)) {
+          return thunkApi.rejectWithValue(err.response?.data)
+        }
+      })
+    return response
+  },
+  {
+    condition: (args, { getState }) => {
+      const { userState } = getState()
+      const { data } = userState
+      if (data.address.length === 0) {
+        return true
+      }
+    },
+  }
+)
+
+// * Thunk action creator for forget password
 export const forgetPasswordApi = createAsyncThunk<
   ServerError, // return type
   string, // Types for function
@@ -248,6 +295,7 @@ export const forgetPasswordApi = createAsyncThunk<
   return { success: true, message: 'Email was sent to ' + email }
 })
 
+// * Thunk action creator for reset password
 export const resetPasswordApi = createAsyncThunk<
   ServerError | { success: boolean; message: string } | undefined, // return type
   { token: string; password: string }, // Types for function
@@ -314,6 +362,11 @@ export const userSlice = createSlice({
         state.loading = false
         state.data = defaultUserSession
         sessionStorage.removeItem('User')
+      })
+      .addCase(fetchUserAddress.fulfilled, (state, action) => {
+        state.loading = false
+        state.data.address = action.payload
+        sessionStorage.setItem('User', JSON.stringify(state.data))
       })
       .addMatcher(isRejectedAction, (state, action) => {
         state.loading = false

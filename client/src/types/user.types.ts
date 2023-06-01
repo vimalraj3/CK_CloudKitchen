@@ -22,6 +22,7 @@ export interface UserSession extends IUser {
   geo: {
     region: string
   }
+  address: IAddress[]
 }
 
 export interface InitialUserState {
@@ -44,4 +45,17 @@ export interface Login extends KeyString {
 
 export interface SignUp extends Login {
   userName: string
+}
+
+/**
+ *  This interface is used to validate the address form in the checkout page
+ */
+export interface IAddress {
+  zipCode: string
+  addressName: string
+  houseNo: string
+  streetName: string
+  city: string
+  state: string
+  _id: string
 }

@@ -18,6 +18,8 @@ import { isAuth } from '../middleware/isAuth'
 import { use } from './decorators'
 import UserAddress, { IAddress, IUserAddress } from '../models/address.model'
 import { AppRouter } from '../AppRouter'
+import logger from '../log/logger'
+import Restaurant from '../models/Restaurant.model'
 
 @controller('/auth')
 class LoginController {
@@ -197,7 +199,8 @@ class LoginController {
   async getUser(req: Request, res: Response) {
     const session = req.session
     const id = session?.uid || session.passport?.user
-    const user: IUser | null = await User.findById(id).lean()
+    const user: HydratedDocument<IUser> | null = await User.findById(id).lean()
+
     if (!user) {
       res.status(403).json({
         success: false,
@@ -205,9 +208,12 @@ class LoginController {
       })
       return
     }
+
+    const { _id, restaurant, __v, createdAt, ...filteredUser } = user
+
     res.status(201).json({
       success: true,
-      user,
+      user: filteredUser,
     })
   }
 
@@ -280,7 +286,7 @@ class LoginController {
 
         if (addressFound) {
           // * return already address was added in user address
-          res.status(200).json({
+          return res.status(200).json({
             success: false,
             message: 'Address exists',
             address: isAddressExist.address,
@@ -295,7 +301,7 @@ class LoginController {
           if (!updatedUserAddress)
             return next(new AppError('Something went wrong ', 500))
 
-          res.status(200).json({
+          return res.status(200).json({
             success: true,
             address: updatedUserAddress.address,
           })
@@ -322,7 +328,7 @@ class LoginController {
   async getAddress(req: Request, res: Response, next: NextFunction) {
     try {
       const userId = req.user?._id
-      const address = await UserAddress.findById(userId)
+      const address = await UserAddress.findOne({ user: userId }).lean()
 
       if (!address) {
         return next(new AppError('Address not found', 404))
@@ -403,3 +409,5 @@ class LoginController {
     }
   }
 }
+
+// * TODO test address routes

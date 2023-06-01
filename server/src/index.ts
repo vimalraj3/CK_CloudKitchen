@@ -13,6 +13,7 @@ import bodyParser from 'body-parser'
 import multer from 'multer'
 
 import { ErrorHandler } from './utils/ErrorHandler'
+import { requestLogger } from './log/requestLogger'
 import { AppRouter } from './AppRouter'
 
 import './middleware/passport.middleware'
@@ -61,6 +62,7 @@ var sess: SessionOptions = {
 //     type: ['application/x-www-form-urlencoded', 'application/json'], // Support json encoded bodies
 //   })
 // )
+app.use(requestLogger)
 app.use(bodyParser.json())
 app.use(session(sess))
 app.use(passport.initialize())

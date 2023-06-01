@@ -7,10 +7,7 @@ export const isAuth = async (
   res: Response,
   next: NextFunction
 ) => {
-  console.log(req.session, `first middleware`)
-
   const userId = req.session.uid || req.session.passport?.user
-  console.log(userId)
 
   if (!userId) {
     return next(new AppError('Login to access this resource', 400))
@@ -22,8 +19,6 @@ export const isAuth = async (
   }
 
   req.user = user
-  console.log(req.user)
-
   next()
 }
 
@@ -32,7 +27,6 @@ export const isAdmin = async (
   res: Response,
   next: NextFunction
 ) => {
-  console.log(req.user, `second middleware`)
   if (!req.user) return next(new AppError('Login to access this resource', 400))
 
   if (req.user.role !== 'admin')

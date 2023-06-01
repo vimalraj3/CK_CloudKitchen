@@ -6,6 +6,12 @@ export default {
   ],
   theme: {
     extend: {
+      colors: {
+        'success': '#5cb85c',
+        'success-300': '#5cb83c',
+        'error': '#ff3a31',
+        'primary': '#ff7e8b'
+      },
       fontFamily: {
         head: `'Poppins', sans-serif`,
         para: `'Nunito', sans-serif`
@@ -14,4 +20,3 @@ export default {
   },
   plugins: [],
 }
-
