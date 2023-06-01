@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import path from 'path'
-import { get, controller, post, patch } from './decorators'
+import { get, controller, post, patch, del } from './decorators'
 import User, { IUser } from '../models/user.model'
 import dotenv from 'dotenv'
 import { createUser } from '../utils/CreateUser'
@@ -11,12 +11,12 @@ dotenv.config({ path: path.resolve(process.cwd(), './src/.env') })
 // TODO testing login signup | Products | multithearding
 import { AppError } from '../utils/AppError'
 import { bodyValidator } from './decorators/bodyValidator'
-import { HydratedDocument } from 'mongoose'
+import { HydratedDocument, Types } from 'mongoose'
 import { EmailTemplate, sendEmail } from '../utils/Mailer'
 import { decodedEmail, encodedEmail } from '../utils/encoder'
 import { isAuth } from '../middleware/isAuth'
 import { use } from './decorators'
-import UserAddress, { IUserAddress } from '../models/address.model'
+import UserAddress, { IAddress, IUserAddress } from '../models/address.model'
 import { AppRouter } from '../AppRouter'
 
 @controller('/auth')
@@ -314,6 +314,92 @@ class LoginController {
       })
     } catch (error) {
       next(new AppError(`Something went wrong`, 500))
+    }
+  }
+
+  @get('/address')
+  @use(isAuth)
+  async getAddress(req: Request, res: Response, next: NextFunction) {
+    try {
+      const userId = req.user?._id
+      const address = await UserAddress.findById(userId)
+
+      if (!address) {
+        return next(new AppError('Address not found', 404))
+      }
+
+      res.status(200).json({
+        success: true,
+        address: address.address,
+      })
+    } catch (error) {
+      next(new AppError('Something went wrong', 500))
+    }
+  }
+
+  @del('/address/:id')
+  @use(isAuth)
+  async delAddress(req: Request, res: Response, next: NextFunction) {
+    try {
+      const userId = req.user?._id
+      let userAddress: HydratedDocument<IUserAddress> | null =
+        await UserAddress.findById(userId)
+
+      if (!userAddress) {
+        return next(new AppError('Address not found', 404))
+      }
+
+      const addressId = req.params.id
+
+      let newAddress = userAddress.address.filter(
+        (addr) => addr._id && addr._id.toString() != addressId
+      )
+
+      userAddress.address = newAddress as Types.DocumentArray<IAddress>
+
+      await userAddress.save()
+
+      res.status(200).json({
+        success: true,
+        address: userAddress.address,
+      })
+    } catch (error) {
+      next(new AppError('Something went wrong', 500))
+    }
+  }
+
+  @patch('/address/:id')
+  @use(isAuth)
+  async updateAddress(req: Request, res: Response, next: NextFunction) {
+    try {
+      const userId = req.user?._id
+      const update = req.body.update
+      const addressId = req.params.id
+
+      let userAddress: HydratedDocument<IUserAddress> | null =
+        await UserAddress.findById(userId)
+
+      if (!userAddress) {
+        return next(new AppError('Address not found', 404))
+      }
+
+      let updatedAddress = userAddress.address.map((addr) => {
+        if (addr && addr._id?.toString() === addressId) {
+          addr = update
+        }
+        return addr
+      })
+
+      userAddress.address = updatedAddress as Types.DocumentArray<IAddress>
+
+      await userAddress.save()
+
+      res.status(200).json({
+        success: true,
+        address: userAddress.address,
+      })
+    } catch (error) {
+      next(new AppError('Something went wrong', 500))
     }
   }
 }
