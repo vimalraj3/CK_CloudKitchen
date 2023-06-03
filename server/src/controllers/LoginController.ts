@@ -247,12 +247,13 @@ class LoginController {
     'streetName',
     'city',
     'state',
-    'zipCode'
+    'zipCode',
+    'area'
   )
   @use(isAuth)
   async postAddress(req: Request, res: Response, next: NextFunction) {
     try {
-      const { houseNo, addressName, streetName, city, state, zipCode } =
+      const { houseNo, addressName, streetName, city, state, zipCode, area } =
         req.body
       const user: IUser = req.user as IUser
       const givenAddress = {
@@ -262,6 +263,7 @@ class LoginController {
         city,
         state,
         zipCode,
+        area,
       }
 
       const isAddressExist: HydratedDocument<IUserAddress> | null =
@@ -278,7 +280,8 @@ class LoginController {
             streetName == addr.streetName &&
             city == addr.city &&
             state == addr.state &&
-            zipCode == addr.zipCode
+            zipCode == addr.zipCode &&
+            area == addr.area
           ) {
             addressFound = true
           }
@@ -286,7 +289,7 @@ class LoginController {
 
         if (addressFound) {
           // * return already address was added in user address
-          return res.status(200).json({
+          return res.status(400).json({
             success: false,
             message: 'Address exists',
             address: isAddressExist.address,
@@ -379,11 +382,11 @@ class LoginController {
   async updateAddress(req: Request, res: Response, next: NextFunction) {
     try {
       const userId = req.user?._id
-      const update = req.body.update
+      const { _id, ...filteredAddress } = req.body.update
       const addressId = req.params.id
 
       let userAddress: HydratedDocument<IUserAddress> | null =
-        await UserAddress.findById(userId)
+        await UserAddress.findOne({ user: userId })
 
       if (!userAddress) {
         return next(new AppError('Address not found', 404))
@@ -391,7 +394,7 @@ class LoginController {
 
       let updatedAddress = userAddress.address.map((addr) => {
         if (addr && addr._id?.toString() === addressId) {
-          addr = update
+          addr = filteredAddress
         }
         return addr
       })

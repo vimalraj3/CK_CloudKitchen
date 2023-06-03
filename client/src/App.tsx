@@ -1,30 +1,28 @@
 import './App.css'
-import { useCallback, useEffect, useRef } from 'react'
+import { Suspense, lazy, useEffect } from 'react'
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
-import Products from './Components/Products'
-import Home from './Components/home/Home'
-import Nav from './Components/Nav'
-import ProductFrom from './Components/ProductFrom'
-import Footer from './Components/footer'
+const Products = lazy(() => import('./Components/Products'))
+const Home = lazy(() => import('./Components/home/Home'))
+const ProductFrom = lazy(() => import('./Components/ProductFrom'))
+const Login = lazy(() => import('./Components/Login/Login'))
+const Footer = lazy(() => import('./Components/Footer'))
+const Signup = lazy(() => import('./Components/Signup/signup'))
+const Account = lazy(() => import('./Components/account/Account'))
+const AddRestaurant = lazy(() => import('./Components/Restaurant'))
+// const Restaurant = lazy(() => import('./Components/Restaurant/RestaurantHome'))
+import Restaurant from './Components/Restaurant/RestaurantHome'
+const ResetPassword = lazy(() => import('./Components/ResetPassword/ResetPassword'))
 
-import Login from './Components/Login/Login'
-import Signup from './Components/Signup/signup'
 
 import { useAppDispatch, useToast } from './hooks'
 import { fetchUser } from './state/slices/user.slice'
-
-import { useNavigate } from 'react-router-dom'
-import { ServerError } from './types/error.types'
-import { Account } from './Components/account/Account'
-import AddRestaurant from './Components/AddRestaurant'
-import { ResetPassword } from './Components/ResetPassword/ResetPassword'
+import PageLoading from './Components/Loading/PageLoading'
 
 function App() {
   const [showToast, ToastComponent] = useToast()
   const dispatch = useAppDispatch()
-  const promiseRef = useRef<any>(null)
 
   useEffect(() => {
     const getuser = async () => {
@@ -35,33 +33,34 @@ function App() {
 
   return (
     <div className="app font-para">
-      {/* <Nav /> */}
       <BrowserRouter>
-        <Routes>
-          <Route>
-            <Route index element={<Home showToast={showToast} />} />
-            <Route path="/login" element={<Login showToast={showToast} />} />
-            <Route path="/signup" element={<Signup showToast={showToast} />} />
-            <Route
-              path="/products"
-              element={<Products showToast={showToast} />}
-            />
-            <Route
-              path="/product/add"
-              element={<ProductFrom showToast={showToast} />}
-            />
-            <Route
-              path="/account"
-              element={<Account showToast={showToast} />}
-            />
-            <Route path="/cloudkitchen/add" element={<AddRestaurant />} />
-            <Route
-              path="/resetpassword/:token"
-              element={<ResetPassword showToast={showToast} />}
-            />
-          </Route>
-        </Routes>
-        <Footer />
+        <Suspense fallback={<PageLoading />}>
+          <Routes>
+            <Route>
+              <Route index element={<Home showToast={showToast} />} />
+              <Route path="/login" element={<Login showToast={showToast} />} />
+              <Route path="/signup" element={<Signup showToast={showToast} />} />
+              <Route
+                path="/restaurants"
+                element={<Products showToast={showToast} />}
+              />
+              <Route
+                path="/restaurant/product/add"
+                element={<ProductFrom showToast={showToast} />}
+              />
+              <Route
+                path="/account"
+                element={<Account showToast={showToast} />}
+              />
+              <Route path="/restaurant/add" element={<Restaurant />} />
+              <Route
+                path="/resetpassword/:token"
+                element={<ResetPassword showToast={showToast} />}
+              />
+            </Route>
+          </Routes>
+          <Footer />
+        </Suspense>
       </BrowserRouter>
       <ToastComponent />
     </div>

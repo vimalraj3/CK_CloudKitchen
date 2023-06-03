@@ -215,8 +215,6 @@ export const fetchUser = createAsyncThunk<
           },
         }
 
-        console.log(userSession, 'user sessions in ')
-
         return userSession
       })
       .catch((err: ServerError) => {
@@ -251,8 +249,6 @@ export const fetchUserAddress = createAsyncThunk<
   async (_, thunkApi) => {
     const response = await Axios.get('/auth/address')
       .then(async (res) => {
-        console.log(res, 'response')
-
         return res.data.address
       })
       .catch((err: ServerError) => {
@@ -376,7 +372,6 @@ export const userSlice = createSlice({
         }
       })
       .addMatcher(isPending, (state) => {
-        console.log('action  is pending')
         state.loading = true
       })
   },

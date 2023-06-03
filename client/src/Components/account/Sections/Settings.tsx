@@ -87,7 +87,7 @@ const SettingsLinkData = [
   { name: 'Switch another account', to: '/login' },
 ]
 
-export const Settings = () => {
+const Settings = () => {
   return (
     <CardContianer title="Settings">
       <SwitchOption />
@@ -101,3 +101,4 @@ export const Settings = () => {
     </CardContianer>
   )
 }
+export default Settings

@@ -27,27 +27,31 @@ const initialState: ToastState = {
     ToastComponent is a component that is used to show the toast message.
     @returns JSX.Element
 */
-export const useToast = () => {
-    const [state, setState] = React.useState<ToastState>(initialState);
+export const useToast =
+    () => {
+        const [state, setState] = React.useState<ToastState>(initialState);
 
-    const showToast: IShowToast = (message: string, type: string) => {
-        setState({ open: true, type, message, Transition: SlideTransition });
-    };
+        const showToast: IShowToast = React.useCallback(
+            (message: string, type: string) => {
+                setState({ open: true, type, message, Transition: SlideTransition });
+            }, []
+        )
+        const handleClose = () => {
+            setState({
+                ...state,
+                open: false,
+            });
+        };
 
-    const handleClose = () => {
-        setState({
-            ...state,
-            open: false,
-        });
-    };
+        const ToastComponent: React.FC<any> = React.memo(
+            () => (
+                <Snackbar open={state.open} autoHideDuration={6000} onClose={handleClose} TransitionComponent={state.Transition} anchorOrigin={{ vertical: `top`, horizontal: `center` }}>
+                    <Alert onClose={handleClose} severity={state.type as AlertColor} sx={{ width: '100%' }}>
+                        {state.message}
+                    </Alert>
+                </Snackbar >
+            )
+        )
 
-    const ToastComponent: React.FC<any> = () => (
-        <Snackbar open={state.open} autoHideDuration={6000} onClose={handleClose} TransitionComponent={state.Transition} anchorOrigin={{ vertical: `top`, horizontal: `center` }}>
-            <Alert onClose={handleClose} severity={state.type as AlertColor} sx={{ width: '100%' }}>
-                {state.message}
-            </Alert>
-        </Snackbar >
-    );
-
-    return [showToast, ToastComponent] as IReturnProps;
-};
+        return [showToast, ToastComponent] as IReturnProps;
+    } 

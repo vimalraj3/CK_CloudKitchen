@@ -5,6 +5,7 @@ export interface IAddress {
   addressName: string
   houseNo: string
   streetName: string
+  area: string
   city: string
   state: string
   zipCode: string
@@ -23,6 +24,7 @@ const AddressSchema: Schema = new Schema<IUserAddress>({
       addressName: { type: String, required: true },
       houseNo: { type: String, required: true },
       streetName: { type: String, required: true },
+      area: { type: String, required: true },
       city: { type: String, required: true },
       state: { type: String, required: true },
       zipCode: { type: String, required: true },

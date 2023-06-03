@@ -1,37 +1,23 @@
 import { IAddress, UserSession } from '../../../types/user.types'
-import { Form, Input, PasswordInput } from '../../utils/Form'
-import * as yup from 'yup'
-import { Text } from '../../utils/Text'
-import EditIcon from '@mui/icons-material/Edit'
+
 import Avatar from '@mui/material/Avatar'
 import { CardContianer } from '../Cards/CardContianer'
 import React, { memo, useCallback, useEffect, useState } from 'react'
-import { useAppDispatch, useAppSelector } from '../../../hooks'
-import { fetchUserAddress } from '../../../state/slices/user.slice'
+import { useAppDispatch, useEditUserAddress, useAppSelector, useDeleteUserAddress } from '../../../hooks'
+import { fetchUserAddress } from '../../../state/slices/address.slice'
 
 import { DialogBox } from '../../utils/DialogBox'
+import { UserAddressEditForm } from '../../Forms/AddressForms/UserAddressEditForm'
+import { IShowToast } from '../../../types/showToast.types'
+
+import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
+import { EditBtn } from '../../utils/IconBtn/EditBtn'
+import { DeleteBtn } from '../../utils/IconBtn/DeleteBtn'
 
 interface IUserInfo {
   user: UserSession
+  showToast: IShowToast
 }
-
-interface FormFields {
-  email: string
-  password: string
-  repassword: string
-}
-
-const schema = yup.object().shape({
-  email: yup.string().email('Invalid email').required('Email is required'),
-  password: yup
-    .string()
-    .required('Password is required')
-    .min(5, 'Password must be at least 5 characters'),
-  repassword: yup
-    .string()
-    .required('New Password is required')
-    .min(5, 'Password must be at least 5 characters'),
-})
 
 const UserAvatar = memo(
   ({ userName }: { userName: string }) => {
@@ -52,63 +38,6 @@ const UserAvatar = memo(
   }
 )
 
-const UserInfoForm: React.FC<IUserInfo> = ({ user }) => {
-  const handleSubmit = (data: FormFields) => {
-    console.log(data)
-  }
-  return (
-    <Form<FormFields> onSubmit={handleSubmit} schema={schema}>
-      {({ register, errors }) => {
-        return (
-          <>
-            <div>
-              <Input type="email" value={user.email} {...register('email')} />
-              {errors.email && (
-                <Text
-                  message={errors.email.message as string}
-                  color="#EF4444"
-                  size="sm"
-                />
-              )}
-            </div>
-            <div className="">
-              <PasswordInput {...register('password')} />
-              {errors.password && (
-                <Text
-                  message={errors.password.message as string}
-                  color="#EF4444"
-                  size="sm"
-                />
-              )}
-            </div>
-            <div className="">
-              <PasswordInput
-                {...register('repassword')}
-                name="repassword"
-                label="New Password"
-              />
-              {errors.repassword && (
-                <Text
-                  message={errors.repassword.message as string}
-                  color="#EF4444"
-                  size="sm"
-                />
-              )}
-            </div>
-            <Input
-              type="submit"
-              value={'Edit'}
-              role="button"
-              style={{
-                cursor: 'pointer',
-              }}
-            />
-          </>
-        )
-      }}
-    </Form>
-  )
-}
 
 
 interface IUserEmail {
@@ -127,19 +56,23 @@ const UserEmail: React.FC<IUserEmail> = memo(
   }
 )
 
-
 type IUserAddress = IAddress & {
-  editAddress: (addressId: string) => void
+  handleEvents: (addressId: string, isEditEvent: boolean) => void
 }
 
 const UserAddress: React.FC<IUserAddress> = memo(
-  ({ houseNo, streetName, city, state, addressName, zipCode, editAddress, _id }) => {
+  ({ houseNo, streetName, city, state, addressName, zipCode, handleEvents, _id }) => {
     return (
       <div className='bg-[#F8F8F8] aspect-video p-3 md:p-5 w-[90%] max-w-[250px] rounded-lg'>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center justify-between gap-2">
           <h5 className='text-lg font-medium font-head capitalize'>{`${addressName} `}</h5>
-          <div onClick={() => { editAddress(_id) }}>
-            <EditIcon fontSize='small' className='cursor-pointer' />
+          <div className='flex'>
+            <div onClick={() => handleEvents(_id, true)}>
+              <EditBtn />
+            </div>
+            <div onClick={() => handleEvents(_id, false)}>
+              <DeleteBtn />
+            </div>
           </div>
         </div>
         <div className="font-para">
@@ -152,25 +85,63 @@ const UserAddress: React.FC<IUserAddress> = memo(
   }
 )
 
+interface IAddUserAddress {
+  setDialogBoxOpen: (open: boolean) => void
+}
+const AddUserAddress: React.FC<IAddUserAddress> = memo(({ setDialogBoxOpen }) => {
+  return (
+    <div className='bg-[#F8F8F8] aspect-video p-3 md:p-5 w-[90%] max-w-[250px] rounded-lg flex justify-center items-center' >
+      <div className="cursor-pointer gap-2" onClick={() => setDialogBoxOpen(true)}>
+        <AddLocationAltIcon /> Add address
+      </div>
+    </div>
+  )
+})
 
 export const UserInfo: React.FC<IUserInfo> = memo(
-  ({ user }) => {
+  ({ user, showToast }) => {
 
     const useDispatch = useAppDispatch()
-    const userAddress = useAppSelector(state => state.userState.data.address)
-    const [dialogBoxOpen, setDialogBoxOpen] = useState(false)
+    const { address, error } = useAppSelector(state => state.addressState)
 
-    const editAddress = useCallback((addressId: string) => {
-      // * show dialog box to edit address
-      setDialogBoxOpen(true)
-      console.log('edit address', addressId);
+    const [dialogBoxOpen, setDialogBoxOpen] = useState(false)
+    const [selectedAddressId, setSelectedAddressId] = useState<string>("")
+
+    const handleDeleteAddress = useDeleteUserAddress()
+
+    const [handleSubmit] = useEditUserAddress()
+
+    const handleUserAddressEvents = useCallback((addressId: string, isEditEvent: boolean) => {
+      if (isEditEvent) {
+        setSelectedAddressId(addressId)
+        setDialogBoxOpen(true)
+      }
+      else {
+        handleDeleteAddress(addressId)
+      }
     }, [])
+
+
+    const handleSubmitEditForm = (data: IAddress) => {
+      if (selectedAddressId !== "") {
+        handleSubmit(data, false)
+        setSelectedAddressId('')
+      }
+      else {
+        handleSubmit(data, true)
+      }
+      setDialogBoxOpen(false)
+    }
 
     useEffect(() => {
       useDispatch(fetchUserAddress())
-      console.log('fecting user address');
-      console.log(userAddress);
     }, [])
+
+    useEffect(() => {
+      if (error && error.message !== "") {
+        showToast(error.message, 'error');
+      }
+    }, [error])
 
     return (
       <CardContianer title="">
@@ -182,21 +153,18 @@ export const UserInfo: React.FC<IUserInfo> = memo(
         <h4 className='text-lg font-semibold mt-7 font-head'>Address</h4>
         <div className="flex flex-col md:flex-row gap-4 md:gap-7 mt-5">
           {
-            userAddress.map((v, i) => {
+            address.map((v, i) => {
               return (
-                <UserAddress {...v} key={i} editAddress={editAddress} />
+                <UserAddress {...v} key={i} handleEvents={handleUserAddressEvents} />
               )
             })
           }
-        </div>
+          <AddUserAddress setDialogBoxOpen={setDialogBoxOpen} />
 
-        {
-          dialogBoxOpen && (
-            <DialogBox open={dialogBoxOpen} setOpen={setDialogBoxOpen} title='Change address' >
-              <p className='min-w-[450px]'>Hlleo ada</p>
-            </DialogBox>
-          )
-        }
+          <DialogBox open={dialogBoxOpen} setOpen={setDialogBoxOpen} title='Change address' btns={false} >
+            <UserAddressEditForm handleSubmit={handleSubmitEditForm} address={address.filter(addr => addr?._id === selectedAddressId)[0]} />
+          </DialogBox>
+        </div>
       </CardContianer>
     )
   }

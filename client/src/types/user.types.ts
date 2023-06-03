@@ -55,6 +55,7 @@ export interface IAddress {
   addressName: string
   houseNo: string
   streetName: string
+  area: string
   city: string
   state: string
   _id: string

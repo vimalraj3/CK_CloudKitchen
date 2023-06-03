@@ -13,7 +13,7 @@ interface IResetPassword {
   showToast: IShowToast
 }
 
-export const ResetPassword = ({ showToast }: IResetPassword) => {
+const ResetPassword = ({ showToast }: IResetPassword) => {
   const navigate = useNavigate()
   const { token } = useParams()
   const appDispatch = useAppDispatch()
@@ -109,3 +109,6 @@ export const ResetPassword = ({ showToast }: IResetPassword) => {
     </>
   )
 }
+
+
+export default ResetPassword
