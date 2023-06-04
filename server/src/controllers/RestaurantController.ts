@@ -17,7 +17,7 @@ import { decodedEmail, encodedEmail } from '../utils/encoder'
 @controller('/restaurant')
 class RestaurantController {
   @post('/new')
-  @use(uploaderSingle)
+  @use(uploaderSingle('restaurantImage'))
   @use(isAuth)
   async addRestaurant(req: Request, res: Response, next: NextFunction) {
     try {

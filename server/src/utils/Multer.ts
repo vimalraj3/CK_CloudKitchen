@@ -33,6 +33,7 @@ const upload = multer({
   },
 })
 
-export const uploaderSingle = upload.single('image')
+export const uploaderSingle = (fileName: string = 'image') =>
+  upload.single(fileName)
 
 export const uploaderMultiple = upload.array('images', 5)

@@ -29,3 +29,4 @@ export const Form = <TFormValues extends FieldValues>({
 
 export { Input } from './TextInput/TextInput'
 export { PasswordInput } from './PasswordInput/PasswordInput'
+export { TextArea } from './TextArea/TextArea'

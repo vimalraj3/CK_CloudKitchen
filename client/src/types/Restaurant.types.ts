@@ -1,5 +1,3 @@
-import AddRestaurantForm from '../Components/Forms/RestaurantForms/AddRestaurantForm'
-
 export interface IRestaurant {
   user: string
   restaurantName: string
@@ -20,5 +18,8 @@ export interface IRestaurant {
 
 export type AddRestaurantFormValidationType = Omit<
   IRestaurant,
-  'user' | 'verifed'
->
+  'user' | 'verifed' | 'restaurantHours'
+> & {
+  open: Date
+  close: Date
+}
