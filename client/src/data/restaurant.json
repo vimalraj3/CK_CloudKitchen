@@ -1,0 +1,22 @@
+{
+  "processSteps": [
+    {
+      "step": "Step 1",
+      "imageUrl": "https://res.cloudinary.com/dd39ktpmz/image/upload/v1685774327/ck/client_static/ewbruulucpju5chb8cwz.avif",
+      "title": "Create your page on CK",
+      "description": "Help users discover your place by creating a listing on CK"
+    },
+    {
+      "step": "Step 2 ",
+      "imageUrl": "https://res.cloudinary.com/dd39ktpmz/image/upload/v1685774326/ck/client_static/bduzpmb5bifabzcchcrz.avif",
+      "title": "Register for online ordering",
+      "description": "And deliver orders to million of customers with ease"
+    },
+    {
+      "step": "Step 3",
+      "imageUrl": "https://res.cloudinary.com/dd39ktpmz/image/upload/v1685774326/ck/client_static/zgfrufonxgirkwkc0agw.avif",
+      "title": "Start receiving orders online",
+      "description": "Manage orders on our partner web, web dashboard or API partners"
+    }
+  ]
+}

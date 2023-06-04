@@ -1,0 +1,12 @@
+{
+  "footerLinks": [
+    {
+      "to": "/restaurants",
+      "name": "Restaurants"
+    },
+    {
+      "to": "/restaurant/add",
+      "name": "Join with us"
+    }
+  ]
+}
