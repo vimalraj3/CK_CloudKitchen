@@ -13,30 +13,11 @@ import { IShowToast } from '../../../types/showToast.types'
 import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
 import { EditBtn } from '../../utils/IconBtn/EditBtn'
 import { DeleteBtn } from '../../utils/IconBtn/DeleteBtn'
+import { UserAvatar } from '../../utils/UserAvatar/UserAvatar'
 
 interface IUserInfo {
   user: UserSession
-  showToast: IShowToast
 }
-
-const UserAvatar = memo(
-  ({ userName }: { userName: string }) => {
-    return (
-      <>
-        <Avatar
-          sx={{
-            bgcolor: '#ff8e7b',
-            width: { xs: '50px', md: '75px' },
-            height: { xs: '50px', md: '75px' },
-            fontSize: { xs: '40px', md: '51px' },
-          }}
-        >
-          {userName[0]}
-        </Avatar>
-      </>
-    )
-  }
-)
 
 
 
@@ -49,8 +30,8 @@ const UserEmail: React.FC<IUserEmail> = memo(
   ({ email, userName }) => {
     return (
       <div>
-        <h4 className='text-lg font-medium font-head'>{email}</h4>
-        <p className='text-md font-thin capitalize'>{userName}</p>
+        <h4 className='text-md md:text-lg font-medium font-head'>{email}</h4>
+        <p className='text-sm md:text-md font-thin capitalize'>{userName}</p>
       </div>
     )
   }
@@ -99,10 +80,10 @@ const AddUserAddress: React.FC<IAddUserAddress> = memo(({ setDialogBoxOpen }) =>
 })
 
 export const UserInfo: React.FC<IUserInfo> = memo(
-  ({ user, showToast }) => {
+  ({ user }) => {
 
     const useDispatch = useAppDispatch()
-    const { address, error } = useAppSelector(state => state.addressState)
+    const { address } = useAppSelector(state => state.addressState)
 
     const [dialogBoxOpen, setDialogBoxOpen] = useState(false)
     const [selectedAddressId, setSelectedAddressId] = useState<string>("")
@@ -137,35 +118,34 @@ export const UserInfo: React.FC<IUserInfo> = memo(
       useDispatch(fetchUserAddress())
     }, [])
 
-    useEffect(() => {
-      if (error && error.message !== "") {
-        showToast(error.message, 'error');
-      }
-    }, [error])
+
+    console.log(user);
 
     return (
-      <CardContianer title="">
-        <h4 className='text-lg font-semibold font-head'>User info</h4>
-        <div className="flex md:flex-row gap-5 md:gap-6 items-center w-[90%] max-w-[600px] mt-5">
-          <UserAvatar userName={user.userName || 'ck'} />
-          {user.email && <UserEmail email={user.email} userName={user.userName || 'ck'} />}
-        </div>
-        <h4 className='text-lg font-semibold mt-7 font-head'>Address</h4>
-        <div className="flex flex-col md:flex-row gap-4 md:gap-7 mt-5">
-          {
-            address.map((v, i) => {
-              return (
-                <UserAddress {...v} key={i} handleEvents={handleUserAddressEvents} />
-              )
-            })
-          }
-          <AddUserAddress setDialogBoxOpen={setDialogBoxOpen} />
+      <div id={'userInfo'}>
+        <CardContianer title="">
+          <h4 className='text-lg font-semibold font-head'>User info</h4>
+          <div className="flex md:flex-row gap-3 md:gap-6 items-center w-[90%] max-w-[600px] mt-5">
+            <UserAvatar userName={user.userName || 'ck'} src={user.avatar} />
+            {user.email && <UserEmail email={user.email} userName={user.userName || 'ck'} />}
+          </div>
+          <h4 className='text-lg font-semibold mt-7 font-head'>Address</h4>
+          <div className="flex flex-col md:flex-row gap-4 md:gap-7 mt-5">
+            {
+              address.map((v, i) => {
+                return (
+                  <UserAddress {...v} key={i} handleEvents={handleUserAddressEvents} />
+                )
+              })
+            }
+            <AddUserAddress setDialogBoxOpen={setDialogBoxOpen} />
 
-          <DialogBox open={dialogBoxOpen} setOpen={setDialogBoxOpen} title='Change address' btns={false} >
-            <UserAddressEditForm handleSubmit={handleSubmitEditForm} address={address.filter(addr => addr?._id === selectedAddressId)[0]} />
-          </DialogBox>
-        </div>
-      </CardContianer>
+            <DialogBox open={dialogBoxOpen} setOpen={setDialogBoxOpen} title='Change address' btns={false} >
+              <UserAddressEditForm handleSubmit={handleSubmitEditForm} address={address.filter(addr => addr?._id === selectedAddressId)[0]} />
+            </DialogBox>
+          </div>
+        </CardContianer>
+      </div>
     )
   }
 )

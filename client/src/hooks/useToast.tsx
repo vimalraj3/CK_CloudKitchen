@@ -45,7 +45,7 @@ export const useToast =
 
         const ToastComponent: React.FC<any> = React.memo(
             () => (
-                <Snackbar open={state.open} autoHideDuration={6000} onClose={handleClose} TransitionComponent={state.Transition} anchorOrigin={{ vertical: `top`, horizontal: `center` }}>
+                <Snackbar open={state.open} autoHideDuration={1500} onClose={handleClose} TransitionComponent={state.Transition} anchorOrigin={{ vertical: `top`, horizontal: `center` }}>
                     <Alert onClose={handleClose} severity={state.type as AlertColor} sx={{ width: '100%' }}>
                         {state.message}
                     </Alert>

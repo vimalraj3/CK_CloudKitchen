@@ -51,132 +51,134 @@ export const AddRestaurantForm: React.FC<IUserAddressEditForm> = ({ restaurant, 
 
 
     return (
-        <Form<RestaurantFormFields> defaultValues={restaurant?.restaurantCity ? restaurant : defaultRestaurant} onSubmit={handleSubmit} schema={RestaurantSchema}>
-            {({ register, errors }) => {
-                return (
-                    <>
-                        <div>
-                            <Input aria-label={'Restaurant name'} label="Restaurant name"  {...register('restaurantName')} />
-                            {errors.restaurantName && (
-                                <Text
-                                    message={errors.restaurantName.message as string}
-                                    color="#EF4444"
-                                    size="sm"
+        <div className="w-[100%]">
+            <Form<RestaurantFormFields> defaultValues={restaurant?.restaurantCity ? restaurant : defaultRestaurant} onSubmit={handleSubmit} schema={RestaurantSchema}>
+                {({ register, errors }) => {
+                    return (
+                        <>
+                            <div>
+                                <Input aria-label={'Restaurant name'} label="Restaurant name"  {...register('restaurantName')} />
+                                {errors.restaurantName && (
+                                    <Text
+                                        message={errors.restaurantName.message as string}
+                                        color="#EF4444"
+                                        size="sm"
+                                    />
+                                )}
+                            </div>
+                            <div>
+                                <TextArea
+                                    aria-label={'restaurant Description  '} label="Restaurant description"   {...register('restaurantDescription')}
                                 />
-                            )}
-                        </div>
-                        <div>
-                            <TextArea
-                                aria-label={'restaurant Description  '} label="Restaurant description"   {...register('restaurantDescription')}
-                            />
-                            {errors.restaurantDescription && (
-                                <Text
-                                    message={errors.restaurantDescription.message as string}
-                                    color="#EF4444"
-                                    size="sm"
-                                />
-                            )}
-                        </div>
-                        <div>
-                            <Input aria-label={'Phone Number'} label="Phone number"  {...register('restaurantPhone')} />
-                            {errors.restaurantPhone && (
-                                <Text
-                                    message={errors.restaurantPhone.message as string}
-                                    color="#EF4444"
-                                    size="sm"
-                                />
-                            )}
-                        </div>
-                        <div className="flex flex-col md:flex-row gap-4">
-                            <TimePicker aria-label={'Open timing'} label="Open timing"  {...register('open')} />
-                            {errors.open && (
-                                <Text
-                                    message={errors.open.message as string}
-                                    color="#EF4444"
-                                    size="sm"
-                                />
-                            )}
-                            <TimePicker aria-label={'Close timing'} label="Close timing"  {...register('close')} />
-                            {errors.close && (
-                                <Text
-                                    message={errors.close.message as string}
-                                    color="#EF4444"
-                                    size="sm"
-                                />
-                            )}
-                        </div>
-                        <div>
-                            <FileInput aria-label={'restaurant image  '} label="Restaurant image"   {...register('restaurantImage')} />
-                            {errors.restaurantImage && (
-                                <Text
-                                    message={errors.restaurantImage.message as string}
-                                    color="#EF4444"
-                                    size="sm"
-                                />
-                            )}
-                        </div>
-                        <div>
-                            <Input aria-label={'Street'} label="Street name"   {...register('restaurantAddress')} />
-                            {errors.restaurantAddress && (
-                                <Text
-                                    message={errors.restaurantAddress.message as string}
-                                    color="#EF4444"
-                                    size="sm"
-                                />
-                            )}
-                        </div>
-                        <div>
-                            <Input aria-label={'City'} label="City"  {...register('restaurantCity')} />
-                            {errors.restaurantCity && (
-                                <Text
-                                    message={errors.restaurantCity.message as string}
-                                    color="#EF4444"
-                                    size="sm"
-                                />
-                            )}
-                        </div>
-                        <div>
-                            <Input aria-label={'Region'} label="Region"  {...register('restaurantRegion')} />
-                            {errors.restaurantRegion && (
-                                <Text
-                                    message={errors.restaurantRegion.message as string}
-                                    color="#EF4444"
-                                    size="sm"
-                                />
-                            )}
-                        </div>
-                        <div>
-                            <Input aria-label={'State'} label="State"  {...register('restaurantState')} />
-                            {errors.restaurantState && (
-                                <Text
-                                    message={errors.restaurantState.message as string}
-                                    color="#EF4444"
-                                    size="sm"
-                                />
-                            )}
-                        </div>
-                        <div>
-                            <Input aria-label={'Zip code'} label="Zip code"  {...register('restaurantZip')} />
-                            {errors.restaurantZip && (
-                                <Text
-                                    message={errors.restaurantZip.message as string}
-                                    color="#EF4444"
-                                    size="sm"
-                                />
-                            )}
-                        </div>
+                                {errors.restaurantDescription && (
+                                    <Text
+                                        message={errors.restaurantDescription.message as string}
+                                        color="#EF4444"
+                                        size="sm"
+                                    />
+                                )}
+                            </div>
+                            <div>
+                                <Input aria-label={'Phone Number'} label="Phone number"  {...register('restaurantPhone')} />
+                                {errors.restaurantPhone && (
+                                    <Text
+                                        message={errors.restaurantPhone.message as string}
+                                        color="#EF4444"
+                                        size="sm"
+                                    />
+                                )}
+                            </div>
+                            <div className="flex flex-col md:flex-row gap-4">
+                                <TimePicker aria-label={'Open timing'} label="Open timing"  {...register('open')} />
+                                {errors.open && (
+                                    <Text
+                                        message={errors.open.message as string}
+                                        color="#EF4444"
+                                        size="sm"
+                                    />
+                                )}
+                                <TimePicker aria-label={'Close timing'} label="Close timing"  {...register('close')} />
+                                {errors.close && (
+                                    <Text
+                                        message={errors.close.message as string}
+                                        color="#EF4444"
+                                        size="sm"
+                                    />
+                                )}
+                            </div>
+                            <div>
+                                <FileInput aria-label={'restaurant image  '} label="Restaurant image"   {...register('restaurantImage')} />
+                                {errors.restaurantImage && (
+                                    <Text
+                                        message={errors.restaurantImage.message as string}
+                                        color="#EF4444"
+                                        size="sm"
+                                    />
+                                )}
+                            </div>
+                            <div>
+                                <Input aria-label={'Street'} label="Street name"   {...register('restaurantAddress')} />
+                                {errors.restaurantAddress && (
+                                    <Text
+                                        message={errors.restaurantAddress.message as string}
+                                        color="#EF4444"
+                                        size="sm"
+                                    />
+                                )}
+                            </div>
+                            <div>
+                                <Input aria-label={'City'} label="City"  {...register('restaurantCity')} />
+                                {errors.restaurantCity && (
+                                    <Text
+                                        message={errors.restaurantCity.message as string}
+                                        color="#EF4444"
+                                        size="sm"
+                                    />
+                                )}
+                            </div>
+                            <div>
+                                <Input aria-label={'Region'} label="Region"  {...register('restaurantRegion')} />
+                                {errors.restaurantRegion && (
+                                    <Text
+                                        message={errors.restaurantRegion.message as string}
+                                        color="#EF4444"
+                                        size="sm"
+                                    />
+                                )}
+                            </div>
+                            <div>
+                                <Input aria-label={'State'} label="State"  {...register('restaurantState')} />
+                                {errors.restaurantState && (
+                                    <Text
+                                        message={errors.restaurantState.message as string}
+                                        color="#EF4444"
+                                        size="sm"
+                                    />
+                                )}
+                            </div>
+                            <div>
+                                <Input aria-label={'Zip code'} label="Zip code"  {...register('restaurantZip')} />
+                                {errors.restaurantZip && (
+                                    <Text
+                                        message={errors.restaurantZip.message as string}
+                                        color="#EF4444"
+                                        size="sm"
+                                    />
+                                )}
+                            </div>
 
-                        <Input
-                            type="submit"
-                            value={'Create restaurant'}
-                            role="button"
-                            style={{
-                                cursor: 'pointer',
-                            }}
-                        />
-                    </>
-                )
-            }}
-        </Form>
+                            <Input
+                                type="submit"
+                                value={'Create restaurant'}
+                                role="button"
+                                style={{
+                                    cursor: 'pointer',
+                                }}
+                            />
+                        </>
+                    )
+                }}
+            </Form>
+        </div>
     )
 }

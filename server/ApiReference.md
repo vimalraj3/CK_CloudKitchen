@@ -60,14 +60,14 @@ Order controller handler payment apis
 
 Restaurant controller handler restaurant apis
 
-| Method   | Route                    | req.body                                                                                                                                                  | description                                  |
-| -------- | ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------- |
-| `post`   | restaurant/new           | image, restaurantName, restaurantDescription, restaurantAddress,restaurantCity,restaurantState,restaurantZip,restaurantPhone,open,close,restaurantRegion, | Create a new restaurant                      |
-| `post`   | restaurant/verify/:token | null                                                                                                                                                      | verify a new restaurant                      |
-| `get`    | restaurant/:id           | null                                                                                                                                                      | return a restaurant                          |
-| `get`    | restaurant/admin/:id     | null                                                                                                                                                      | return a restaurant info for admin dashboard |
-| `patch`  | restaurant/:id           | update                                                                                                                                                    | update a restaurant                          |
-| `delete` | restaurant/:id           | null                                                                                                                                                      | `delete` a restaurant                        |
-| `get`    | restaurant/all           | null                                                                                                                                                      | return all verified restaurants              |
+| Method   | Route                     | req.body                                                                                                                                                  | description                                  |
+| -------- | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------- |
+| `post`   | restaurant/new            | image, restaurantName, restaurantDescription, restaurantAddress,restaurantCity,restaurantState,restaurantZip,restaurantPhone,open,close,restaurantRegion, | Create a new restaurant                      |
+| `post`   | restaurant/verify/:token  | null                                                                                                                                                      | verify a new restaurant                      |
+| `get`    | restaurant/:id            | null                                                                                                                                                      | return a restaurant                          |
+| `get`    | restaurant/admin/byuserid | null                                                                                                                                                      | return a restaurant info for admin dashboard |
+| `patch`  | restaurant/admin/update   | update                                                                                                                                                    | update a restaurant                          |
+| `delete` | restaurant/:id            | null                                                                                                                                                      | `delete` a restaurant                        |
+| `get`    | restaurant/all            | null                                                                                                                                                      | return all verified restaurants              |
 
 ---

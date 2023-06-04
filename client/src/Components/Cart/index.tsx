@@ -1,5 +1,5 @@
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import { ICart } from "../../../types/user.types";
+import { ICart } from "../../types/user.types";
 import { NavLink } from "react-router-dom";
 
 interface ICartProps {

@@ -19,13 +19,15 @@ const orders: IRestaurantCardProps = {
 
 export const UserOrders = () => {
   return (
-    <CardContianer title="Orders">
-      <div className="flex flex-col">
-        {/* {orders.map((order) => ( */}
-        <RestaurantCard {...orders} />
-        {/* ))} */}
-      </div>
-    </CardContianer>
+    <div id={'userOrders'}>
+      <CardContianer title="Orders">
+        <div className="flex flex-col">
+          {/* {orders.map((order) => ( */}
+          <RestaurantCard {...orders} />
+          {/* ))} */}
+        </div>
+      </CardContianer>
+    </div>
   )
 }
 

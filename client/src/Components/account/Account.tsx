@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useAppSelector } from '../../hooks'
 import { IShowToast } from '../../types/showToast.types'
 import { InitialUserState } from '../../types/user.types'
@@ -13,7 +13,12 @@ interface IAccountProps {
 }
 
 const Account: React.FC<IAccountProps> = ({ showToast }) => {
-  const user: InitialUserState = useAppSelector((state) => state.userState)
+  const { data, error }: InitialUserState = useAppSelector((state) => state.userState)
+
+  useEffect(() => {
+    showToast(error?.message || '', 'error')
+  }, [error])
+
   return (
     <div>
       <Nav dark bgColor="#f8f8f8" />
@@ -21,7 +26,7 @@ const Account: React.FC<IAccountProps> = ({ showToast }) => {
         <h3 className="text-lg md:text-4xl text-black font-bold font-head">
           Account
         </h3>
-        <UserInfo user={user.data} showToast={showToast} />
+        <UserInfo user={data} />
         <UserOrders />
         <Settings />
       </Container>

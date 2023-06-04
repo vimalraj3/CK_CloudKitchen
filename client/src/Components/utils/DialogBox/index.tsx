@@ -13,10 +13,11 @@ interface IProps {
   children: React.ReactNode
   cancelBtnText?: string
   successBtnText?: string
+  handleConfirm?: () => void
   btns?: boolean
 }
 export const DialogBox: React.FC<IProps> = React.memo(
-  ({ open, setOpen, title, children, cancelBtnText = "Cancel", successBtnText = "confirm", btns = true }) => {
+  ({ open, setOpen, title, children, cancelBtnText = "Cancel", successBtnText = "confirm", btns = true, handleConfirm }) => {
     // const [isOpen, setIsOpen] = React.useState(open || false)
 
     const handleClose = () => {
@@ -50,10 +51,13 @@ export const DialogBox: React.FC<IProps> = React.memo(
                 <Button variant='outlined' sx={{
                   color: (theme) => theme.palette.error.main,
                   borderColor: (theme) => theme.palette.error.dark,
-                }} >{cancelBtnText}</Button>
+                }} onClick={handleClose} >{cancelBtnText}</Button>
                 <Button variant='outlined' sx={{
                   color: (theme) => theme.palette.success.main,
                   borderColor: (theme) => theme.palette.success.dark,
+                }} onClick={() => {
+                  handleConfirm && handleConfirm();
+                  handleClose()
                 }}  >{successBtnText}</Button>
               </DialogActions>
             </>

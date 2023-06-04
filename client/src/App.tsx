@@ -14,6 +14,7 @@ const AddRestaurant = lazy(() => import('./Components/Restaurant'))
 // const Restaurant = lazy(() => import('./Components/Restaurant/RestaurantHome'))
 import Restaurant from './Components/Restaurant/RestaurantHome'
 const ResetPassword = lazy(() => import('./Components/ResetPassword/ResetPassword'))
+const RestauranProfile = lazy(() => import('./Components/Restaurant/RestaurantProfile'))
 
 
 import { useAppDispatch, useToast } from './hooks'
@@ -52,7 +53,11 @@ function App() {
                 path="/account"
                 element={<Account showToast={showToast} />}
               />
-              <Route path="/restaurant/add" element={<Restaurant />} />
+              <Route
+                path="/restaurant/:id"
+                element={<RestauranProfile />}
+              />
+              <Route path="/restaurant/add" element={<Restaurant showToast={showToast} />} />
               <Route
                 path="/resetpassword/:token"
                 element={<ResetPassword showToast={showToast} />}

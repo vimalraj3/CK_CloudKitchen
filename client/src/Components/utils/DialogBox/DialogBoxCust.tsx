@@ -12,8 +12,8 @@ export interface DialogTitleProps {
 
 export const DialogBoxCust = styled(Dialog)(({ theme }) => ({
     '& .MuiDialogContent-root': {
-        padding: theme.spacing(2),
-        minWidth: '300px',
+        padding: theme.spacing(1),
+        minWidth: '250px',
     },
     '& .MuiDialogActions-root': {
         padding: theme.spacing(1),
@@ -24,7 +24,7 @@ export const DialogBoxCustTitle = (props: DialogTitleProps) => {
     const { children, onClose, ...other } = props
 
     return (
-        <DialogTitle sx={{ m: 0, p: 2 }} {...other}>
+        <DialogTitle sx={{ m: 0, p: 2 }} {...other} >
             <div className="flex items-center justify-between">
                 {children}
                 {onClose ? (

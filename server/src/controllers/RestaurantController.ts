@@ -9,6 +9,7 @@ import User, { IUser } from '../models/user.model'
 import { HydratedDocument, Types } from 'mongoose'
 import { uploadSingleImageCloudinary } from '../utils/Cloudinary'
 import { decodedEmail, encodedEmail } from '../utils/encoder'
+import { stringToDate } from '../utils/StringToDate'
 
 /**
  * @class RestaurantController
@@ -17,7 +18,7 @@ import { decodedEmail, encodedEmail } from '../utils/encoder'
 @controller('/restaurant')
 class RestaurantController {
   @post('/new')
-  @use(uploaderSingle('restaurantImage'))
+  @use(uploaderSingle)
   @use(isAuth)
   async addRestaurant(req: Request, res: Response, next: NextFunction) {
     try {
@@ -35,7 +36,13 @@ class RestaurantController {
         return next(new AppError('Please login to add a restaurant', 400))
       }
 
-      const user = req.user
+      const ReqUser = req.user
+
+      if (ReqUser.restaurant) {
+        console.log(ReqUser.restaurant, 'listed already')
+
+        return next(new AppError('You already list a restaurant', 404))
+      }
       const {
         restaurantName,
         restaurantDescription,
@@ -72,8 +79,11 @@ class RestaurantController {
 
       if (!secure_url) return next(new AppError('Something went wrong', 500))
 
-      const restaurant = new Restaurant<IRestaurant>({
-        user: user?._id.toString(),
+      const openTime = stringToDate(open)
+      const closeTime = stringToDate(close)
+
+      const restaurant = await Restaurant.create({
+        user: ReqUser?._id.toString(),
         restaurantName,
         restaurantDescription,
         restaurantImage: [secure_url],
@@ -83,8 +93,8 @@ class RestaurantController {
         restaurantZip,
         restaurantPhone,
         restaurantRegion,
-        restaurantHours: { open, close },
-        verifyToken: encodedEmail(user?.email.toString()),
+        restaurantHours: { open: openTime, close: closeTime },
+        verifyToken: encodedEmail(ReqUser?.email.toString()),
         verified: false,
       })
 
@@ -100,23 +110,22 @@ class RestaurantController {
 
       console.log(restaurant, 'restaurant')
 
-      const restaurantRequest = restaurant.save()
-      const userRestaurantIdLinkRequest = User.findByIdAndUpdate(
-        user._id,
+      const userRestaurantIdLinkRequest = await User.findByIdAndUpdate(
+        ReqUser._id,
         { restaurant: restaurant._id, role: 'admin' },
         { runValidators: false }
       )
 
-      const [restaurantSavedData, updatedUser] = await Promise.all([
-        restaurantRequest,
-        userRestaurantIdLinkRequest,
-      ])
+      const { user, ...restaurantFiltered } = restaurant.toObject()
 
       res.status(200).json({
         message: 'Restaurant added successfully',
-        restaurantSavedData,
+        restaurant: restaurantFiltered,
+        success: true,
       })
     } catch (error: any) {
+      console.log(error)
+
       next(new AppError(`Something went wrong`, 500))
     }
   }
@@ -171,7 +180,7 @@ class RestaurantController {
     }
   }
 
-  @get('/admin/:id')
+  @get('/admin/byuserid')
   @use(isAdmin)
   @use(isAuth)
   async getRestaurantAdminById(
@@ -180,12 +189,17 @@ class RestaurantController {
     next: NextFunction
   ) {
     try {
-      const { id } = req.params
-      const restaurant: HydratedDocument<IRestaurant> | null =
-        await Restaurant.findById(id).populate('orders')
-      console.log('restaurant controllers 185:', restaurant, 'restaurant')
+      const userId = req.user?._id
+      let data: HydratedDocument<IRestaurant> | null = await Restaurant.findOne(
+        { user: userId }
+      )
+        .populate('orders')
+        .lean()
 
-      if (!restaurant) return next(new AppError('No restaurant found', 404))
+      if (!data) return next(new AppError('No restaurant found', 404))
+
+      let { user, ...restaurant } = data
+
       res.status(200).json({
         success: true,
         restaurant,
@@ -195,29 +209,27 @@ class RestaurantController {
     }
   }
 
-  @patch('/:id')
+  @patch('/admin/update')
   @use(isAdmin)
   @use(isAuth)
   async updateRestaurantById(req: Request, res: Response, next: NextFunction) {
     try {
-      const { id } = req.params
       const { update } = req.body
-
       if (!update)
         return next(new AppError('Please provide update object', 400))
 
       if (!req.user)
         return next(new AppError(`Login to access this resource`, 401))
 
-      const restaurant: HydratedDocument<IRestaurant> | null =
+      const data: HydratedDocument<IRestaurant> | null =
         await Restaurant.findOneAndUpdate(
-          { _id: id, restaurant: req.user.restaurant },
+          { restaurant: req.user.restaurant },
           update,
           { new: true }
-        )
+        ).lean()
 
-      if (!restaurant) return next(new AppError(`No Restaurant found`, 404))
-
+      if (!data) return next(new AppError(`No Restaurant found`, 404))
+      const { user, ...restaurant } = data
       res.status(200).json({ success: true, restaurant })
     } catch (error) {
       return next(new AppError(`Something went wrong`, 500))

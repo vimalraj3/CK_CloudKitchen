@@ -1,5 +1,4 @@
 export interface IRestaurant {
-  user: string
   restaurantName: string
   restaurantDescription: string
   restaurantImage: string[]
@@ -14,11 +13,12 @@ export interface IRestaurant {
     close: Date
   }
   verifed: boolean
+  _id: string
 }
 
 export type AddRestaurantFormValidationType = Omit<
   IRestaurant,
-  'user' | 'verifed' | 'restaurantHours'
+  'user' | 'verifed' | 'restaurantHours' | '_id'
 > & {
   open: Date
   close: Date

@@ -64,7 +64,7 @@ function index({ showToast }: ILoginProps) {
   }
 
   const handleGoogleLogin = () => {
-    window.open(`${import.meta.env.VITE_REACT_SER_URL}/api/v1/google`, '_self')
+    window.open(`${import.meta.env.VITE_REACT_SER_URL}/auth/google`, '_self')
   }
 
   return (
@@ -78,7 +78,7 @@ function index({ showToast }: ILoginProps) {
                 <>
                   <div>
                     <Input
-                      type="text"
+                      type="email"
                       {...register('email', { required: true, maxLength: 30 })}
                     />
                     {errors.email && (

@@ -89,16 +89,16 @@ const SettingsLinkData = [
 
 const Settings = () => {
   return (
-    <CardContianer title="Settings">
-      <SwitchOption />
-      <Logout>
-        <div className="text-blue-400 underline mb-2">Logout</div>
-      </Logout>
-      <SettingsLink
-        name={SettingsLinkData[1].name}
-        to={SettingsLinkData[1].to}
-      />
-    </CardContianer>
+    <div id={'userSettings'}>
+      <CardContianer title="Settings">
+        <SwitchOption />
+        <Logout />
+        <SettingsLink
+          name={SettingsLinkData[1].name}
+          to={SettingsLinkData[1].to}
+        />
+      </CardContianer>
+    </div>
   )
 }
 export default Settings

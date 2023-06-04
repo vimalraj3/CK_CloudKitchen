@@ -1,91 +1,22 @@
-import React from 'react'
-import Button from '@mui/material/Button'
-import Dialog from '@mui/material/Dialog'
-import DialogActions from '@mui/material/DialogActions'
-import DialogContent from '@mui/material/DialogContent'
-import DialogTitle from '@mui/material/DialogTitle'
-import Slide from '@mui/material/Slide'
-import { TransitionProps } from '@mui/material/transitions'
+import { useState } from 'react'
 import { useAppDispatch } from '../../hooks'
+import { LogoutDialogBox } from './LogoutDialogBox'
+import { userLogout } from '../../state/slices/user.slice'
+import { useNavigate } from 'react-router-dom'
 
-interface DialogBoxProps {
-  children: React.ReactNode
-}
-
-interface LogoutProps extends DialogBoxProps {}
-
-const Transition = React.forwardRef(function Transition(
-  props: TransitionProps & {
-    children: React.ReactElement<any, any>
-  },
-  ref: React.Ref<unknown>
-) {
-  return <Slide direction="up" ref={ref} {...props} />
-})
-
-const DialogBox: React.FC<DialogBoxProps> = ({ children }) => {
-  const [open, setOpen] = React.useState<boolean>(false)
-
-  const handleClose = () => {
-    setOpen(false)
-  }
-
+export const Logout: React.FC = () => {
+  const dispatch = useAppDispatch()
+  const navigate = useNavigate()
+  const [open, setOpen] = useState(false)
   const handleConfirm = async () => {
     setOpen(false)
+    await dispatch(userLogout())
+    navigate(-1)
   }
-
   return (
     <div>
-      <div onClick={() => setOpen(true)} className="cursor-pointer">
-        {children}
-      </div>
-      <Dialog
-        open={open}
-        TransitionComponent={Transition}
-        keepMounted
-        onClose={handleClose}
-        aria-describedby="Logout dialog"
-      >
-        <DialogTitle
-          sx={{
-            fontFamily: 'poppins',
-          }}
-        >
-          {`Logout`}
-        </DialogTitle>
-        <DialogContent>
-          <p className="text-md font-bold font-head text-red-300">
-            Confirm to logout
-          </p>
-        </DialogContent>
-        <DialogActions
-          sx={{
-            padding: ' 0 1rem 1rem 1rem',
-          }}
-        >
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button
-            onClick={handleConfirm}
-            variant="contained"
-            sx={{
-              bgcolor: '#ff7e8b',
-              ':hover': {
-                bgcolor: '#ff7e8b',
-              },
-            }}
-          >
-            Confirm
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </div>
-  )
-}
-
-export const Logout: React.FC<LogoutProps> = ({ children }) => {
-  return (
-    <div>
-      <DialogBox>{children}</DialogBox>
+      <div className="text-blue-400 underline mb-2 cursor-pointer" onClick={() => { setOpen(true) }}>Logout</div>
+      <LogoutDialogBox open={open} setOpen={setOpen} handleConfirm={handleConfirm} />
     </div>
   )
 }

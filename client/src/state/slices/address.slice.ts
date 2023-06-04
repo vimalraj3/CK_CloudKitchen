@@ -59,10 +59,11 @@ export const fetchUserAddress = createAsyncThunk<
   {
     condition: (args, { getState }) => {
       const { addressState } = getState()
-      const { address } = addressState
-      if (address.length === 0) {
+      const { address, loading } = addressState
+      if (address.length == 0) {
         return true
       }
+      return false
     },
   }
 )

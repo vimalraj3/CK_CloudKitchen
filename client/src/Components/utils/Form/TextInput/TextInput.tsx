@@ -12,7 +12,7 @@ export const Input = memo(
     const { name, role, label } = props
 
     return (
-      <div>
+      <div >
         {role == 'button' ? (
           <></>
         ) : (
@@ -26,6 +26,7 @@ export const Input = memo(
           id={name}
           placeholder={`Enter your ${label || name}`}
           ref={ref}
+          name={name}
           {...props}
           className="py-2 mt-1 px-2 w-[100%] bg-[#f8f8f8] border-[#9c9c9c] border-2 rounded-md focus:outline-none text-sm font-para"
         />
