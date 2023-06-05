@@ -10,6 +10,8 @@ import { HydratedDocument, Types } from 'mongoose'
 import { uploadSingleImageCloudinary } from '../utils/Cloudinary'
 import { decodedEmail, encodedEmail } from '../utils/encoder'
 import { stringToDate } from '../utils/StringToDate'
+import logger from '../log/logger'
+import { log } from 'winston'
 
 /**
  * @class RestaurantController
@@ -18,7 +20,7 @@ import { stringToDate } from '../utils/StringToDate'
 @controller('/restaurant')
 class RestaurantController {
   @post('/new')
-  @use(uploaderSingle)
+  @use(uploaderSingle('restaurantImage'))
   @use(isAuth)
   async addRestaurant(req: Request, res: Response, next: NextFunction) {
     try {
@@ -54,6 +56,7 @@ class RestaurantController {
         open,
         close,
         restaurantRegion,
+        priceRange,
       } = body
 
       const requiredFields = [
@@ -67,6 +70,7 @@ class RestaurantController {
         'open',
         'close',
         'restaurantRegion',
+        'priceRange',
       ]
 
       for (const field of requiredFields) {
@@ -96,6 +100,7 @@ class RestaurantController {
         restaurantHours: { open: openTime, close: closeTime },
         verifyToken: encodedEmail(ReqUser?.email.toString()),
         verified: false,
+        priceRange,
       })
 
       sendEmail(
@@ -165,17 +170,42 @@ class RestaurantController {
     }
   }
 
+  @get('/all')
+  async getAllRestaurants(req: Request, res: Response, next: NextFunction) {
+    try {
+      const restaurants = await Restaurant.find({}).lean()
+      console.log(restaurants, 'all restaurants')
+
+      if (!restaurants) return next(new AppError('No restaurants found', 404))
+      res.status(200).json({
+        success: true,
+        restaurants,
+      })
+    } catch (error) {
+      console.log(error, 'error logged')
+
+      return next(new AppError(`Something went wrong`, 500))
+    }
+  }
+
   @get('/:id')
   async getRestaurantById(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params
-      const restaurant = await Restaurant.findById(id)
-      if (!restaurant) return next(new AppError('No restaurant found', 404))
+      const data = await Restaurant.findById(id)
+        .populate(['foods', 'reviews'])
+        .lean()
+      if (!data) return next(new AppError('No restaurant found', 404))
+      const { foods, user, verifyToken, ...restaurant } = data
+      console.log(foods, 'foods in server')
+
       res.status(200).json({
         success: true,
         restaurant,
+        food: foods,
       })
     } catch (error) {
+      console.log(error)
       return next(new AppError(`Something went wrong`, 500))
     }
   }
@@ -222,11 +252,9 @@ class RestaurantController {
         return next(new AppError(`Login to access this resource`, 401))
 
       const data: HydratedDocument<IRestaurant> | null =
-        await Restaurant.findOneAndUpdate(
-          { restaurant: req.user.restaurant },
-          update,
-          { new: true }
-        ).lean()
+        await Restaurant.findOneAndUpdate({ user: req.user._id }, update, {
+          new: true,
+        }).lean()
 
       if (!data) return next(new AppError(`No Restaurant found`, 404))
       const { user, ...restaurant } = data
@@ -245,31 +273,21 @@ class RestaurantController {
 
       if (!req.user)
         return next(new AppError(`Login to access this resource`, 401))
-
+      console.log(req.user, 'error')
       const restaurant: HydratedDocument<IRestaurant> | null =
         await Restaurant.findOneAndDelete({
           _id: id,
-          restaurant: req.user.restaurant,
-        })
+          user: req.user._id,
+        }).lean()
+      await User.findByIdAndUpdate(req.user._id, { restaurant: null })
+      console.log(restaurant)
 
       if (!restaurant) return next(new AppError(`No Restaurant found`, 404))
 
       res.status(200).json({ success: true, message: 'successfully deleted' })
     } catch (error) {
-      return next(new AppError(`Something went wrong`, 500))
-    }
-  }
+      console.log(error)
 
-  @get('/all')
-  async getAllRestaurants(req: Request, res: Response, next: NextFunction) {
-    try {
-      const restaurants = await Restaurant.find({ verified: true })
-      if (!restaurants) return next(new AppError('No restaurants found', 404))
-      res.status(200).json({
-        success: true,
-        restaurants,
-      })
-    } catch (error) {
       return next(new AppError(`Something went wrong`, 500))
     }
   }
@@ -285,5 +303,5 @@ class RestaurantController {
  * *  patch - restaurant/:id -  update a particular restaurant
  * *  delete - restaurant/:id -  delete a particular restaurant
  * *  get - restaurant/admin/:id - info of particular restaurant for admin dashboard
- * *  get - restaurant/ -  get all restaurant info
+ * *  get - restaurant/all -  get all restaurant info
  */

@@ -16,7 +16,7 @@ export const uploadSingleImageCloudinary = async (
     const result: UploadApiResponse | undefined =
       await cloudinary.uploader.upload(
         path,
-        { upload_preset: process.env.CLOUDINARY_PRESET },
+        { format: 'webp', upload_preset: process.env.CLOUDINARY_PRESET },
         (error, result) => {
           if (error) {
             return next(new AppError(`Something went wrong`, 500))

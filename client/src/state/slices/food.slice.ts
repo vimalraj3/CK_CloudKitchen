@@ -13,6 +13,7 @@ import { Axios } from '../../axios/config'
 import { ServerError } from '../../types/error.types'
 import { isAxiosError } from 'axios'
 import { AppDispatch, RootState } from '../store'
+import { IFood } from '../../types/Food.types'
 import { IOwner } from '../../types/owner.types'
 
 interface RejectedAction extends Action {
@@ -21,44 +22,46 @@ interface RejectedAction extends Action {
 
 interface initialState {
   loading: boolean
-  restaurant: IRestaurant | null
-  restaurants: IRestaurant[]
-  owner: IOwner
+  foods: IFood[]
+  currentRestaurant: IRestaurant | null
+  currentRestaurantId: string | null
   error: ServerError | null
+  owner: IOwner
 }
 
 const initialState: initialState = {
   loading: false,
-  restaurant: null,
-  restaurants: [],
+  foods: [],
+  currentRestaurant: null,
+  error: null,
+  currentRestaurantId: null,
   owner: {
     isOwner: false,
     restaurantId: '',
   },
-  error: null,
 }
 
 interface ServerResponse {
-  restaurant: IRestaurant
+  food: IRestaurant
   success: boolean
 }
 
 // * ============================================================================
-// ? user fetchRestaurantByUserId
-export const fetchRestaurantByUserId = createAsyncThunk<
-  IRestaurant,
-  void,
+// ? user fetchFoodAndRestaurantByRestaurantId
+export const fetchFoodAndRestaurantByRestaurantId = createAsyncThunk<
+  { food: IFood[]; restaurant: IRestaurant },
+  string,
   {
     rejectValue: ServerError
     state: RootState
     dispatch: AppDispatch
   }
 >(
-  'restaurant/fetchRestaurantByUserId',
-  async (_, thunkApi) => {
-    const response = await Axios.get('/restaurant/admin/byuserid')
+  'food/fetchFoodAndRestaurantByRestaurantId',
+  async (restaurantId, thunkApi) => {
+    const response = await Axios.get(`/restaurant/${restaurantId}`)
       .then(async (res) => {
-        return res.data.restaurant
+        return res.data
       })
       .catch((err: ServerError) => {
         if (isAxiosError(err)) {
@@ -69,28 +72,29 @@ export const fetchRestaurantByUserId = createAsyncThunk<
   },
   {
     condition: (args, { getState }) => {
-      const { restaurantState } = getState()
-      const { restaurant } = restaurantState
-      if (restaurant?.restaurantName === '') {
+      const { foodState } = getState()
+      const { foods } = foodState
+      if (foods.length === 0) {
         return true
       }
+      return false
     },
   }
 )
 
 // * ============================================================================
-// ? Add new restaurant
-export const addRestaurant = createAsyncThunk<
-  IRestaurant,
+// ? Add new food
+export const addFood = createAsyncThunk<
+  IFood,
   FormData,
   {
     rejectValue: ServerError
     state: RootState
     dispatch: AppDispatch
   }
->('restaurant/addRestaurant', async (restaurant, thunkApi) => {
-  const response = await Axios.post('/restaurant/new', restaurant)
-    .then((res) => res.data.restaurant)
+>('food/addFood', async (food, thunkApi) => {
+  const response = await Axios.post('/food/new', food)
+    .then((res) => res.data.food)
     .catch((err) => {
       if (isAxiosError(err)) {
         return thunkApi.rejectWithValue(err.response?.data)
@@ -101,18 +105,18 @@ export const addRestaurant = createAsyncThunk<
 
 // * ============================================================================
 
-// ? fetch Restaurant by restaurant id
-export const fetchRestaurantById = createAsyncThunk<
-  IRestaurant,
-  string,
+// ? update food by id
+export const updateFoodById = createAsyncThunk<
+  IFood,
+  { data: FormData; id: string },
   {
     rejectValue: ServerError
     state: RootState
     dispatch: AppDispatch
   }
->('restaurant/fetchRestaurantById', async (restaurantId, thunkApi) => {
-  const response = await Axios.get(`/restaurant/${restaurantId}`)
-    .then((res) => res.data.restaurant)
+>('food/updateFoodById', async ({ data, id }, thunkApi) => {
+  const response = await Axios.patch(`/food/${id}`, { update: data })
+    .then((res) => res.data.food)
     .catch((err) => {
       if (isAxiosError(err)) {
         return thunkApi.rejectWithValue(err.response?.data)
@@ -122,42 +126,19 @@ export const fetchRestaurantById = createAsyncThunk<
 })
 
 // * ============================================================================
-// ? Update restaurant by restaurant id
-export const updateRestaurant = createAsyncThunk<
-  IRestaurant,
-  AddRestaurantFormValidationType,
-  {
-    rejectValue: ServerError
-    state: RootState
-    dispatch: AppDispatch
-  }
->('restaurant/updateRestaurant', async (restaurant, thunkApi) => {
-  const response = await Axios.patch(`/restaurant/admin/update`, { restaurant })
-    .then(async (res) => {
-      return res.data.restaurant
-    })
-    .catch((err: ServerError) => {
-      if (isAxiosError(err)) {
-        return thunkApi.rejectWithValue(err.response?.data as ServerError)
-      }
-    })
-  return response
-})
-
-// * ============================================================================
-// ? Update restaurant by restaurant id
-export const deleteRestaurantById = createAsyncThunk<
-  void,
+// ? delete food by  id
+export const deleteFoodById = createAsyncThunk<
+  ServerError,
   string,
   {
     rejectValue: ServerError
     state: RootState
     dispatch: AppDispatch
   }
->('restaurant/deleteRestaurant', async (restaurantId, thunkApi) => {
-  const response = await Axios.delete(`/restaurant/${restaurantId}`)
+>('food/deleteFoodById', async (id, thunkApi) => {
+  const response = await Axios.delete(`/food/${id}`)
     .then(async (res) => {
-      return res.data.restaurant
+      return res.data
     })
     .catch((err: ServerError) => {
       if (isAxiosError(err)) {
@@ -168,19 +149,19 @@ export const deleteRestaurantById = createAsyncThunk<
 })
 
 // * ============================================================================
-// ?  Get all restaurants
-export const getAllRestaurants = createAsyncThunk<
-  IRestaurant[],
+// ?  Get all foods
+export const getAllFoods = createAsyncThunk<
+  IFood[],
   void,
   {
     rejectValue: ServerError
     state: RootState
     dispatch: AppDispatch
   }
->('restaurant/getAllRestaurants', async (_, thunkApi) => {
-  const response = await Axios.get(`/restaurant/all`)
+>('foods/getAllFoods', async (_, thunkApi) => {
+  const response = await Axios.get(`/food/all`)
     .then(async (res) => {
-      return res.data.restaurants
+      return res.data.food
     })
     .catch((err: ServerError) => {
       if (isAxiosError(err)) {
@@ -203,35 +184,40 @@ function isRejectedAction(action: AnyAction): action is RejectedAction {
 
 // * ============================================================================
 
-export const restaurantSlice = createSlice({
-  name: 'restaurant',
+export const foodSlice = createSlice({
+  name: 'food',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchRestaurantByUserId.fulfilled, (state, action) => {
+      .addCase(
+        fetchFoodAndRestaurantByRestaurantId.fulfilled,
+        (state, action) => {
+          state.loading = false
+          state.foods = action.payload.food
+          state.currentRestaurant = action.payload.restaurant
+          state.currentRestaurantId = action.payload.restaurant._id
+        }
+      )
+      .addCase(addFood.fulfilled, (state, action) => {
         state.loading = false
-        state.restaurant = action.payload
+        state.foods[state.foods.length] = action.payload
       })
-      .addCase(updateRestaurant.fulfilled, (state, action) => {
+      .addCase(updateFoodById.fulfilled, (state, action) => {
         state.loading = false
-        state.restaurant = action.payload
+        state.foods = state.foods.map((v) => {
+          if (v._id === action.payload._id) {
+            v = action.payload
+          }
+          return v
+        })
       })
-      .addCase(addRestaurant.fulfilled, (state, action) => {
+      .addCase(deleteFoodById.fulfilled, (state, action) => {
         state.loading = false
-        state.restaurant = action.payload
       })
-      .addCase(fetchRestaurantById.fulfilled, (state, action) => {
+      .addCase(getAllFoods.fulfilled, (state, action) => {
         state.loading = false
-        state.restaurant = action.payload
-      })
-      .addCase(deleteRestaurantById.fulfilled, (state, action) => {
-        state.loading = false
-        state.restaurant = null
-      })
-      .addCase(getAllRestaurants.fulfilled, (state, action) => {
-        state.loading = false
-        state.restaurants = action.payload
+        state.foods = action.payload
       })
       .addMatcher(isRejectedAction, (state, action) => {
         state.loading = false
@@ -246,4 +232,4 @@ export const restaurantSlice = createSlice({
   },
 })
 
-export default restaurantSlice.reducer
+export default foodSlice.reducer

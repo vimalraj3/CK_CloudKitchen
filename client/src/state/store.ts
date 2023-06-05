@@ -1,15 +1,15 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit'
-import productReducer from './slices/product.slice'
 import thunk from 'redux-thunk'
 import userReducer from './slices/user.slice'
 import restaurantReducer from './slices/restaurant.slice'
 import addressReducer from './slices/address.slice'
+import foodReducer from './slices/food.slice'
 
 const reducer = combineReducers({
-  productState: productReducer,
   userState: userReducer,
   addressState: addressReducer,
   restaurantState: restaurantReducer,
+  foodState: foodReducer,
 })
 
 export const store = configureStore({

@@ -59,7 +59,7 @@ const Nav: React.FC<INavProps> = ({
 
   const { data } = useAppSelector((state) => state.userState)
   return (
-    <div className={`w-[100%] fixed md:bg-[${bgColor}] z-50`}>
+    <div id='top' className={`w-[100%] bg-[${bgColor}] z-50`}>
       <header
         className={`flex justify-between mx-auto py-2 px-10 items-center relative w-[100%] max-w-[1200px] text-[${dark ? '#242424' : textColor
           }] `}

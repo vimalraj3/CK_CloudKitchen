@@ -26,6 +26,7 @@ const AddResForm: React.FC<IAddResFormProps> = ({ showToast }) => {
         formData.append('restaurantRegion', data.restaurantRegion)
         formData.append('restaurantState', data.restaurantState)
         formData.append('restaurantZip', data.restaurantZip)
+        formData.append("priceRange", data.priceRange.toString())
         formData.append('restaurantImage', data.restaurantImage[0])
 
 

@@ -2,22 +2,31 @@ import Category from './Category'
 import Hero from './Hero'
 
 import OfferCard from './OfferCard'
-import Product from './product'
+import HomeProduct from '../Restaurant/RestaurantCardView/HomeProduct'
 
 import { IShowToast } from '../../types/showToast.types'
+import { useAppDispatch, useAppSelector } from '../../hooks'
+import { useEffect } from 'react'
+import { getAllRestaurants } from '../../state/slices/restaurant.slice'
 interface IHome {
   showToast: IShowToast
 }
 
 export default function Home(props: IHome) {
   const { showToast } = props
+  const dispatch = useAppDispatch()
+  const { restaurants } = useAppSelector(state => state.restaurantState)
+
+  useEffect(() => {
+    dispatch(getAllRestaurants())
+  }, [])
 
   return (
     <div>
       <Hero />
       <OfferCard />
       <Category />
-      <Product />
+      <HomeProduct restaurants={restaurants} />
     </div>
   )
 }

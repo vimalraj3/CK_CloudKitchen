@@ -2,6 +2,7 @@ import mongoose, { Types } from 'mongoose'
 import { IFood } from './food.model'
 import { IUser } from './user.model'
 import { IOrder } from './order.model'
+import { IReviewModel } from './reviews.model'
 
 /**
  * @export interface IRestaurant
@@ -133,6 +134,10 @@ export interface IRestaurant {
   verifyToken?: string
 
   orders?: Types.DocumentArray<Types.ObjectId | IOrder>
+
+  reviews: IReviewModel | Types.ObjectId
+
+  priceRange?: number
 }
 
 const RestaurantSchema = new mongoose.Schema<IRestaurant>({
@@ -162,6 +167,8 @@ const RestaurantSchema = new mongoose.Schema<IRestaurant>({
   verified: { type: Boolean, default: false, required: true },
   verifyToken: { type: String, required: false },
   orders: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Order' }],
+  reviews: { type: mongoose.Schema.Types.ObjectId, ref: 'Review' },
+  priceRange: { type: Number, default: 0 },
 })
 
 /**

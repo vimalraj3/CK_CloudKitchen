@@ -31,6 +31,7 @@ const RestaurantSchema = yup.object().shape({
     restaurantPhone: yup.string().required("Phone number is required").matches(/^\d{10}$/, 'Invalid Phone number'),
     open: yup.mixed().required("Open timing is required"),
     close: yup.mixed().required("close timing is required"),
+    priceRange: yup.string().required("Price for twice is required")
 })
 
 const defaultRestaurant: AddRestaurantFormValidationType = {
@@ -43,6 +44,7 @@ const defaultRestaurant: AddRestaurantFormValidationType = {
     restaurantCity: '',
     restaurantZip: '',
     restaurantPhone: '',
+    priceRange: 0,
     open: new Date,
     close: new Date,
 }
@@ -73,6 +75,16 @@ export const AddRestaurantForm: React.FC<IUserAddressEditForm> = ({ restaurant, 
                                 {errors.restaurantDescription && (
                                     <Text
                                         message={errors.restaurantDescription.message as string}
+                                        color="#EF4444"
+                                        size="sm"
+                                    />
+                                )}
+                            </div>
+                            <div>
+                                <Input aria-label={'Price for two person'} label="Price for two person"  {...register('priceRange')} />
+                                {errors.priceRange && (
+                                    <Text
+                                        message={errors.priceRange.message as string}
                                         color="#EF4444"
                                         size="sm"
                                     />

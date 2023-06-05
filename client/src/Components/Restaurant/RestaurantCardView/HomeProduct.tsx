@@ -1,8 +1,9 @@
 import Title from './Title'
 import Filter from './Filter'
-import ProductCard from './ProductCard'
+import RestaurantCardContainer from './RestaurantCardContainer'
 import { Btns } from '../../utils/Btn'
 import Search from '../../utils/Search'
+import { IRestaurant } from '../../../types/Restaurant.types'
 
 
 const productTempData = [
@@ -56,7 +57,11 @@ const productTempData = [
     }
 ]
 
-function index() {
+interface Props {
+    restaurants: IRestaurant[]
+}
+
+const HomeProduct: React.FC<Props> = ({ restaurants }) => {
     return (
         <div className='w-[90%] md:w-[80%] mx-auto max-w-[1200px] mt-4 md:mt-10'>
             <Title city='Puducherry' />
@@ -67,9 +72,9 @@ function index() {
                     <Search />
                 </div>
             </div>
-            <ProductCard products={productTempData} />
+            <RestaurantCardContainer restaurants={restaurants} />
         </div>
     )
 }
 
-export default index
+export default HomeProduct

@@ -11,13 +11,11 @@ export const UserAvatar = memo(
                             bgcolor: '#ff8e7b',
                             width: { xs: '28px', md: '32px' },
                             height: { xs: '28px', md: '32px' },
-                            fontSize: '24px',
+                            fontSize: '18px',
                         }}
+                        src={src}
+                        alt={userName[0]}
                     >
-                        {src ?
-                            <img src={src} alt={userName} />
-                            :
-                            userName[0]}
                     </Avatar>
                     :
                     <Avatar
@@ -27,11 +25,9 @@ export const UserAvatar = memo(
                             height: { xs: '50px', md: '75px' },
                             fontSize: { xs: '40px', md: '51px' },
                         }}
+                        src={src}
+                        alt={userName[0]}
                     >
-                        {src ?
-                            <img src={src} alt={userName} />
-                            :
-                            userName[0]}
                     </Avatar>}
             </>
         )

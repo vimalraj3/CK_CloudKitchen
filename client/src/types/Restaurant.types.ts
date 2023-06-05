@@ -13,12 +13,16 @@ export interface IRestaurant {
     close: Date
   }
   verifed: boolean
+  rating: number
+  totalRating?: number
+  averageRating?: number
+  priceRange: number
   _id: string
 }
 
 export type AddRestaurantFormValidationType = Omit<
   IRestaurant,
-  'user' | 'verifed' | 'restaurantHours' | '_id'
+  'user' | 'verifed' | 'restaurantHours' | '_id' | 'rating'
 > & {
   open: Date
   close: Date

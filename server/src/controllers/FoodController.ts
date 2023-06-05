@@ -1,68 +1,54 @@
 import { NextFunction, Request, Response } from 'express'
 import { get, controller, use, post, del, patch } from './decorators'
 import { IFood } from '../models/food.model'
-import { uploadMultipleImagesCloudinary } from '../utils/Cloudinary'
+import {
+  uploadMultipleImagesCloudinary,
+  uploadSingleImageCloudinary,
+} from '../utils/Cloudinary'
 import { bodyValidator } from './decorators/bodyValidator'
 import { isAdmin, isAuth } from '../middleware/isAuth'
 import { AppError } from '../utils/AppError'
-import { uploaderMultiple } from '../utils/Multer'
+import { uploaderMultiple, uploaderSingle } from '../utils/Multer'
 import Food from '../models/food.model'
 import Restaurant, { IRestaurant } from '../models/Restaurant.model'
 import { HydratedDocument, IfAny } from 'mongoose'
+import { stringToDate } from '../utils/StringToDate'
 
 // TODO  Search for a food
 
 @controller('/food')
 class FoodController {
   @post('/new')
-  @bodyValidator(
-    'state',
-    'price',
-    'description',
-    'open',
-    'close',
-    'title',
-    'category'
-  )
-  @use(uploaderMultiple)
+  @bodyValidator('price', 'open', 'close', 'title', 'category')
+  @use(uploaderSingle('image'))
   @use(isAdmin)
   @use(isAuth)
   async addProduct(req: Request, res: Response, next: NextFunction) {
     try {
-      const { state, price, description, open, close, title, category } =
-        req.body
+      const { price, description, open, close, title, category } = req.body
 
-      let files = req.files as Express.Multer.File[]
-
-      // ? check if files is empty
-      if (files?.length === 0 || !files)
-        return next(new AppError('Please upload an image', 400))
-
-      // ? get the path of the files
-      let filesPath = files
-        ?.filter((file: any) => file !== undefined)
-        .map((file: any) => file?.path)
-
-      if (filesPath?.length === 0)
-        return next(new AppError('Please upload an image', 400))
+      let file = req.file as Express.Multer.File
+      const filePath = file.path
+      if (!filePath) return next(new AppError('Please upload an image', 400))
 
       // ? upload the images to cloudinary
-      const image = await uploadMultipleImagesCloudinary(filesPath, next)
+      const image = await uploadSingleImageCloudinary(filePath, next)
       if (!image) return next(new AppError('Unable to upload image', 400))
 
       if (req.user?._id === undefined || !req.user?.restaurant)
         return next(new AppError('Please login to add a product', 400))
+
+      const openTiming = stringToDate(open)
+      const closeTiming = stringToDate(close)
 
       // ? create the product
       const foodData: IFood = {
         user: req.user?._id,
         restaurant: req.user?.restaurant,
         title,
-        state,
         price,
-        description,
-        time: { open, close },
-        image,
+        time: { open: openTiming, close: closeTiming },
+        image: [image],
         category,
       }
       const food: HydratedDocument<IFood> | null = await Food.create(foodData)
@@ -85,18 +71,44 @@ class FoodController {
     }
   }
 
+  // * get all food
+  @get('/all')
+  async getProducts(req: Request, res: Response, next: NextFunction) {
+    try {
+      const products: IFood[] | null = await Food.find<IFood>({})
+      if (!products) {
+        next(new AppError(`Product not Found`, 404))
+      }
+      res.status(404).json({
+        success: true,
+        food: products,
+      })
+    } catch (error) {
+      return next(new AppError(`Something went wrong, try again later`, 500))
+    }
+  }
+
   // * get food by id
   @get('/:id')
   async getProduct(req: Request, res: Response, next: NextFunction) {
     try {
-      const product: IFood | null = await Food.findById<IFood>(req.params.id)
+      const product: HydratedDocument<IFood> | null = await Food.findOne<IFood>(
+        {
+          restaurant: req.params.id,
+        }
+      )
+        .populate('restaurant')
+        .lean()
       if (!product) {
         next(new AppError(`Unable to find the product`, 500))
         return
       }
+      const { restaurant, ...foods } = product
+
       res.status(200).json({
         success: true,
-        product,
+        restaurant: restaurant,
+        food: foods,
       })
     } catch (error) {
       return next(new AppError(`Something went wrong`, 500))
@@ -147,23 +159,6 @@ class FoodController {
         success: true,
         message: `Product ${food?.title} was updated successfully`,
         food,
-      })
-    } catch (error) {
-      return next(new AppError(`Something went wrong, try again later`, 500))
-    }
-  }
-
-  // * get all food
-  @get('/all')
-  async getProducts(req: Request, res: Response, next: NextFunction) {
-    try {
-      const products: IFood[] | null = await Food.find<IFood>({})
-      if (!products) {
-        next(new AppError(`Product not Found`, 404))
-      }
-      res.status(404).json({
-        success: true,
-        products,
       })
     } catch (error) {
       return next(new AppError(`Something went wrong, try again later`, 500))

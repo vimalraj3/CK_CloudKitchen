@@ -23,44 +23,44 @@ interface IArrow {
 
 const categoryData: ICategoryData[] = [
     {
-        image: biriyaniImg,
+        image: "https://res.cloudinary.com/dd39ktpmz/image/upload/v1685954417/ck/client_static/wo5fduzjhxmgxjnepubt.avif",
         name: "Biriyani"
     },
     {
-        image: dosaImg,
+        image: "https://res.cloudinary.com/dd39ktpmz/image/upload/v1685954177/ck/client_static/dbwrrfkvkhwwxlqzbuhi.avif",
         name: "Dosa"
     },
     {
-        image: firedriceImg,
+        image: "https://res.cloudinary.com/dd39ktpmz/image/upload/v1685954176/ck/client_static/aw2pq8ovtfadnrndiv7y.avif",
         name: "Fired Rice"
     },
     {
-        image: thaliImg,
+        image: "https://res.cloudinary.com/dd39ktpmz/image/upload/v1685954176/ck/client_static/hj62uq38p4albzjle9s5.avif",
         name: "Thali"
     },
     {
-        image: noodlesImg,
+        image: "https://res.cloudinary.com/dd39ktpmz/image/upload/v1685954176/ck/client_static/pef7cy10s4bt2oqk5e3t.avif",
         name: "Noodles"
     },
     {
-        image: paneerImg,
+        image: "https://res.cloudinary.com/dd39ktpmz/image/upload/v1685954176/ck/client_static/hbambl5svg5d0kbihkbp.avif",
         name: "Paneer"
     },
     {
-        image: pizzaImg,
+        image: "https://res.cloudinary.com/dd39ktpmz/image/upload/v1685954177/ck/client_static/eh4xjrbveum2a9u0x59w.avif",
         name: "Pizza"
     },
     {
-        image: cakeImg,
+        image: "https://res.cloudinary.com/dd39ktpmz/image/upload/v1685954552/ck/client_static/xat79gdpdesnyzqzay7d.png",
         name: "Cake"
     },
 
     {
-        image: rollsImg,
+        image: "https://res.cloudinary.com/dd39ktpmz/image/upload/v1685954177/ck/client_static/wcveniokmrytgwa4ckev.avif",
         name: "Rolls"
     },
     {
-        image: shawarmaImg,
+        image: "https://res.cloudinary.com/dd39ktpmz/image/upload/v1685954176/ck/client_static/ximkylkzfv4rtlphe3gx.avif",
         name: "Shawarma"
     },
 
