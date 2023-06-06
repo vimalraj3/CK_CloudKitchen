@@ -16,7 +16,9 @@ const Account: React.FC<IAccountProps> = ({ showToast }) => {
   const { data, error }: InitialUserState = useAppSelector((state) => state.userState)
 
   useEffect(() => {
-    showToast(error?.message || '', 'error')
+    if (error?.message !== "" && error?.message) {
+      showToast(error?.message, 'error')
+    }
   }, [error])
 
   return (

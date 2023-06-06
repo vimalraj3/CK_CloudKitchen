@@ -1,18 +1,31 @@
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import { ICart } from "../../types/user.types";
-import { NavLink } from "react-router-dom";
+import React, { useEffect } from 'react'
+import Nav from '../Nav'
+import { IShowToast } from '../../types/showToast.types'
+import { RestaurantCard } from './Card'
+import { useAppDispatch, useAppSelector } from '../../hooks'
+import PageLoading from '../Loading/PageLoading'
+import { fetchCartByUserId } from '../../state/slices/cart.slice'
 
-interface ICartProps {
-  cartItems: ICart[];
+interface IProps {
+    showToast: IShowToast
 }
-export default function index() {
-  return (
-    <div>
-      <NavLink to={"/cart"}>
-        <div className='cursor-pointer px-1 py-1'>
-          <ShoppingCartIcon sx={{ width: 24, height: 24 }} />
+
+const index: React.FC<IProps> = ({
+    showToast
+}) => {
+    const dispatch = useAppDispatch()
+
+    useEffect(() => {
+        dispatch(fetchCartByUserId())
+    }, [])
+
+
+    return (
+        <div>
+            <Nav bgColor='#f8f8f8' dark />
+            <RestaurantCard />
         </div>
-      </NavLink>
-    </div>
-  );
+    )
 }
+
+export default index

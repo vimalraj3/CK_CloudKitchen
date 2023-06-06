@@ -1,4 +1,3 @@
-import { IProduct } from './Food.types'
 import { ServerError } from './error.types'
 
 export interface IUser {
@@ -6,11 +5,6 @@ export interface IUser {
   userName?: string
   avatar?: string
   role?: string
-}
-
-export type ICart = {
-  productId: string
-  quantity: number
 }
 
 export interface UserSession extends IUser {

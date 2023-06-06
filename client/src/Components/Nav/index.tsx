@@ -5,7 +5,7 @@ import { NavLink } from 'react-router-dom'
 import { useAppSelector } from '../../hooks'
 
 import { UserAvatarNav } from './UserAvatarNav'
-import Cart from '../Cart'
+import Cart from '../utils/IconBtn/CartIcon'
 
 interface INavProps {
   dark?: boolean

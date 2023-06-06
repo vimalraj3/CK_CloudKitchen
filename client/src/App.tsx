@@ -11,11 +11,13 @@ const Footer = lazy(() => import('./Components/Footer'))
 const Signup = lazy(() => import('./Components/Signup/signup'))
 const Account = lazy(() => import('./Components/account/Account'))
 const AddRestaurant = lazy(() => import('./Components/Restaurant'))
-// const Restaurant = lazy(() => import('./Components/Restaurant/RestaurantHome'))
-import Restaurant from './Components/Restaurant/RestaurantHome'
+const Restaurant = lazy(() => import('./Components/Restaurant/RestaurantHome'))
+// import Restaurant from './Components/Restaurant/RestaurantHome'
 const ResetPassword = lazy(() => import('./Components/ResetPassword/ResetPassword'))
 const RestauranProfile = lazy(() => import('./Components/Restaurant/RestaurantOrderPage/RestaurantOrderPage'))
-// import RestauranProfile from './Components/Restaurant/RestaurantOrderPage/RestaurantOrderPage'
+// const Cart = lazy(() => import('./Components/Cart'))
+import Cart from './Components/Cart'
+// import RestauranProfile from './Components/Restaurant/RestaurantOrderPage/RestaurantOrderPage' 
 
 
 import { useAppDispatch, useToast } from './hooks'
@@ -53,6 +55,10 @@ function App() {
               <Route
                 path="/account"
                 element={<Account showToast={showToast} />}
+              />
+              <Route
+                path="/cart"
+                element={<Cart showToast={showToast} />}
               />
               <Route
                 path="/restaurant/:id"

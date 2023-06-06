@@ -79,7 +79,10 @@ class OrderController {
 
       let cart: HydratedDocument<ICart> | null = await Cart.findOne({
         user: req.user._id,
-      }).populate('foods.food')
+      })
+        .populate('restaurantId')
+        .populate('foods.food')
+        .lean()
 
       if (!cart) {
         return next(new AppError(`Cart not found`, 400))

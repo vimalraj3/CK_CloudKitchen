@@ -334,7 +334,11 @@ class LoginController {
       const address = await UserAddress.findOne({ user: userId }).lean()
 
       if (!address) {
-        return next(new AppError('Please add address', 404))
+        return res.status(200).json({
+          success: false,
+          message: 'Please add address',
+          address: [],
+        })
       }
 
       res.status(200).json({
