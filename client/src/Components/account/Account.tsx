@@ -8,18 +8,9 @@ const Settings = React.lazy(() => import('./Sections/Settings'))
 import { UserInfo } from './Sections/UserInfo'
 import { UserOrders } from './Sections/UserOrders'
 
-interface IAccountProps {
-  showToast: IShowToast
-}
 
-const Account: React.FC<IAccountProps> = ({ showToast }) => {
+const Account: React.FC = () => {
   const { data, error }: InitialUserState = useAppSelector((state) => state.userState)
-
-  useEffect(() => {
-    if (error?.message !== "" && error?.message) {
-      showToast(error?.message, 'error')
-    }
-  }, [error])
 
   return (
     <div>

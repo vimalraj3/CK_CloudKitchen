@@ -22,11 +22,7 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />
 })
 
-export default function ForgetPassword({
-  showToast,
-}: {
-  showToast: IShowToast
-}) {
+export default function ForgetPassword() {
   const [open, setOpen] = React.useState<boolean>(false)
   const [email, setEmail] = React.useState<string>('')
 
@@ -41,22 +37,9 @@ export default function ForgetPassword({
   }
 
   const handleConfirm = async () => {
-    if (email === '') {
-      showToast('Please enter the Email', 'error')
-    }
     const forgetPassword = await appDispatch(forgetPasswordApi(email))
     if (forgetPasswordApi.fulfilled.match(forgetPassword)) {
-      showToast(forgetPassword.payload.message, 'success')
-      console.log(forgetPassword, 'fullfil')
       // navigate(-1)
-    } else {
-      console.log(forgetPassword, 'error')
-
-      if (forgetPassword.payload?.message) {
-        showToast(forgetPassword.payload.message, 'error')
-      } else {
-        showToast('something went wrong', 'error')
-      }
     }
   }
 
@@ -101,3 +84,6 @@ export default function ForgetPassword({
     </div>
   )
 }
+
+
+//  TODO need to improve and implement yup and form data , testing

@@ -5,21 +5,15 @@ import AddResForm from './Sections/AddResForm'
 import { IShowToast } from '../../../types/showToast.types'
 import { useAppSelector } from '../../../hooks'
 
-type IRestaurantAddProps = { showToast: IShowToast }
 
-const index: React.FC<IRestaurantAddProps> = ({ showToast }) => {
-    const { restaurant, restaurants, loading, error } = useAppSelector(state => state.restaurantState)
+const index: React.FC = () => {
+    const { restaurant, restaurants, loading } = useAppSelector(state => state.restaurantState)
 
-    useEffect(() => {
-        if (error?.message) {
-            showToast(error?.message, 'error')
-        }
-    }, [error])
     return (
         <div>
             <Hero key={useId()} />
             <HowItsWork key={useId()} />
-            <AddResForm key={useId()} showToast={showToast} />
+            <AddResForm key={useId()} />
         </div>
     )
 }

@@ -1,29 +1,25 @@
-import React, { useEffect } from 'react'
+import React, { Suspense, lazy, useEffect } from 'react'
 import Nav from '../Nav'
-import { IShowToast } from '../../types/showToast.types'
-import { RestaurantCard } from './Card'
-import { useAppDispatch, useAppSelector } from '../../hooks'
+import RestaurantCard from './Card'
+// import { RestaurantCard } from './Card'
+import { useCart } from '../../hooks/useCart'
 import PageLoading from '../Loading/PageLoading'
-import { fetchCartByUserId } from '../../state/slices/cart.slice'
 
-interface IProps {
-    showToast: IShowToast
-}
+const index: React.FC = () => {
 
-const index: React.FC<IProps> = ({
-    showToast
-}) => {
-    const dispatch = useAppDispatch()
+    const { handlePageLoad } = useCart()
 
     useEffect(() => {
-        dispatch(fetchCartByUserId())
+        handlePageLoad()
     }, [])
 
 
     return (
         <div>
             <Nav bgColor='#f8f8f8' dark />
-            <RestaurantCard />
+            <Suspense fallback={<PageLoading />}>
+                <RestaurantCard />
+            </Suspense>
         </div>
     )
 }

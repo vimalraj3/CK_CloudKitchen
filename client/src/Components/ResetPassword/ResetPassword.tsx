@@ -9,11 +9,8 @@ import { useAppDispatch } from '../../hooks'
 import { resetPasswordApi } from '../../state/slices/user.slice'
 import { IShowToast } from '../../types/showToast.types'
 
-interface IResetPassword {
-  showToast: IShowToast
-}
 
-const ResetPassword = ({ showToast }: IResetPassword) => {
+const ResetPassword = () => {
   const navigate = useNavigate()
   const { token } = useParams()
   const appDispatch = useAppDispatch()
@@ -38,11 +35,7 @@ const ResetPassword = ({ showToast }: IResetPassword) => {
         resetPasswordApi.fulfilled.match(resetpassword) &&
         resetpassword.payload
       ) {
-        showToast(resetpassword.payload.message, 'success')
         navigate(-1)
-      } else {
-        resetpassword.payload &&
-          showToast(resetpassword.payload?.message, 'error')
       }
     }
   }

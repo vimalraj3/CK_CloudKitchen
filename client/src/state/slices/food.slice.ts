@@ -15,6 +15,7 @@ import { isAxiosError } from 'axios'
 import { AppDispatch, RootState } from '../store'
 import { IFood } from '../../types/Food.types'
 import { IOwner } from '../../types/owner.types'
+import { setError } from './error.slice'
 
 interface RejectedAction extends Action {
   payload: ServerError
@@ -25,7 +26,6 @@ interface initialState {
   foods: IFood[]
   currentRestaurant: IRestaurant | null
   currentRestaurantId: string | null
-  error: ServerError | null
   owner: IOwner
 }
 
@@ -33,7 +33,6 @@ const initialState: initialState = {
   loading: false,
   foods: [],
   currentRestaurant: null,
-  error: null,
   currentRestaurantId: null,
   owner: {
     isOwner: false,
@@ -221,10 +220,10 @@ export const foodSlice = createSlice({
       })
       .addMatcher(isRejectedAction, (state, action) => {
         state.loading = false
-        state.error = {
-          message: action.payload?.message ?? 'something went wrong',
-          success: action.payload?.success ?? false,
-        }
+        setError({
+          message: action.payload.message,
+          success: action.payload.success,
+        })
       })
       .addMatcher(isPending, (state) => {
         state.loading = true

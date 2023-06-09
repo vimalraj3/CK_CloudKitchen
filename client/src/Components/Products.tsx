@@ -2,10 +2,7 @@ import React from 'react'
 import { IShowToast } from '../types/showToast.types'
 
 
-interface IProps {
-    showToast: IShowToast
-}
-function Products({ showToast }: IProps) {
+function Products() {
     return (
         <div>Products</div>
     )

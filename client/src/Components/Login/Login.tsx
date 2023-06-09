@@ -17,11 +17,8 @@ import { Text } from '../utils/Text'
 import * as yup from 'yup'
 import ForgetPassword from '../DialogBox/ForgetBox'
 
-interface ILoginProps {
-  showToast: IShowToast
-}
 
-function index({ showToast }: ILoginProps) {
+function index() {
   const navigate = useNavigate()
 
   const dispatch = useAppDispatch()
@@ -52,14 +49,7 @@ function index({ showToast }: ILoginProps) {
   const onSubmit = async (data: Login) => {
     const resultAction = await dispatch(loginUser(data))
     if (loginUser.fulfilled.match(resultAction)) {
-      showToast('Welcome back', 'info')
       navigate(-1)
-    } else {
-      if (resultAction.payload?.message) {
-        showToast(resultAction.payload.message, 'error')
-      } else {
-        showToast('something went wrong', 'error')
-      }
     }
   }
 
@@ -105,7 +95,7 @@ function index({ showToast }: ILoginProps) {
                     )}
                   </div>
                   <div>
-                    <ForgetPassword showToast={showToast} />
+                    <ForgetPassword />
                   </div>
                   <Input
                     type="submit"

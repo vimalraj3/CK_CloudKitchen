@@ -4,17 +4,25 @@ import {
   createSlice,
   Action,
   isPending,
+  PayloadAction,
+  ThunkDispatch,
+  ThunkAction,
 } from '@reduxjs/toolkit'
 import { IRestaurant } from '../../types/Restaurant.types'
 import { Axios } from '../../axios/config'
 import { ServerError } from '../../types/error.types'
 import { isAxiosError } from 'axios'
-import { AppDispatch, RootState } from '../store'
+import { AppDispatch, RootState, store } from '../store'
 import { IFoodCart, ServerResponseICart } from '../../types/cart.types'
-
+import { setError, setErrors } from './error.slice'
+import { useAppDispatch } from '../../hooks'
+import { handleError } from '../handleError/handleError'
+// const dispatch = useDispatch()
 interface RejectedAction extends Action {
   payload: ServerError
 }
+
+type AppThunkDispatch = ThunkDispatch<RootState, undefined, AnyAction>
 
 interface initialState {
   loading: boolean
@@ -22,16 +30,16 @@ interface initialState {
   restaurant: IRestaurant | null
   restaurantId: string | null
   totalPrice: number
-  error: ServerError | null
+  askClean: boolean
 }
 
 const initialState: initialState = {
   loading: false,
   cart: [],
   restaurant: null,
-  error: null,
   restaurantId: null,
   totalPrice: 0,
+  askClean: false,
 }
 
 interface ServerResponse {
@@ -76,6 +84,51 @@ export const fetchCartByUserId = createAsyncThunk<
     },
   }
 )
+// * ============================================================================
+// ? clean and Add to Cart
+export const clearAndAddToCart = createAsyncThunk<
+  ServerResponse,
+  {
+    foodId: string
+    restaurantId: string
+    quantity: number
+  },
+  {
+    rejectValue: ServerError
+    state: RootState
+    dispatch: AppDispatch
+  }
+>('cart/clearAndAddToCart', async (food, thunkApi) => {
+  const response = await Axios.post('/cart/clearandaddtocart', food)
+    .then((res) => res.data)
+    .catch((err) => {
+      if (isAxiosError(err)) {
+        return thunkApi.rejectWithValue(err.response?.data)
+      }
+    })
+  return response
+})
+
+// * ============================================================================
+// ? clean   Cart
+export const clearCart = createAsyncThunk<
+  ServerResponse,
+  void,
+  {
+    rejectValue: ServerError
+    state: RootState
+    dispatch: AppDispatch
+  }
+>('cart/clearCart', async (food, thunkApi) => {
+  const response = await Axios.post('/cart/clear', food)
+    .then((res) => res.data)
+    .catch((err) => {
+      if (isAxiosError(err)) {
+        return thunkApi.rejectWithValue(err.response?.data)
+      }
+    })
+  return response
+})
 
 // * ============================================================================
 // ? Add to Cart
@@ -96,11 +149,31 @@ export const addToCart = createAsyncThunk<
     .then((res) => res.data)
     .catch((err) => {
       if (isAxiosError(err)) {
+        const dispatch = useAppDispatch()
+        thunkApi.dispatch(
+          setErrors({
+            message: err.response?.data.message,
+            success: err.response?.data.success,
+          })
+        )
+        console.log(err.response?.data, 'err.response.data')
+
         return thunkApi.rejectWithValue(err.response?.data)
       }
     })
   return response
 })
+// * ============================================================================
+// ? set ask clean
+export const setAskClean = createAsyncThunk<
+  void,
+  void,
+  {
+    rejectValue: ServerError
+    state: RootState
+    dispatch: AppDispatch
+  }
+>('cart/setAskClean', async (food, thunkApi) => {})
 
 // * ============================================================================
 
@@ -115,8 +188,8 @@ export const updateCartById = createAsyncThunk<
   }
 >(
   'cart/updateCartById',
-  async (food, thunkApi) => {
-    const response = await Axios.patch(`/food/setquantity`, { ...food })
+  async (cart, thunkApi) => {
+    const response = await Axios.patch(`/cart/setquantity`, { ...cart })
       .then((res) => res.data)
       .catch((err) => {
         if (isAxiosError(err)) {
@@ -130,7 +203,9 @@ export const updateCartById = createAsyncThunk<
       const { cartState } = getState()
       const { cart } = cartState
       const { quantity } = args
-      if (quantity > 0) {
+      if (quantity >= 1) {
+        console.log(quantity, 'quantity')
+
         return true
       }
       return false
@@ -140,7 +215,7 @@ export const updateCartById = createAsyncThunk<
 
 // * ============================================================================
 // ? delete food by  id
-export const deleteFoodById = createAsyncThunk<
+export const deleteCartFoodById = createAsyncThunk<
   ServerResponse,
   string,
   {
@@ -148,7 +223,7 @@ export const deleteFoodById = createAsyncThunk<
     state: RootState
     dispatch: AppDispatch
   }
->('cart/deleteFoodById', async (id, thunkApi) => {
+>('cart/deleteCartFoodById', async (id, thunkApi) => {
   const response = await Axios.delete(`/cart/delfood/${id}`)
     .then(async (res) => {
       return res.data
@@ -162,6 +237,18 @@ export const deleteFoodById = createAsyncThunk<
 })
 
 // * ============================================================================
+// ? Logout
+export const ResetCart = createAsyncThunk<
+  void,
+  void,
+  {
+    rejectValue: ServerError
+    state: RootState
+    dispatch: AppDispatch
+  }
+>('cart/reset', async (id, thunkApi) => {})
+
+// * ============================================================================
 
 /**
  * isRejectedAction type guard function that checks if the action is rejected
@@ -172,12 +259,24 @@ function isRejectedAction(action: AnyAction): action is RejectedAction {
   return action.type.endsWith('rejected')
 }
 
+const setErrorToErrorState = (action: ServerError) => {
+  // setError({
+  //   message: action.message,
+  //   success: action.success,
+  // })
+  console.log('called')
+}
+
 // * ============================================================================
 
-export const cartSlice = createSlice({
+export const cartReducer = createSlice({
   name: 'cart',
   initialState,
-  reducers: {},
+  reducers: {
+    setError: (state, action: PayloadAction<ServerError>) => {
+      setError(action.payload)
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchCartByUserId.fulfilled, (state, action) => {
@@ -185,25 +284,52 @@ export const cartSlice = createSlice({
         state.restaurant = action.payload.cart.restaurantId
         state.cart = action.payload.cart.foods
         state.totalPrice = action.payload.cart.totalPrice
+        state.askClean = false
       })
       .addCase(addToCart.fulfilled, (state, action) => {
         state.loading = false
-        state.cart = action.payload.cart.foods
+        if (action.payload.cart.foods) state.cart = action.payload.cart.foods
+        state.restaurant = action.payload.cart.restaurantId
+        state.askClean = false
+        state.totalPrice = action.payload.cart.totalPrice
       })
       .addCase(updateCartById.fulfilled, (state, action) => {
         state.loading = false
         state.cart = action.payload.cart.foods
+        state.restaurant = action.payload.cart.restaurantId
+        state.askClean = false
+        state.totalPrice = action.payload.cart.totalPrice
       })
-      .addCase(deleteFoodById.fulfilled, (state, action) => {
+      .addCase(deleteCartFoodById.fulfilled, (state, action) => {
         state.loading = false
         state.cart = action.payload.cart.foods
         state.totalPrice = action.payload.cart.totalPrice
+        state.restaurant = action.payload.cart.restaurantId
+      })
+      .addCase(clearAndAddToCart.fulfilled, (state, action) => {
+        state.loading = false
+        state.cart = action.payload.cart.foods
+        state.totalPrice = action.payload.cart.totalPrice
+        state.restaurant = action.payload.cart.restaurantId
+        state.askClean = false
+      })
+      .addCase(clearCart.fulfilled, (state, action) => {
+        state.loading = false
+        state.cart = action.payload.cart.foods
+        state.totalPrice = action.payload.cart.totalPrice
+        state.restaurant = action.payload.cart.restaurantId
+        state.askClean = false
+      })
+      .addCase(ResetCart.fulfilled, (state, action) => {
+        state = initialState
+      })
+      .addCase(setAskClean.fulfilled, (state, action) => {
+        state.askClean = !state.askClean
       })
       .addMatcher(isRejectedAction, (state, action) => {
         state.loading = false
-        state.error = {
-          message: action.payload?.message ?? 'something went wrong',
-          success: action.payload?.success ?? false,
+        if (action.payload) {
+          handleError(action.payload)
         }
       })
       .addMatcher(isPending, (state) => {
@@ -212,4 +338,4 @@ export const cartSlice = createSlice({
   },
 })
 
-export default cartSlice.reducer
+export default cartReducer.reducer

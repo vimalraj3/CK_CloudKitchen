@@ -10,6 +10,7 @@ import { Axios } from '../../axios/config'
 import { ServerError } from '../../types/error.types'
 import { isAxiosError } from 'axios'
 import { AppDispatch, RootState } from '../store'
+import { setError } from './error.slice'
 
 interface RejectedAction extends Action {
   payload: ServerError
@@ -18,13 +19,11 @@ interface RejectedAction extends Action {
 interface initialState {
   loading: boolean
   address: IAddress[]
-  error: ServerError | null
 }
 
 const initialState: initialState = {
   loading: false,
   address: [],
-  error: null,
 }
 
 interface ServerResponse {
@@ -136,6 +135,18 @@ export const editUserAddress = createAsyncThunk<
 
 // * ============================================================================
 
+export const resetAddress = createAsyncThunk<
+  void,
+  void,
+  {
+    rejectValue: ServerError
+    state: RootState
+    dispatch: AppDispatch
+  }
+>('address/reset', async (_, thunkApi) => {})
+
+// * ============================================================================
+
 /**
  * isRejectedAction type guard function that checks if the action is rejected
  * @param action - action object
@@ -169,12 +180,15 @@ export const addressSlice = createSlice({
         state.loading = false
         state.address = action.payload
       })
+      .addCase(resetAddress.fulfilled, (state) => {
+        state = initialState
+      })
       .addMatcher(isRejectedAction, (state, action) => {
         state.loading = false
-        state.error = {
-          message: action.payload?.message ?? 'something went wrong',
-          success: action.payload?.success ?? false,
-        }
+        setError({
+          message: action.payload.message,
+          success: action.payload.success,
+        })
       })
       .addMatcher(isPending, (state) => {
         state.loading = true

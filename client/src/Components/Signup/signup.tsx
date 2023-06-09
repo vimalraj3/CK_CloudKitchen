@@ -8,19 +8,13 @@ import GoogleIcon from '@mui/icons-material/Google'
 import { SignUp } from '../../types/user.types'
 import { signUpUser } from '../../state/slices/user.slice'
 import { useAppDispatch } from '../../hooks'
-import { IShowToast } from '../../types/showToast.types'
 import * as yup from 'yup'
 import { Text } from '../utils/Text'
-
-interface ISignupProps {
-  showToast: IShowToast
-}
-
 interface ISignupForm extends SignUp {
   repassword: string
 }
 
-function index({ showToast }: ISignupProps) {
+function index() {
   const navigate = useNavigate()
 
   const dispatch = useAppDispatch()
@@ -47,14 +41,7 @@ function index({ showToast }: ISignupProps) {
       signUpUser({ email, userName, password } as SignUp)
     )
     if (signUpUser.fulfilled.match(resultAction)) {
-      showToast('Welcome back', 'info')
       navigate(-1)
-    } else {
-      if (resultAction.payload) {
-        showToast(resultAction.payload.message, 'error')
-      } else {
-        showToast('something went wrong', 'error')
-      }
     }
   }
 

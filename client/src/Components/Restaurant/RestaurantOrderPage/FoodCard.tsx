@@ -14,6 +14,8 @@ interface IFoodCard extends IFood {
 }
 const FoodCard: React.FC<IFoodCard> = memo(
     ({ time, title, restaurant, rating, price, image, _id, handleAddToCart }) => {
+
+
         return (
             <Grid item xs={12} sm={6} md={4}>
                 <div className="px-4 py-3 aspect-[4/3] w-[100%] rounded-lg md:hover:shadow-xl ease-in-out transition-shadow" >

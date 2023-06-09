@@ -15,24 +15,22 @@ const Restaurant = lazy(() => import('./Components/Restaurant/RestaurantHome'))
 // import Restaurant from './Components/Restaurant/RestaurantHome'
 const ResetPassword = lazy(() => import('./Components/ResetPassword/ResetPassword'))
 const RestauranProfile = lazy(() => import('./Components/Restaurant/RestaurantOrderPage/RestaurantOrderPage'))
-// const Cart = lazy(() => import('./Components/Cart'))
-import Cart from './Components/Cart'
+const Cart = lazy(() => import('./Components/Cart'))
 // import RestauranProfile from './Components/Restaurant/RestaurantOrderPage/RestaurantOrderPage' 
 
 
-import { useAppDispatch, useToast } from './hooks'
+import { useAppDispatch } from './hooks'
 import { fetchUser } from './state/slices/user.slice'
 import PageLoading from './Components/Loading/PageLoading'
+import { fetchCartByUserId } from './state/slices/cart.slice'
+import { ShowToast } from './Components/Toast/Toast'
 
 function App() {
-  const [showToast, ToastComponent] = useToast()
   const dispatch = useAppDispatch()
 
   useEffect(() => {
-    const getuser = async () => {
-      const user = await dispatch(fetchUser())
-    }
-    getuser()
+    dispatch(fetchUser())
+    dispatch(fetchCartByUserId())
   }, [])
 
   return (
@@ -41,40 +39,40 @@ function App() {
         <Suspense fallback={<PageLoading />}>
           <Routes>
             <Route>
-              <Route index element={<Home showToast={showToast} />} />
-              <Route path="/login" element={<Login showToast={showToast} />} />
-              <Route path="/signup" element={<Signup showToast={showToast} />} />
+              <Route index element={<Home />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
               <Route
                 path="/restaurants"
-                element={<Products showToast={showToast} />}
+                element={<Products />}
               />
               <Route
                 path="/restaurant/product/add"
-                element={<ProductFrom showToast={showToast} />}
+                element={<ProductFrom />}
               />
               <Route
                 path="/account"
-                element={<Account showToast={showToast} />}
+                element={<Account />}
               />
               <Route
                 path="/cart"
-                element={<Cart showToast={showToast} />}
+                element={<Cart />}
               />
               <Route
                 path="/restaurant/:id"
                 element={<RestauranProfile />}
               />
-              <Route path="/restaurant/add" element={<Restaurant showToast={showToast} />} />
+              <Route path="/restaurant/add" element={<Restaurant />} />
               <Route
                 path="/resetpassword/:token"
-                element={<ResetPassword showToast={showToast} />}
+                element={<ResetPassword />}
               />
             </Route>
           </Routes>
           <Footer />
         </Suspense>
       </BrowserRouter>
-      <ToastComponent />
+      <ShowToast />
     </div>
   )
 }

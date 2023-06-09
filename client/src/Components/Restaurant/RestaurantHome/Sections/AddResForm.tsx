@@ -6,10 +6,9 @@ import { addRestaurant } from '../../../../state/slices/restaurant.slice'
 import { useNavigate } from 'react-router-dom'
 import { IShowToast } from '../../../../types/showToast.types'
 
-type IAddResFormProps = { showToast: IShowToast }
 
 
-const AddResForm: React.FC<IAddResFormProps> = ({ showToast }) => {
+const AddResForm: React.FC = () => {
 
     const dispatch = useAppDispatch()
     const navigate = useNavigate()

@@ -8,12 +8,9 @@ import { IShowToast } from '../../types/showToast.types'
 import { useAppDispatch, useAppSelector } from '../../hooks'
 import { useEffect } from 'react'
 import { getAllRestaurants } from '../../state/slices/restaurant.slice'
-interface IHome {
-  showToast: IShowToast
-}
 
-export default function Home(props: IHome) {
-  const { showToast } = props
+
+export default function Home() {
   const dispatch = useAppDispatch()
   const { restaurants } = useAppSelector(state => state.restaurantState)
 

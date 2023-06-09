@@ -4,6 +4,7 @@ import userReducer from './slices/user.slice'
 import restaurantReducer from './slices/restaurant.slice'
 import addressReducer from './slices/address.slice'
 import foodReducer from './slices/food.slice'
+import errorsReducer from './slices/error.slice'
 import cartReducer from './slices/cart.slice'
 
 const reducer = combineReducers({
@@ -12,6 +13,7 @@ const reducer = combineReducers({
   restaurantState: restaurantReducer,
   foodState: foodReducer,
   cartState: cartReducer,
+  errorsState: errorsReducer,
 })
 
 export const store = configureStore({

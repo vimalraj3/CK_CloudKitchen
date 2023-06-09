@@ -3,7 +3,7 @@ import { IFood } from './food.model'
 import { IUser } from './user.model'
 import { IRestaurant } from './Restaurant.model'
 
-interface IFoodCart {
+export interface IFoodCart {
   food: IFood | Types.ObjectId
   quantity: number
 }

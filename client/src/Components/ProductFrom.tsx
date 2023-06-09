@@ -6,12 +6,7 @@ import { Resize } from '@cloudinary/url-gen/actions';
 import ImageSelector from './imgUploader/ImageSelector';
 import { IShowToast } from '../types/showToast.types';
 
-
-interface IProductFromProps {
-    showToast: IShowToast
-}
-
-function ProductFrom({ showToast }: IProductFromProps) {
+function ProductFrom() {
     const [image, setImage] = useState()
     const [isOpen, setIsOpen] = useState(false)
     const [value, setValue] = useState<string>()

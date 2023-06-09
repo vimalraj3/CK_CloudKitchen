@@ -322,6 +322,8 @@ class LoginController {
         address: newUserAddress.address,
       })
     } catch (error) {
+      console.log(error)
+
       next(new AppError(`Something went wrong`, 500))
     }
   }
@@ -386,7 +388,7 @@ class LoginController {
   async updateAddress(req: Request, res: Response, next: NextFunction) {
     try {
       const userId = req.user?._id
-      const { _id, ...filteredAddress } = req.body.update
+      const update = req.body.update
       const addressId = req.params.id
 
       let userAddress: HydratedDocument<IUserAddress> | null =
@@ -398,20 +400,24 @@ class LoginController {
 
       let updatedAddress = userAddress.address.map((addr) => {
         if (addr && addr._id?.toString() === addressId) {
-          addr = filteredAddress
+          addr = update
         }
         return addr
       })
 
+      console.log(JSON.stringify(updatedAddress))
+
       userAddress.address = updatedAddress as Types.DocumentArray<IAddress>
 
-      await userAddress.save()
+      await userAddress.save({ validateBeforeSave: false })
 
       res.status(200).json({
         success: true,
         address: userAddress.address,
       })
     } catch (error) {
+      console.log(error)
+
       next(new AppError('Something went wrong', 500))
     }
   }

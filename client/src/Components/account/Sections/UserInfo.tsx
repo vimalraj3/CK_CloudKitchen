@@ -41,8 +41,8 @@ type IUserAddress = IAddress & {
   handleEvents: (addressId: string, isEditEvent: boolean) => void
 }
 
-const UserAddress: React.FC<IUserAddress> = memo(
-  ({ houseNo, streetName, city, state, addressName, zipCode, handleEvents, _id }) => {
+export const UserAddress: React.FC<IUserAddress> = memo(
+  ({ houseNo, streetName, city, state, addressName, zipCode, handleEvents, _id, area }) => {
     return (
       <div className='bg-[#F8F8F8] aspect-video p-3 md:p-5 w-[90%] max-w-[250px] rounded-lg'>
         <div className="flex items-center justify-between gap-2">
@@ -58,6 +58,7 @@ const UserAddress: React.FC<IUserAddress> = memo(
         </div>
         <div className="font-para">
           <p>{`${houseNo}, ${streetName},`}</p>
+          <p className='capitalize'>{`${area},`}</p>
           <p className='capitalize'>{`${city},`}</p>
           <p className='capitalize'>{`${state} - ${zipCode}.`}</p>
         </div>
@@ -69,7 +70,7 @@ const UserAddress: React.FC<IUserAddress> = memo(
 interface IAddUserAddress {
   setDialogBoxOpen: (open: boolean) => void
 }
-const AddUserAddress: React.FC<IAddUserAddress> = memo(({ setDialogBoxOpen }) => {
+export const AddUserAddress: React.FC<IAddUserAddress> = memo(({ setDialogBoxOpen }) => {
   return (
     <div className='bg-[#F8F8F8] aspect-video p-3 md:p-5 w-[90%] max-w-[250px] rounded-lg flex justify-center items-center' >
       <div className="cursor-pointer gap-2" onClick={() => setDialogBoxOpen(true)}>
