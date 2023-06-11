@@ -24,6 +24,7 @@ import { fetchUser } from './state/slices/user.slice'
 import PageLoading from './Components/Loading/PageLoading'
 import { fetchCartByUserId } from './state/slices/cart.slice'
 import { ShowToast } from './Components/Toast/Toast'
+import { fetchUserAddress } from './state/slices/address.slice'
 
 function App() {
   const dispatch = useAppDispatch()
@@ -31,6 +32,7 @@ function App() {
   useEffect(() => {
     dispatch(fetchUser())
     dispatch(fetchCartByUserId())
+    dispatch(fetchUserAddress())
   }, [])
 
   return (

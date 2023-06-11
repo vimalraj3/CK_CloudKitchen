@@ -18,6 +18,7 @@ import { Login, SignUp } from '../../types/user.types'
 import axios, { AxiosResponse, AxiosError, isAxiosError } from 'axios'
 import { AppDispatch, RootState } from '../store'
 import { useAppDispatch } from '../../hooks'
+import { useHandleError } from '../../hooks/useHandleError'
 interface RejectedAction extends Action {
   payload: ServerError
 }
@@ -51,6 +52,9 @@ interface ServerResponse {
   user: IUser
   success: boolean
 }
+
+// ? Centerized error handling
+const { setServerError } = useHandleError()
 
 /**
  * login user thunk action creator function that returns a promise of IUser type and takes user object and ThunkAPI as arguments
@@ -366,10 +370,7 @@ export const userSlice = createSlice({
       })
       .addMatcher(isRejectedAction, (state, action) => {
         state.loading = false
-        state.error = {
-          message: action.payload?.message ?? 'something went wrong',
-          success: action.payload?.success ?? false,
-        }
+        setServerError(action.payload)
       })
       .addMatcher(isPending, (state) => {
         state.loading = true

@@ -3,7 +3,7 @@ import { IRestaurant } from './Restaurant.model'
 import { IUser } from './user.model'
 import { IFood } from './food.model'
 
-export interface IPayment {
+export interface IFoodInfo {
   foods: [
     {
       food: IFood | Types.ObjectId
@@ -15,7 +15,7 @@ export interface IPayment {
   totalPrice: number
 }
 
-export interface IOrder extends IPayment {
+export interface IOrder extends IFoodInfo {
   user: Types.ObjectId | IUser
   restaurant: Types.ObjectId | IRestaurant
   status: string
@@ -39,9 +39,9 @@ const OrderSchema: Schema = new Schema<IOrder>({
     },
   ],
   date: { type: Date, default: Date.now(), required: true },
-  paid: { type: Boolean, required: true, default: false },
+  paid: { type: Boolean, required: true, default: true },
   totalPrice: { type: Number, required: true },
-  status: { type: String, required: true, default: 'pending' },
+  status: { type: String, required: true, default: 'delivered' },
 })
 
 const Order = mongoose.model<IOrder>('Order', OrderSchema)

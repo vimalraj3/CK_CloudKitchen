@@ -59,7 +59,7 @@ export const RestaurantCardItem: React.FC<IRestaurantCardItemProps> = React.memo
             <>
                 {
                     food.title && (
-                        <div className="flex flex-col md:flex-row items-start md:items-center justify-between mt-2 gap-2 bg-secondary py-4 px-6 rounded-lg ">
+                        <div className="flex flex-col md:flex-row items-start md:items-center justify-between bg-secondary py-4 px-6 rounded-lg">
                             <div className="flex flex-row justify-start items-center gap-4">
                                 <img src={image[0]} alt={title} className="w-16 h-16 rounded-md" loading="lazy" />
                                 <div className="">
@@ -68,7 +68,7 @@ export const RestaurantCardItem: React.FC<IRestaurantCardItemProps> = React.memo
                                 </div>
                             </div>
 
-                            <div className="flex w-[100%] md:w-auto justify-center items-center">
+                            <div className="flex w-[100%] md:w-auto justify-center items-center mt-3 md:mt-0">
                                 <RestaurantCardItemBtns id={id} quantity={quantity} />
                             </div>
                         </div>

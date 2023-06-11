@@ -5,6 +5,7 @@ import {
   fetchCartByUserId,
   updateCartById,
 } from '../state/slices/cart.slice'
+import { fetchUserAddress } from '../state/slices/address.slice'
 
 export const useCart = () => {
   const dispatch = useAppDispatch()
@@ -21,6 +22,7 @@ export const useCart = () => {
 
   const handlePageLoad = () => {
     dispatch(fetchCartByUserId)
+    dispatch(fetchUserAddress())
   }
   return { handleCartQuantity, handleCartDelete, handlePageLoad }
 }

@@ -16,7 +16,7 @@ import { AppDispatch, RootState, store } from '../store'
 import { IFoodCart, ServerResponseICart } from '../../types/cart.types'
 import { setError, setErrors } from './error.slice'
 import { useAppDispatch } from '../../hooks'
-import { handleError } from '../handleError/handleError'
+import { useHandleError } from '../../hooks/useHandleError'
 // const dispatch = useDispatch()
 interface RejectedAction extends Action {
   payload: ServerError
@@ -32,6 +32,10 @@ interface initialState {
   totalPrice: number
   askClean: boolean
 }
+interface ServerResponse {
+  cart: ServerResponseICart
+  success: boolean
+}
 
 const initialState: initialState = {
   loading: false,
@@ -42,10 +46,9 @@ const initialState: initialState = {
   askClean: false,
 }
 
-interface ServerResponse {
-  cart: ServerResponseICart
-  success: boolean
-}
+// * ============================================================================
+// ? centerized error handling
+const { setServerError } = useHandleError()
 
 // * ============================================================================
 // ? user fetchCartByUserId
@@ -62,8 +65,6 @@ export const fetchCartByUserId = createAsyncThunk<
   async (_, thunkApi) => {
     const response = await Axios.get(`/cart/get`)
       .then(async (res) => {
-        console.log(res.data, 'res data')
-
         return res.data
       })
       .catch((err: ServerError) => {
@@ -149,15 +150,6 @@ export const addToCart = createAsyncThunk<
     .then((res) => res.data)
     .catch((err) => {
       if (isAxiosError(err)) {
-        const dispatch = useAppDispatch()
-        thunkApi.dispatch(
-          setErrors({
-            message: err.response?.data.message,
-            success: err.response?.data.success,
-          })
-        )
-        console.log(err.response?.data, 'err.response.data')
-
         return thunkApi.rejectWithValue(err.response?.data)
       }
     })
@@ -329,7 +321,7 @@ export const cartReducer = createSlice({
       .addMatcher(isRejectedAction, (state, action) => {
         state.loading = false
         if (action.payload) {
-          handleError(action.payload)
+          setServerError(action.payload)
         }
       })
       .addMatcher(isPending, (state) => {

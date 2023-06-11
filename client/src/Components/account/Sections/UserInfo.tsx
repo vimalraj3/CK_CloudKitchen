@@ -1,6 +1,5 @@
 import { IAddress, UserSession } from '../../../types/user.types'
 
-import Avatar from '@mui/material/Avatar'
 import { CardContianer } from '../Cards/CardContianer'
 import React, { memo, useCallback, useEffect, useState } from 'react'
 import { useAppDispatch, useEditUserAddress, useAppSelector, useDeleteUserAddress } from '../../../hooks'
@@ -8,12 +7,12 @@ import { fetchUserAddress } from '../../../state/slices/address.slice'
 
 import { DialogBox } from '../../utils/DialogBox'
 import { UserAddressEditForm } from '../../Forms/AddressForms/UserAddressEditForm'
-import { IShowToast } from '../../../types/showToast.types'
 
 import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
 import { EditBtn } from '../../utils/IconBtn/EditBtn'
 import { DeleteBtn } from '../../utils/IconBtn/DeleteBtn'
 import { UserAvatar } from '../../utils/UserAvatar/UserAvatar'
+import { TickCheckbox } from '../../utils/Form/Checkbox/Checkbox'
 
 interface IUserInfo {
   user: UserSession
@@ -38,23 +37,36 @@ const UserEmail: React.FC<IUserEmail> = memo(
 )
 
 type IUserAddress = IAddress & {
-  handleEvents: (addressId: string, isEditEvent: boolean) => void
+  handleEvents?: (addressId: string, isEditEvent: boolean) => void
+  selector?: boolean
+  handleSelector?: React.Dispatch<React.SetStateAction<string>>
+  selectedId?: string
 }
 
 export const UserAddress: React.FC<IUserAddress> = memo(
-  ({ houseNo, streetName, city, state, addressName, zipCode, handleEvents, _id, area }) => {
+  ({ houseNo, streetName, city, state, addressName, zipCode, handleEvents, _id, area, selector, handleSelector, selectedId }) => {
     return (
-      <div className='bg-[#F8F8F8] aspect-video p-3 md:p-5 w-[90%] max-w-[250px] rounded-lg'>
+      <div className={`bg-[#F8F8F8] aspect-video p-3 md:p-5 w-[100%] md:max-w-[250px] rounded-lg ${selector && 'cursor-pointer'} border-2  ${selectedId === _id && 'border-green-400'}`} onClick={() => {
+        if (handleSelector) {
+          handleSelector(_id)
+        }
+      }}>
         <div className="flex items-center justify-between gap-2">
           <h5 className='text-lg font-medium font-head capitalize'>{`${addressName} `}</h5>
-          <div className='flex'>
-            <div onClick={() => handleEvents(_id, true)}>
-              <EditBtn />
-            </div>
-            <div onClick={() => handleEvents(_id, false)}>
-              <DeleteBtn />
-            </div>
-          </div>
+          {
+            !selector ? (
+              <div className='flex'>
+                <div onClick={() => handleEvents && handleEvents(_id, true)}>
+                  <EditBtn />
+                </div>
+                <div onClick={() => handleEvents && handleEvents(_id, false)}>
+                  <DeleteBtn />
+                </div>
+              </div>
+            ) : (
+              <TickCheckbox checked={selectedId === _id} />
+            )
+          }
         </div>
         <div className="font-para">
           <p>{`${houseNo}, ${streetName},`}</p>
@@ -72,7 +84,7 @@ interface IAddUserAddress {
 }
 export const AddUserAddress: React.FC<IAddUserAddress> = memo(({ setDialogBoxOpen }) => {
   return (
-    <div className='bg-[#F8F8F8] aspect-video p-3 md:p-5 w-[90%] max-w-[250px] rounded-lg flex justify-center items-center' >
+    <div className='bg-[#F8F8F8] aspect-video p-3 md:p-5 w-[100%] md:max-w-[250px] rounded-lg flex justify-center items-center border-2' >
       <div className="cursor-pointer gap-2" onClick={() => setDialogBoxOpen(true)}>
         <AddLocationAltIcon /> Add address
       </div>

@@ -2,6 +2,7 @@ import mongoose, { Schema, Document, VirtualType, Types, Model } from 'mongoose'
 import { IOrder } from './order.model'
 import { ICart } from './cart.model'
 import { IRestaurant } from './Restaurant.model'
+import { IAddress } from './address.model'
 
 export enum userRole {
   user = 'user',
@@ -22,6 +23,7 @@ export interface IUser {
   verifyToken?: string
   createdAt?: Date
   _id: Types.ObjectId
+  address: Types.ObjectId | IAddress
 }
 
 const roleEnum = {
@@ -60,6 +62,11 @@ const UserSchema: Schema = new Schema<IUser>({
   },
   verified: { type: Boolean, required: true, default: false },
   verifyToken: { type: String, required: false, select: false },
+  address: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Address',
+    require: false,
+  },
   createdAt: { type: Date, required: true, default: Date.now() },
 })
 

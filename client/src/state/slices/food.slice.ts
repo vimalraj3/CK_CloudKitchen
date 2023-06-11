@@ -16,6 +16,7 @@ import { AppDispatch, RootState } from '../store'
 import { IFood } from '../../types/Food.types'
 import { IOwner } from '../../types/owner.types'
 import { setError } from './error.slice'
+import { useHandleError } from '../../hooks/useHandleError'
 
 interface RejectedAction extends Action {
   payload: ServerError
@@ -44,6 +45,9 @@ interface ServerResponse {
   food: IRestaurant
   success: boolean
 }
+// * ============================================================================
+// ? Centerized error handling
+const { setServerError } = useHandleError()
 
 // * ============================================================================
 // ? user fetchFoodAndRestaurantByRestaurantId
@@ -220,10 +224,7 @@ export const foodSlice = createSlice({
       })
       .addMatcher(isRejectedAction, (state, action) => {
         state.loading = false
-        setError({
-          message: action.payload.message,
-          success: action.payload.success,
-        })
+        setServerError(action.payload)
       })
       .addMatcher(isPending, (state) => {
         state.loading = true

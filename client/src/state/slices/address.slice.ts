@@ -11,6 +11,7 @@ import { ServerError } from '../../types/error.types'
 import { isAxiosError } from 'axios'
 import { AppDispatch, RootState } from '../store'
 import { setError } from './error.slice'
+import { useHandleError } from '../../hooks/useHandleError'
 
 interface RejectedAction extends Action {
   payload: ServerError
@@ -30,6 +31,10 @@ interface ServerResponse {
   user: IAddress[]
   success: boolean
 }
+
+// * ============================================================================
+// ? Centerized error handling
+const { setServerError } = useHandleError()
 
 // * ============================================================================
 // * user fetchUserAddress
@@ -185,10 +190,7 @@ export const addressSlice = createSlice({
       })
       .addMatcher(isRejectedAction, (state, action) => {
         state.loading = false
-        setError({
-          message: action.payload.message,
-          success: action.payload.success,
-        })
+        setServerError(action.payload)
       })
       .addMatcher(isPending, (state) => {
         state.loading = true

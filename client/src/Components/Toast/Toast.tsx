@@ -4,6 +4,7 @@ import Slide, { SlideProps } from '@mui/material/Slide';
 import { Alert, AlertColor } from '@mui/material';
 import { IShowToast, ToastState, IReturnProps } from '../../types/showToast.types';
 import { useAppSelector } from '../../hooks/useAppSelector';
+import { useHandleError } from '../../hooks/useHandleError';
 
 function SlideTransition(props: SlideProps) {
     return <Slide {...props} direction="down" />;
@@ -15,8 +16,6 @@ const initialState: ToastState = {
     type: 'success',
     message: 'This is a success message!',
 };
-
-
 
 /** *
     useToast hook is used to show toast messages in the application.
@@ -37,15 +36,15 @@ export const ShowToast: React.FC<any> = () => {
         }, []
     )
 
-    const { error } = useAppSelector(state => state.errorsState)
+    const { serverError, setServerError } = useHandleError()
 
     React.useEffect(() => {
-        console.log(error, 'change');
+        console.log(serverError, 'toast');
 
-        if (error) {
-            showToast(error.message, error.success ? 'success' : "error")
+        if (serverError && serverError.message !== "") {
+            showToast(serverError.message, serverError.success ? 'success' : "error")
         }
-    }, [error?.message])
+    }, [serverError?.message])
 
     const handleClose = () => {
         setState({
