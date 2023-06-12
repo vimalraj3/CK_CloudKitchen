@@ -133,7 +133,7 @@ export interface IRestaurant {
    */
   verifyToken?: string
 
-  orders?: Types.DocumentArray<Types.ObjectId | IOrder>
+  orders?: Types.DocumentArray<Types.ObjectId[] | IOrder[]>
 
   reviews: IReviewModel | Types.ObjectId
 

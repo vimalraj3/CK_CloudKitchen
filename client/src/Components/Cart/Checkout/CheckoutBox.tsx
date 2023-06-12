@@ -5,10 +5,8 @@ import { useCheckout } from '../../../hooks/useCheckout'
 
 
 
-export const CheckoutBox: React.FC<{
-    handleCheckout?: (data: boolean) => void
-}> = React.memo(
-    ({ handleCheckout }) => {
+export const CheckoutBox: React.FC = React.memo(
+    () => {
         const { handlePlaceOrder } = useCheckout()
         const { totalPrice, cart, restaurant, loading } = useAppSelector(state => state.cartState)
         return (
@@ -52,7 +50,7 @@ export const CheckoutBox: React.FC<{
                                         bgcolor: (theme) => theme.palette.success.main,
                                     }
                                 }}
-                                    onClick={() => { handlePlaceOrder() }}
+                                    onClick={() => { handlePlaceOrder(restaurant._id) }}
                                     fullWidth
                                     aria-label='Buy'
                                 >

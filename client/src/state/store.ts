@@ -6,6 +6,7 @@ import addressReducer from './slices/address.slice'
 import foodReducer from './slices/food.slice'
 import errorsReducer from './slices/error.slice'
 import cartReducer from './slices/cart.slice'
+import checkoutReducer from './slices/checkout.slice'
 
 const reducer = combineReducers({
   userState: userReducer,
@@ -13,6 +14,7 @@ const reducer = combineReducers({
   restaurantState: restaurantReducer,
   foodState: foodReducer,
   cartState: cartReducer,
+  checkoutState: checkoutReducer,
   errorsState: errorsReducer,
 })
 

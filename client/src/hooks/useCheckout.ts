@@ -1,26 +1,32 @@
 import React, { useCallback, useEffect, useRef } from 'react'
 import { useAppDispatch } from './useAppDispatch'
-import { placeOrderCheckout } from '../state/slices/checkout.slice'
+import {
+  placeOrderCheckout,
+  setAddressId,
+} from '../state/slices/checkout.slice'
+import { useAppSelector } from './useAppSelector'
 
 export const useCheckout = () => {
-  const [selectedAddressId, setSelectedAddressId] = React.useState('')
-
-  const addressId = useRef('')
-
-  useEffect(() => {
-    console.log(selectedAddressId)
-    addressId.current = selectedAddressId
-  }, [selectedAddressId, setSelectedAddressId, addressId])
+  const { addressId } = useAppSelector((state) => state.checkoutState)
 
   const dispatch = useAppDispatch()
 
-  const handlePlaceOrder = useCallback(() => {
-    console.log(addressId, 'selected address id')
+  const handleSetAddressId = useCallback((selectedAddressId: string) => {
+    dispatch(setAddressId(selectedAddressId))
+  }, [])
 
-    if (selectedAddressId !== '') {
-      dispatch(placeOrderCheckout(selectedAddressId))
-    }
-  }, [selectedAddressId, dispatch])
+  const handlePlaceOrder = useCallback(
+    (restaurantId: string) => {
+      if (addressId !== '' && restaurantId !== '') {
+        dispatch(placeOrderCheckout({ addressId, restaurantId }))
+      }
+    },
+    [addressId, dispatch]
+  )
 
-  return { selectedAddressId, setSelectedAddressId, handlePlaceOrder }
+  return {
+    handleSetAddressId,
+    handlePlaceOrder,
+    addressId,
+  }
 }

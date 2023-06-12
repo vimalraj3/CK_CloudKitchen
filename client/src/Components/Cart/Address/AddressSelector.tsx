@@ -11,14 +11,14 @@ export const AddressSelector = () => {
     const [dialogBoxOpen, setDialogBoxOpen] = useState(false)
     const { address } = useAppSelector(state => state.addressState)
 
-    const { selectedAddressId, setSelectedAddressId } = useCheckout()
+    const { handleSetAddressId, addressId } = useCheckout()
 
     const [handleSubmit] = useEditUserAddress()
 
     const handleSubmitEditForm = (data: IAddress) => {
-        if (selectedAddressId !== "") {
+        if (addressId !== "") {
             handleSubmit(data, false)
-            setSelectedAddressId('')
+            handleSetAddressId('')
         }
         else {
             handleSubmit(data, true)
@@ -49,7 +49,7 @@ export const AddressSelector = () => {
                             {
                                 address.map((v, i) => {
                                     return (
-                                        <UserAddress {...v} key={i} selector handleSelector={setSelectedAddressId} selectedId={selectedAddressId} />
+                                        <UserAddress {...v} key={i} selector handleSelector={handleSetAddressId} selectedId={addressId} />
                                     )
                                 })
                             }

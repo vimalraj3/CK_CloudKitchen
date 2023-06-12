@@ -15,7 +15,7 @@ export interface IUser {
   password?: string
   googleId?: string
   avatar?: string
-  orders?: Types.DocumentArray<IOrder>
+  orders?: Types.DocumentArray<Types.ObjectId[] | IOrder[]>
   cart?: Types.ObjectId | ICart
   restaurant?: Types.ObjectId | IRestaurant
   verified: boolean
@@ -37,12 +37,14 @@ const UserSchema: Schema = new Schema<IUser>({
   password: { type: String, required: false, select: false },
   googleId: { type: String, required: false, select: false },
   avatar: { type: String, required: false },
-  orders: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Order',
-    require: false,
-    select: false,
-  },
+  orders: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Order',
+      require: false,
+      select: false,
+    },
+  ],
   cart: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Cart',

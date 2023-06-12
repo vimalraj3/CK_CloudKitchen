@@ -1,34 +1,56 @@
+import { useEffect } from 'react'
+import { useOrders } from '../../../hooks/useOrders'
 import { CardContianer } from '../Cards/CardContianer'
-import { IRestaurantCardProps, RestaurantCard } from '../Cards/RestaurantCard'
+import { RestaurantCard } from '../Cards/RestaurantCard'
+import { Divider, Skeleton } from '@mui/material'
 
-const orders: IRestaurantCardProps = {
-  date: '2021-09-01',
-  total: 100,
-  status: 'Delivered',
-  restaurant: 'McDonalds',
-  items: [
-    {
-      id: 1,
-      name: 'Big Mac',
-      price: 100,
-      quantity: 1,
-      image: 'https://via.placeholder.com/150',
-    },
-  ],
+const OrdersLoading = () => {
+  return (
+    <div className="flex flex-col gap-8 w-[100vw]" >
+      {
+        Array(3).fill(0).map((_, i) => (
+          <div className="flex items-center justify-between mt-2 w-[100%]">
+            <div className="flex flex-row justify-start items-center gap-4">
+              <Skeleton variant="rectangular" width={'9rem'} height={'6rem'} animation='wave' />
+              <div className='w-[100%]'>
+                <Skeleton variant="text" sx={{ fontSize: '1rem', width: '10vw' }} animation='wave' />
+                <Skeleton variant="text" sx={{ fontSize: '1rem', width: '10vw' }} animation='wave' />
+              </div>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+
+  )
 }
 
+
 export const UserOrders = () => {
+
+  const { handleLoadOrders, orders, loading } = useOrders()
+
+  useEffect(() => {
+    handleLoadOrders()
+  }, [])
+
   return (
     <div id={'userOrders'}>
       <CardContianer title="Orders">
-        <div className="flex flex-col">
-          {/* {orders.map((order) => ( */}
-          <RestaurantCard {...orders} />
-          {/* ))} */}
-        </div>
+        {
+          loading ? <OrdersLoading /> : (
+            <div className="flex flex-col gap-8" >
+              {orders.length > 0 && orders.map((order, i) => (
+                <>
+                  <RestaurantCard orders={order} key={order._id} />
+                  {i !== orders.length - 1 && <Divider />}
+                </>
+              ))}
+            </div>
+          )
+        }
       </CardContianer>
     </div>
   )
 }
 
-// TODO intergate with backend, Redesign the border and fonts make it little fancy

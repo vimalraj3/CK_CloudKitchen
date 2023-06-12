@@ -35,18 +35,7 @@ const RestaurantCardTitle: React.FC<IRestaurantCardTitleProps> = ({
 const RestaurantCard: React.FC = () => {
     const { loading, cart, restaurant, totalPrice } = useAppSelector(state => state.cartState)
 
-    const navigate = useNavigate()
-
     const { handlePageLoad } = useCart()
-
-    const { handlePlaceOrder } = useCheckout()
-
-    const handleNavigate = useCallback((toggle: boolean) => {
-        console.log('checkout');
-
-        handlePlaceOrder()
-    }, [])
-
     useEffect(() => {
         handlePageLoad()
     }, [])
@@ -92,7 +81,7 @@ const RestaurantCard: React.FC = () => {
                                     <AddressSelector />
                                 </div>
                                 <div className="w-[100%] md:w-[40%]">
-                                    <CheckoutBox handleCheckout={handleNavigate} />
+                                    <CheckoutBox />
                                 </div>
                             </div>
                         </div>

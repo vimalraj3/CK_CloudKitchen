@@ -39,7 +39,7 @@ const UserEmail: React.FC<IUserEmail> = memo(
 type IUserAddress = IAddress & {
   handleEvents?: (addressId: string, isEditEvent: boolean) => void
   selector?: boolean
-  handleSelector?: React.Dispatch<React.SetStateAction<string>>
+  handleSelector?: (addressId: string) => void
   selectedId?: string
 }
 

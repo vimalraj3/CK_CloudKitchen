@@ -15,6 +15,7 @@ export interface IFoodInfo {
 }
 
 export interface IOrder extends IFoodInfo {
+  _id: string
   user: IUser
   restaurant: IRestaurant
   status: string

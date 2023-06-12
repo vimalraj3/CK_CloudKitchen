@@ -1,20 +1,22 @@
+import { useId } from "react"
+import { IFood } from "../../../types/Food.types"
+import { IOrder } from "../../../types/order.types"
+
+
+export interface IRestaurantCardProps {
+  orders: IOrder
+}
+
+
 interface IRestaurantCardTitleProps {
-  date: string
+  restaurant: string
   total: number
   status: string
-  restaurant: string
+  date?: string
 }
 
-interface IRestaurantCardItemProps {
-  id: number
-  name: string
-  price: number
+interface IRestaurantCardItemProps extends IFood {
   quantity: number
-  image: string
-}
-
-export interface IRestaurantCardProps extends IRestaurantCardTitleProps {
-  items: IRestaurantCardItemProps[]
 }
 
 const RestaurantCardTitle: React.FC<IRestaurantCardTitleProps> = ({
@@ -25,21 +27,23 @@ const RestaurantCardTitle: React.FC<IRestaurantCardTitleProps> = ({
 }) => {
   return (
     <>
-      <div className="flex items-center gap-2">
-        <h3 className="font-bold font-head text-sm md:text-lg">{restaurant}</h3>
-        <p className="text-green-500">•</p>
-        <p className="text-xs md:text-sm">Total: ${total}</p>
-        <p className="text-green-500">•</p>
-        <p className={`text-xs md:text-sm`}>{status}</p>
+      <div className="flex justify-between items-center gap-2">
+        <div>
+          <h3 className="font-bold font-head text-sm md:text-lg">{restaurant}</h3>
+          <p className="text-xs md:text-sm">Total: ${total}</p>
+        </div>
+        <div>
+          <p className={`text-xs md:text-sm`}>{status}</p>
+          <p className="text-xs">{date}</p>
+        </div>
       </div>
-      <p className="text-xs">{date}</p>
     </>
   )
 }
 
 const RestaurantCardItem: React.FC<IRestaurantCardItemProps> = ({
-  id,
-  name,
+  _id,
+  title,
   price,
   quantity,
   image,
@@ -47,10 +51,12 @@ const RestaurantCardItem: React.FC<IRestaurantCardItemProps> = ({
   return (
     <>
       <div className="flex items-center mt-2">
-        <img src={image} alt={name} className="w-16 h-16 rounded-md" />
-        <div className="ml-2">
-          <h3 className="font-bold font-head md:text-lg">{name}</h3>
-          <p className="text-sm">${price}</p>
+        <div className="flex flex-row justify-start items-center gap-4">
+          <img src={image[0]} alt={title} className="w-16 h-16 rounded-md" loading="lazy" />
+          <div>
+            <h3 className="font-semibold font-head md:text-lg">{title}</h3>
+            <p className="text-sm font-para mt-1">₹ {price}</p>
+          </div>
         </div>
         <p className="ml-auto text-sm">x{quantity}</p>
       </div>
@@ -59,21 +65,26 @@ const RestaurantCardItem: React.FC<IRestaurantCardItemProps> = ({
 }
 
 export const RestaurantCard: React.FC<IRestaurantCardProps> = ({
-  date,
-  total,
-  status,
-  restaurant,
-  items,
+  orders
 }) => {
+  console.log(orders.date);
+
+  const date = new Date(orders.date)
   return (
-    <div>
+    <div key={date.toLocaleTimeString()}>
       <RestaurantCardTitle
-        date={date}
-        total={total}
-        status={status}
-        restaurant={restaurant}
+        date={date.toLocaleDateString()}
+        total={orders.totalPrice}
+        status={orders.status}
+        restaurant={orders.restaurant.restaurantName}
       />
-      <RestaurantCardItem {...items[0]} />
+      <div className="flex flex-col gap-3 mt-1">
+        {
+          orders.foods.map((food, i) => (
+            <RestaurantCardItem {...food.food} quantity={food.quantity} key={i} />
+          ))
+        }
+      </div>
     </div>
   )
 }

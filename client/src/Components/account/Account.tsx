@@ -1,16 +1,16 @@
 import React, { useEffect } from 'react'
 import { useAppSelector } from '../../hooks'
-import { IShowToast } from '../../types/showToast.types'
 import { InitialUserState } from '../../types/user.types'
 import Container from '../Container'
 import Nav from '../Nav'
 const Settings = React.lazy(() => import('./Sections/Settings'))
 import { UserInfo } from './Sections/UserInfo'
 import { UserOrders } from './Sections/UserOrders'
+import PageLoading from '../Loading/PageLoading'
 
 
 const Account: React.FC = () => {
-  const { data, error }: InitialUserState = useAppSelector((state) => state.userState)
+  const { data }: InitialUserState = useAppSelector((state) => state.userState)
 
   return (
     <div>
