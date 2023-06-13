@@ -31,6 +31,7 @@ interface initialState {
   restaurantId: string | null
   totalPrice: number
   askClean: boolean
+  error: ServerError | null
 }
 interface ServerResponse {
   cart: ServerResponseICart
@@ -44,6 +45,7 @@ const initialState: initialState = {
   restaurantId: null,
   totalPrice: 0,
   askClean: false,
+  error: null,
 }
 
 // * ============================================================================
@@ -320,9 +322,7 @@ export const cartReducer = createSlice({
       })
       .addMatcher(isRejectedAction, (state, action) => {
         state.loading = false
-        if (action.payload) {
-          setServerError(action.payload)
-        }
+        state.error = action.payload
       })
       .addMatcher(isPending, (state) => {
         state.loading = true

@@ -67,8 +67,6 @@ const RestaurantCardItem: React.FC<IRestaurantCardItemProps> = ({
 export const RestaurantCard: React.FC<IRestaurantCardProps> = ({
   orders
 }) => {
-  console.log(orders.date);
-
   const date = new Date(orders.date)
   return (
     <div key={date.toLocaleTimeString()}>

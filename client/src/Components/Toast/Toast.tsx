@@ -30,21 +30,56 @@ const initialState: ToastState = {
 export const ShowToast: React.FC<any> = () => {
     const [state, setState] = React.useState<ToastState>(initialState);
 
+    const userError = useAppSelector(state => state.userState.error)
+    const restaurantError = useAppSelector(state => state.restaurantState.error)
+    const addressError = useAppSelector(state => state.addressState.error)
+    const checkoutError = useAppSelector(state => state.checkoutState.error)
+    const foodError = useAppSelector(state => state.foodState.error)
+    const cartError = useAppSelector(state => state.cartState.error)
+
     const showToast: IShowToast = React.useCallback(
         (message: string, type: string) => {
             setState({ open: true, type, message, Transition: SlideTransition });
         }, []
     )
 
-    const { serverError, setServerError } = useHandleError()
+    React.useEffect(() => {
+        if (userError && userError.message !== "") {
+            showToast(userError.message, userError.success ? 'success' : "error")
+        }
+    }, [userError])
 
     React.useEffect(() => {
-        console.log(serverError, 'toast');
-
-        if (serverError && serverError.message !== "") {
-            showToast(serverError.message, serverError.success ? 'success' : "error")
+        if (restaurantError && restaurantError.message !== "") {
+            showToast(restaurantError.message, restaurantError.success ? 'success' : "error")
         }
-    }, [serverError?.message])
+    }, [restaurantError])
+    React.useEffect(() => {
+        if (addressError && addressError.message !== "") {
+            showToast(addressError.message, addressError.success ? 'success' : "error")
+        }
+    }, [addressError])
+
+    React.useEffect(() => {
+
+        if (checkoutError && checkoutError.message !== "") {
+            showToast(checkoutError.message, checkoutError.success ? 'success' : "error")
+        }
+    }, [checkoutError])
+
+    React.useEffect(() => {
+
+        if (cartError && cartError.message !== "") {
+            showToast(cartError.message, cartError.success ? 'success' : "error")
+        }
+    }, [cartError])
+
+    React.useEffect(() => {
+
+        if (foodError && foodError.message !== "") {
+            showToast(foodError.message, foodError.success ? 'success' : "error")
+        }
+    }, [foodError])
 
     const handleClose = () => {
         setState({

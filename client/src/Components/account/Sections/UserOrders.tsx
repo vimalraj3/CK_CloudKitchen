@@ -38,7 +38,7 @@ export const UserOrders = () => {
     <div id={'userOrders'}>
       <CardContianer title="Orders">
         {
-          loading ? <OrdersLoading /> : (
+          !(orders.length > 0) ? <OrdersLoading /> : (
             <div className="flex flex-col gap-8" >
               {orders.length > 0 && orders.map((order, i) => (
                 <>

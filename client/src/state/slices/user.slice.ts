@@ -23,10 +23,6 @@ interface RejectedAction extends Action {
   payload: ServerError
 }
 
-interface AsyncThunkConfig {
-  rejectValue: ServerError
-}
-
 const defaultUserSession: UserSession = {
   email: '',
   userName: '',
@@ -370,7 +366,7 @@ export const userSlice = createSlice({
       })
       .addMatcher(isRejectedAction, (state, action) => {
         state.loading = false
-        setServerError(action.payload)
+        state.error = action.payload
       })
       .addMatcher(isPending, (state) => {
         state.loading = true

@@ -26,6 +26,7 @@ interface initialState {
   restaurant: IRestaurant | null
   restaurants: IRestaurant[]
   owner: IOwner
+  error: ServerError | null
 }
 
 const initialState: initialState = {
@@ -36,6 +37,7 @@ const initialState: initialState = {
     isOwner: false,
     restaurantId: '',
   },
+  error: null,
 }
 
 interface ServerResponse {
@@ -238,7 +240,7 @@ export const restaurantSlice = createSlice({
       })
       .addMatcher(isRejectedAction, (state, action) => {
         state.loading = false
-        setServerError(action.payload)
+        state.error = action.payload as ServerError
       })
       .addMatcher(isPending, (state) => {
         state.loading = true

@@ -10,7 +10,6 @@ import { Axios } from '../../axios/config'
 import { ServerError } from '../../types/error.types'
 import { isAxiosError } from 'axios'
 import { AppDispatch, RootState } from '../store'
-import { setError } from './error.slice'
 import { useHandleError } from '../../hooks/useHandleError'
 
 interface RejectedAction extends Action {
@@ -20,11 +19,13 @@ interface RejectedAction extends Action {
 interface initialState {
   loading: boolean
   address: IAddress[]
+  error: ServerError | null
 }
 
 const initialState: initialState = {
   loading: false,
   address: [],
+  error: null,
 }
 
 interface ServerResponse {
@@ -190,7 +191,7 @@ export const addressSlice = createSlice({
       })
       .addMatcher(isRejectedAction, (state, action) => {
         state.loading = false
-        setServerError(action.payload)
+        state.error = action.payload
       })
       .addMatcher(isPending, (state) => {
         state.loading = true
