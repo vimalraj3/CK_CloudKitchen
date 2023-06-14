@@ -5,6 +5,7 @@ import { IRestaurant } from '../../../types/Restaurant.types'
 import { Search } from '../../utils/Form/Search/Search'
 import { useSearch } from '../../../hooks/useSearch'
 import { FilterDrawer } from '../../utils/Drawer/FilterDrawer'
+import { SortedBy } from '../../utils/SortedBy/SortedBy'
 
 
 const productTempData = [
@@ -73,8 +74,8 @@ const HomeProduct: React.FC<Props> = ({ restaurants }) => {
                 <div className="w-[100%] md:w-[30%]">
                     <Search handleSearch={handleSearch} handleSearchSubmit={handleSearchSubmit} />
                 </div>
-                {/* <Btns labelArr={["Rating 4.0+"]} /> */}
                 <FilterDrawer />
+                <SortedBy />
             </div>
             <RestaurantCardContainer restaurants={restaurants} />
         </div>

@@ -1,62 +1,58 @@
 import React, { useCallback } from 'react'
+import { IsFlatObject } from 'react-hook-form'
 
 interface IFilters {
-  rating: {
-    min: number
-    max: number
-  }
+  rating: number
   price: {
     min: number
     max: number
   }
-  vegOnly: boolean
-  nonVegOnly: boolean
 }
 
 interface ISortBy {
-  rating: number
+  rating: boolean
   price: {
-    lowToHigh: false
-    highToLow: false
+    lowToHigh: boolean
+    highToLow: boolean
   }
 }
 
 export const useSearch = () => {
+  // * Default values
   const filtersDefault: IFilters = {
-    rating: {
-      min: 0,
-      max: 0,
-    },
+    rating: 0,
     price: {
       min: 0,
       max: 0,
     },
-    vegOnly: false,
-    nonVegOnly: false,
   }
 
   const sortedByDefault: ISortBy = {
-    rating: 0,
+    rating: false,
     price: {
       lowToHigh: false,
       highToLow: false,
     },
   }
 
+  // * state Delcaration
   const [search, setSearch] = React.useState('')
-
   const [sortedBy, setSortedBy] = React.useState<ISortBy>(sortedByDefault)
-
   const [filter, setFilter] = React.useState<IFilters>(filtersDefault)
 
+  // * handle search input change
   const handleSearch = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value)
   }, [])
 
+  // * handle clear everything
   const handleClearSearch = useCallback(() => {
     setSearch('')
+    setSortedBy(sortedByDefault)
+    setFilter(filtersDefault)
   }, [])
 
+  // * handle Search Submit
   const handleSearchSubmit = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
       console.log(search, 'search', 'submitted')
@@ -68,8 +64,39 @@ export const useSearch = () => {
     setSortedBy(sortedBy)
   }, [])
 
-  const handleFilter = useCallback((filters: IFilters) => {
-    setFilter(filters)
+  const handleChangePrice = useCallback(
+    (value: string, isMin: boolean) => {
+      isMin
+        ? setFilter({
+            ...filter,
+            price: {
+              max: filter.price.max,
+              min: parseInt(value),
+            },
+          })
+        : setFilter({
+            ...filter,
+            price: {
+              min: filter.price.min,
+              max: parseInt(value),
+            },
+          })
+    },
+    [setFilter]
+  )
+
+  const handleRating = useCallback(
+    (value: number) => {
+      setFilter({
+        ...filter,
+        rating: value,
+      })
+    },
+    [setFilter, filter]
+  )
+
+  const handleFilterSubmit = useCallback((data: IFilters) => {
+    console.log(data)
   }, [])
 
   return {
@@ -77,7 +104,12 @@ export const useSearch = () => {
     handleSearch,
     handleClearSearch,
     handleSearchSubmit,
-    handleFilter,
     handleSortedBy,
+    handleChangePrice,
+    handleRating,
+    ratingValue: filter.rating,
+    handleFilterSubmit,
+    priceMin: filter.price.min,
+    priceMax: filter.price.max,
   }
 }
