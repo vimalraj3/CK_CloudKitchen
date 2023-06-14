@@ -1,8 +1,8 @@
-import { IProduct } from './Food.types'
+import { IFood } from './Food.types'
 import { IRestaurant } from './Restaurant.types'
 
 export interface IFoodOrder {
-  foods: IProduct[]
+  foods: IFood[]
   date: Date
   paid: boolean
   totalPrice: number
