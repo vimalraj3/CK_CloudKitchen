@@ -9,7 +9,13 @@ import User from '../models/user.model'
 import path from 'path'
 
 import dotenv from 'dotenv'
-dotenv.config({ path: path.resolve(process.cwd(), './src/.env.test') })
+
+const currentDir = process.cwd()
+if (currentDir.endsWith('server')) {
+  dotenv.config({ path: path.resolve(currentDir, './src/.env') })
+} else {
+  dotenv.config({ path: path.resolve(currentDir, './server/dist/.env') })
+}
 
 const options: StrategyOptions = {
   clientID: process.env.CLIENT_ID,

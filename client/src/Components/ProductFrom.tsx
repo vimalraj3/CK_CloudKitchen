@@ -1,9 +1,5 @@
 import axios from 'axios';
 import { useState } from 'react'
-import { Cloudinary } from '@cloudinary/url-gen';
-import { Resize } from '@cloudinary/url-gen/actions';
-// import ImageUploader from './imgUploader/ImageUploader';
-import ImageSelector from './imgUploader/ImageSelector';
 import { IShowToast } from '../types/showToast.types';
 
 function ProductFrom() {
@@ -70,7 +66,7 @@ function ProductFrom() {
                         <input type="time" name="close" id="close" className='textBox mt-2' />
                     </div>
 
-                    <ImageSelector />
+                    {/* <ImageSelector /> */}
 
                     <button className='btn-full'>Submit</button>
                 </div>

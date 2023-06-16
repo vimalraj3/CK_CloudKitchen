@@ -1,5 +1,5 @@
 import dotenv from 'dotenv'
-import express from 'express'
+import express, { Request, Response } from 'express'
 
 import path from 'path'
 
@@ -24,8 +24,14 @@ import './controllers/RootController'
 import './controllers/RestaurantController'
 import './controllers/OrderController'
 import './controllers/CartController'
+import { log } from 'winston'
 
-dotenv.config({ path: path.resolve(process.cwd(), './src/.env.test') })
+const currentDir = process.cwd()
+if (currentDir.endsWith('server')) {
+  dotenv.config({ path: path.resolve(currentDir, './src/.env') })
+} else {
+  dotenv.config({ path: path.resolve(currentDir, './server/dist/.env') })
+}
 
 const app = express()
 const corsOption: CorsOptions = {
@@ -56,23 +62,17 @@ var sess: SessionOptions = {
   cookie: cookieOpt,
 }
 
-// app.use(bodyParser.urlencoded({ extended: false }))
-// app.use(
-//   bodyParser.json({
-//     type: ['application/x-www-form-urlencoded', 'application/json'], // Support json encoded bodies
-//   })
-// )
 app.use(requestLogger)
 app.use(bodyParser.json())
 app.use(session(sess))
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(cors(corsOption))
-app.use(AppRouter.getInstance())
+app.use('/api/', AppRouter.getInstance())
 app.use(ErrorHandler)
 
 app.get(
-  '/auth/google',
+  'api/auth/google',
   (req, res, next) => {
     res.header(
       'Access-Control-Allow-Methods',
@@ -86,13 +86,18 @@ app.get(
 )
 
 app.get(
-  '/auth/google/callback',
+  'api/auth/google/callback',
   passport.authenticate('google', {
     failureRedirect: `${env.CLI_URL}/`,
   }),
   function (req, res) {
     res.redirect(`${env.CLI_URL}/`)
   }
+)
+
+app.use(express.static(path.join(__dirname, '../../client/dist')))
+app.get('*', (req: Request, res: Response) =>
+  res.sendFile(path.join(__dirname, '../../client/dist/index.html'))
 )
 
 process.on('uncaughtException', (err: Error) => {
@@ -110,5 +115,3 @@ connect(DB_URL).then(() => {
     console.log(`Server running at http://localhost:${env.PORT}`)
   })
 })
-
-// testing
