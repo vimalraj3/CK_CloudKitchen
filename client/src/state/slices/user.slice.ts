@@ -184,21 +184,6 @@ export const fetchUser = createAsyncThunk<
   async (_, thunkApi) => {
     const response = await Axios.get<ServerResponse>('/auth/getuser')
       .then(async (res) => {
-        let locate, lat, lon
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition((position) => {
-            lat = position.coords.latitude
-            lon = position.coords.longitude
-          })
-          if (lat && lon) {
-            locate = await axios.get(
-              `https://api.openweathermap.org/data/2.5/weather?lat={${lat}}&lon={${lon}}&appid={${
-                import.meta.env.VITE_LOCATION_API_KEY
-              }}`
-            )
-          }
-        }
-
         let userData = res.data.user
 
         const userSession: UserSession = {
@@ -211,7 +196,7 @@ export const fetchUser = createAsyncThunk<
             isAdmin: userData.role === 'admin' ? true : false,
           },
           geo: {
-            region: locate?.data.name || 'Your location',
+            region: 'Your location',
           },
         }
 
