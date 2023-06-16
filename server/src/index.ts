@@ -13,7 +13,6 @@ import bodyParser from 'body-parser'
 import multer from 'multer'
 
 import { ErrorHandler } from './utils/ErrorHandler'
-import { requestLogger } from './log/requestLogger'
 import { AppRouter } from './AppRouter'
 
 import './middleware/passport.middleware'
@@ -62,7 +61,6 @@ var sess: SessionOptions = {
   cookie: cookieOpt,
 }
 
-app.use(requestLogger)
 app.use(bodyParser.json())
 app.use(session(sess))
 app.use(passport.initialize())
