@@ -18,7 +18,7 @@ interface BtnsProps extends BtnFuns {
 export const Btn: React.FC<BtnProps> = ({ label, styles, className, onClick, types, type = "button" }) => {
     const btnType = types || 'success'
     return (
-        <button onClick={onClick} type={type} className="py-2 px-2 bg-secondary border-[#9c9c9c] border-2 rounded-md focus:outline-none text-sm font-para"
+        <button onClick={onClick} type={type} className="py-2 px-2 bg-secondary border-[#9c9c9c] border-2 rounded-md focus:outline-none text-md font-para"
         >{label}</button>
     )
 }

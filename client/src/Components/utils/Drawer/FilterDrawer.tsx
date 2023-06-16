@@ -2,15 +2,13 @@ import React, { Children, useCallback } from 'react'
 import { Drawer } from './Drawer'
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import { Btn } from './../Btn'
-import { useSearch } from '../../../hooks/useSearch';
-import { Input } from '../Form';
 import Rating from '@mui/material/Rating';
 import StarIcon from '@mui/icons-material/Star';
 import { Button, Divider } from '@mui/material';
 import { PriceSelector } from '../Form/PriceSelector/PriceSelector';
-import { TickCheckbox } from '../Form/Checkbox/Checkbox';
-import { flif } from '@cloudinary/url-gen/qualifiers/format';
-
+import { useAppDispatch, useAppSelector } from '../../../hooks';
+import { setFilter } from '../../../state/slices/FilterAndSearch.slice';
+import TuneIcon from '@mui/icons-material/Tune';
 export const FilterDrawer = () => {
     const anchor = 'right'
 
@@ -24,47 +22,56 @@ export const FilterDrawer = () => {
     const iOS =
         typeof navigator !== 'undefined' && /iPad|iPhone|iPod/.test(navigator.userAgent);
 
-    const { handleRating, ratingValue, handleFilterSubmit } = useSearch()
+    const { filter, search, sortedBy } = useAppSelector(state => state.filterAndSearchState)
+    const dispatch = useAppDispatch()
 
 
-    const [rating, setRating] = React.useState(0)
-    const [minValue, setMinValue] = React.useState(0)
-    const [maxValue, setMaxValue] = React.useState(0)
+    const toggleDrawer = (open: boolean) => {
+        setState({ ...state, [anchor]: open });
+    };
 
 
-    const handlePrice = useCallback((value: string, isMin: boolean) => {
-        isMin ?
-            setMinValue(parseInt(value))
-            :
-            setMaxValue(parseInt(value))
-    }, [])
+    const handleFilterSubmit = () => {
+        console.log('closing');
 
-    const toggleDrawer =
-        (open: boolean) =>
-            (event: React.KeyboardEvent | React.MouseEvent) => {
-                if (
-                    event &&
-                    event.type === 'keydown' &&
-                    ((event as React.KeyboardEvent).key === 'Tab' ||
-                        (event as React.KeyboardEvent).key === 'Shift')
-                ) {
-                    return;
-                }
+        console.log(filter, 'filter', 'submitted', sortedBy, 'sortedBy')
+    }
 
-                setState({ ...state, [anchor]: open });
-            };
+    const handleRating = (value: number) => {
+        dispatch(
+            setFilter({
+                ...filter,
+                rating: value,
+            })
+        )
+    }
+
     return (
         <div>
             <div>
                 <React.Fragment key={anchor}>
-                    <Btn label={"Filter"} onClick={toggleDrawer(true)} />
-                    <div onClick={toggleDrawer(true)}>
+                    <Button variant='outlined' size={'large'} onClick={() => toggleDrawer(true)} sx={{
+                        color: '#ff7e8b',
+                        borderColor: '#ff7e8b',
+                        ":hover": {
+                            borderColor: '#ff7e8b',
+                        }
+                    }} >
+                        <div className='flex gap-2 items-center'>
+                            <TuneIcon />
+                            Filter
+                        </div>
+                    </Button>
+                    <div onClick={() => toggleDrawer(true)}>
                     </div>
                     <SwipeableDrawer
                         anchor={anchor}
                         open={state[anchor]}
-                        onClose={toggleDrawer(false)}
-                        onOpen={toggleDrawer(true)}
+                        onClose={() => {
+                            toggleDrawer(false)
+                            handleFilterSubmit()
+                        }}
+                        onOpen={() => toggleDrawer(true)}
                         disableBackdropTransition={false}
                     >
                         <div className="flex flex-col justify-between h-[100%] w-[100%] mx-auto py-6 px-4 font-para">
@@ -77,15 +84,9 @@ export const FilterDrawer = () => {
                                         <div className="flex gap-2">
                                             <Rating
                                                 name="hover-feedback"
-                                                value={rating}
-                                                precision={0.5}
+                                                value={filter.rating}
                                                 max={4}
-                                                onChange={(event, newValue) => {
-                                                    if (newValue) {
-                                                        console.log(newValue, 'new value ratng');
-                                                        setRating(newValue);
-                                                    }
-                                                }}
+                                                onChange={(event, newValue) => (newValue) && handleRating(newValue)}
                                                 emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
                                             />
                                             <p> & above</p>
@@ -97,31 +98,17 @@ export const FilterDrawer = () => {
                                         Price
                                     </h4>
                                     <div className='w-[100%] mt-5'>
-                                        <PriceSelector handleChange={handlePrice} minValue={minValue} maxValue={maxValue} />
+                                        <PriceSelector />
                                     </div>
                                 </section>
                             </div>
-                            <div className="flex gap-5 z-50">
-                                <div className="w-[50%]">
-                                    <Button color='error' variant='outlined' fullWidth onClick={toggleDrawer(false)}>
-                                        Cancel
-                                    </Button>
-                                </div>
-                                <div className="w-[50%]">
-                                    <Button color='success' variant='contained' fullWidth onClick={() => {
-                                        toggleDrawer(false)
-                                        handleFilterSubmit({
-                                            rating: rating,
-                                            price: {
-                                                min: minValue
-                                                ,
-                                                max: maxValue
-                                            }
-                                        })
-                                    }}>
-                                        confirm
-                                    </Button>
-                                </div>
+                            <div className="flex z-50">
+                                <Button color='success' variant='contained' fullWidth onClick={() => {
+                                    toggleDrawer(false)
+                                    handleFilterSubmit()
+                                }}>
+                                    Filter
+                                </Button>
                             </div>
                         </div>
                     </SwipeableDrawer>

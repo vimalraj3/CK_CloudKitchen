@@ -172,3 +172,22 @@ div.scrollbar-hide::-webkit-scrollbar {
     background-color: hsl(200, 20%, 95%);
   }
 }
+
+.slider {
+  overflow: hidden;
+  animation: slide 0.3s 1 ease-in-out;
+}
+
+@keyframes slide {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+.border-1 {
+  border: 1px solid;
+}

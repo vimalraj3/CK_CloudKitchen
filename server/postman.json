@@ -1,0 +1,601 @@
+{
+	"info": {
+		"_postman_id": "349fd56d-4eb9-4cf0-bf27-fce2c12a953f",
+		"name": "CLoud kitchen",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19982905"
+	},
+	"item": [
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"vimalic0011@gmail.com\",\r\n    \"password\":\"vimal\"\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Signup",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userName\":\"vimal raj\",\r\n    \"email\":\"vimalic0011@gmail.com\",\r\n    \"password\":\"vimalR\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/auth/signup",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"auth",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add address",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"houseNo\": \"No. 59\",\n    \"addressName\":\"home\",\n    \"streetName\":\"6th cross\",\n    \"city\":\"moolakulam\",\n    \"state\":\"puducherry\",\n    \"zipCode\":\"605010\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/address",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"address"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/auth/logout",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getUser",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/auth/getuser",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"getuser"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "google auth",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/google",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"google"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Food",
+			"item": [
+				{
+					"name": "Add Food",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "body",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "Fired rice",
+									"type": "text"
+								},
+								{
+									"key": "state",
+									"value": "puducherry",
+									"type": "text"
+								},
+								{
+									"key": "price",
+									"value": "600",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "An Indian thali is a large platter or tray that contains a variety of small dishes, each with a different flavor and texture. The dishes are usually served in small bowls called katoris and are accompanied by rice or bread.",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "open",
+									"value": "17:00",
+									"type": "text"
+								},
+								{
+									"key": "close",
+									"value": "21:00",
+									"type": "text"
+								},
+								{
+									"key": "category",
+									"value": "rice",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/home/vimal/cloudKitchen/client/src/assets/home/product.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/food/new",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"food",
+								"new"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all foods",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/food/all",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"food",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get foods by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/food/647df190b47acf01e363650e",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"food",
+								"647df190b47acf01e363650e"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Restaurant",
+			"item": [
+				{
+					"name": "add restaurant",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "restaurantName",
+									"value": "vimal cloud kitchen",
+									"type": "text"
+								},
+								{
+									"key": "restaurantDescription",
+									"value": "Welcome to our South Indian restaurant, where you can indulge in the authentic flavors of India's southern region. Our menu features a variety of mouthwatering dishes, including dosa, idli, and other South Indian specialties that are sure to tantalize your taste buds.\n\nAt our restaurant, we use only the freshest ingredients and traditional recipes to create dishes that are full of flavor and nutrition. From the crispy dosas to the soft and fluffy idlis, every dish is made with care and attention to detail to ensure that you have the best dining experience possible.",
+									"type": "text"
+								},
+								{
+									"key": "restaurantAddress",
+									"value": "NO.59, 6th cross",
+									"type": "text"
+								},
+								{
+									"key": "restaurantCity",
+									"value": "Moolakulam",
+									"type": "text"
+								},
+								{
+									"key": "restaurantState",
+									"value": "Puducherry",
+									"type": "text"
+								},
+								{
+									"key": "restaurantRegion",
+									"value": "puducherry",
+									"type": "text"
+								},
+								{
+									"key": "restaurantZip",
+									"value": "605010",
+									"type": "text"
+								},
+								{
+									"key": "restaurantPhone",
+									"value": "1234567890",
+									"type": "text"
+								},
+								{
+									"key": "open",
+									"value": "16:00",
+									"type": "text"
+								},
+								{
+									"key": "close",
+									"value": "22:00",
+									"type": "text"
+								},
+								{
+									"key": "priceRange",
+									"value": "400",
+									"type": "text"
+								},
+								{
+									"key": "restaurantImage",
+									"type": "file",
+									"src": "/home/vimal/Downloads/restaurantLogo.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/restaurant/new",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"restaurant",
+								"new"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all restaurants",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/restaurant/all/?sortOption=rating",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"restaurant",
+								"all",
+								""
+							],
+							"query": [
+								{
+									"key": "priceRange",
+									"value": "200-500",
+									"disabled": true
+								},
+								{
+									"key": "rating",
+									"value": "0",
+									"disabled": true
+								},
+								{
+									"key": "sortOption",
+									"value": "rating"
+								},
+								{
+									"key": "sortOption",
+									"value": "price-high-to-low",
+									"disabled": true
+								},
+								{
+									"key": "sortOption",
+									"value": "price-low-to-high",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get restaurant by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/restaurant/647dfbfc353f93d0d0334190",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"restaurant",
+								"647dfbfc353f93d0d0334190"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete restaurant",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/restaurant/647df190b47acf01e363650e",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"restaurant",
+								"647df190b47acf01e363650e"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Orders",
+			"item": [
+				{
+					"name": "checkout",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"addressId\":\"647a1ce93b774b3c31ffd33c\",\r\n    \"restaurantId\":\"647dfbfc353f93d0d0334190\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/order/checkout",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"order",
+								"checkout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get user orders",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/order/myorders",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"order",
+								"myorders"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Cart",
+			"item": [
+				{
+					"name": "create cart",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"foodId\":\"6461145946273e7fbb597802\",\r\n    \"quantity\":1,\r\n    \"restaurantId\":\"64610fd41e8557d35e5f89ad\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/cart/add",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"cart",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Set Quantity",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"foodId\":\"6468ff25f14cbb161718c653\",\r\n    \"quantity\":3\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/cart/setquantity",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"cart",
+								"setquantity"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete food",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/cart/delfood/6468ff25f14cbb161718c653",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"cart",
+								"delfood",
+								"6468ff25f14cbb161718c653"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "clear and add to cart",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"foodId\":\"647dfc26353f93d0d0334199\",\n    \"restaurantId\":\"64610fd41e8557d35e5f89ad\",\n    \"quantity\":1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/cart/clearandaddtocart",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"cart",
+								"clearandaddtocart"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:300."
+		}
+	]
+}

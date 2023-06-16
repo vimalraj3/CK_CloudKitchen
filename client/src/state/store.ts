@@ -7,6 +7,7 @@ import foodReducer from './slices/food.slice'
 import errorsReducer from './slices/error.slice'
 import cartReducer from './slices/cart.slice'
 import checkoutReducer from './slices/checkout.slice'
+import filterAndSearchReducer from './slices/FilterAndSearch.slice'
 
 const reducer = combineReducers({
   userState: userReducer,
@@ -16,6 +17,7 @@ const reducer = combineReducers({
   cartState: cartReducer,
   checkoutState: checkoutReducer,
   errorsState: errorsReducer,
+  filterAndSearchState: filterAndSearchReducer,
 })
 
 export const store = configureStore({
