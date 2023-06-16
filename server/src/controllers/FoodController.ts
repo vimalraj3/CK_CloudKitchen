@@ -1,14 +1,11 @@
 import { NextFunction, Request, Response } from 'express'
 import { get, controller, use, post, del, patch } from './decorators'
 import { IFood } from '../models/food.model'
-import {
-  uploadMultipleImagesCloudinary,
-  uploadSingleImageCloudinary,
-} from '../utils/Cloudinary'
+import { uploadSingleImageCloudinary } from '../utils/Cloudinary'
 import { bodyValidator } from './decorators/bodyValidator'
 import { isAdmin, isAuth } from '../middleware/isAuth'
 import { AppError } from '../utils/AppError'
-import { uploaderMultiple, uploaderSingle } from '../utils/Multer'
+import { uploaderSingle } from '../utils/Multer'
 import Food from '../models/food.model'
 import Restaurant, { IRestaurant } from '../models/Restaurant.model'
 import { HydratedDocument, IfAny } from 'mongoose'
