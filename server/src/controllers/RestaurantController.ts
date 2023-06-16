@@ -10,6 +10,7 @@ import { HydratedDocument, Types } from 'mongoose'
 import { uploadSingleImageCloudinary } from '../utils/Cloudinary'
 import { decodedEmail, encodedEmail } from '../utils/encoder'
 import { stringToDate } from '../utils/StringToDate'
+import Review from '../models/reviews.model'
 
 /**
  * @class RestaurantController
@@ -161,8 +162,6 @@ class RestaurantController {
   async getAllRestaurants(req: Request, res: Response, next: NextFunction) {
     try {
       const restaurants = await Restaurant.find({}).lean()
-      console.log(restaurants, 'all restaurants')
-
       if (!restaurants) return next(new AppError('No restaurants found', 404))
       res.status(200).json({
         success: true,
@@ -177,18 +176,29 @@ class RestaurantController {
   async getRestaurantById(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params
-      const data = await Restaurant.findById(id)
-        .populate(['foods', 'reviews'])
-        .lean()
-      if (!data) return next(new AppError('No restaurant found', 404))
+      // const data = await Restaurant.findById(id)
+      //   .populate(['foods', 'reviews'])
+      //   .populate('reviews.reviews.user')
+      //   .lean()
+
+      const [reviews, data] = await Promise.all([
+        Review.findOne({ restaurant: id }).populate('reviews.user').lean(),
+        Restaurant.findById(id).populate(['foods']).lean(),
+      ])
+
+      if (!data || !reviews)
+        return next(new AppError('No restaurant found', 404))
       const { foods, user, verifyToken, ...restaurant } = data
 
       res.status(200).json({
         success: true,
         restaurant,
         food: foods,
+        reviews,
       })
     } catch (error) {
+      console.log(error)
+
       return next(new AppError(`Something went wrong`, 500))
     }
   }

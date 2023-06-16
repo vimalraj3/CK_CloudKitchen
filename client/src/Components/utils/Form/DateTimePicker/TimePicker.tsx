@@ -18,7 +18,7 @@ export const TimePicker = memo(
                 <label htmlFor={name} className="capitalize font-head">
                     {`${label || name}: `}
                 </label>
-                <input type='time' id={name} name={name} ref={ref} className='py-2 px-1 bg-secondary border-gray-400 border-2 rounded-md w-[100%]' {...rest} />
+                <input type='time' id={name} name={name} ref={ref} className='py-2 px-1 bg-white border-primary border-2 mt-2 rounded-md w-[100%]' {...rest} />
             </div>
         );
     })

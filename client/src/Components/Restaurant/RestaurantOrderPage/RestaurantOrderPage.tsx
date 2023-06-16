@@ -2,16 +2,13 @@ import React, { Suspense, lazy, memo, useCallback, useEffect, useMemo, useState 
 import Nav from '../../Nav'
 import Container from '../../Container'
 import { useAppDispatch, useAppSelector } from '../../../hooks'
-import { fetchFoodAndRestaurantByRestaurantId } from '../../../state/slices/food.slice'
-import { useNavigate, useParams } from 'react-router-dom'
-import PageLoading from '../../Loading/PageLoading'
+import { fetchFoodAndRestaurantByRestaurantId, getAllReviews } from '../../../state/slices/food.slice'
+import { useParams } from 'react-router-dom'
 import { useRestaurantOrderPage } from '../../../hooks/useRestaurantOrderPage'
-import { IShowToast } from '../../../types/showToast.types'
 import { DialogBox } from '../../utils/DialogBox'
-import { ServerError } from '../../../types/error.types'
-import { addToCart } from '../../../state/slices/cart.slice'
-const RestaurantOrderCard = lazy(() => import('./RestaurantOrderCard'))
-const FoodCard = lazy(() => import('./FoodCard'))
+import { RestaurantOrderCard } from './RestaurantOrderCard'
+import FoodCard from './FoodCard'
+import { RestaurantFoodTabs } from '../../utils/Tabs/RestaurantFoodTabs/RestaurantFoodTabs'
 
 const ShowErrorMessage: React.FC<{ askClean: boolean; handleAskClean: () => void; handleConfirm: () => void }> = memo(
   ({ askClean, handleAskClean, handleConfirm }) => {
@@ -32,11 +29,10 @@ const ShowErrorMessage: React.FC<{ askClean: boolean; handleAskClean: () => void
 )
 
 const RestaurantOrderPage: React.FC = () => {
-  const { currentRestaurant, foods } = useAppSelector(state => state.foodState)
   const { askClean } = useAppSelector(state => state.cartState)
   const { id } = useParams<{ id: string }>()
-  const { handleAddToCart, handleAskClean, handleClearAndAddToCart } = useRestaurantOrderPage()
-  const [lastFoodAddToCart, setLastFoodAddToCart] = useState<{
+  const { handleAskClean, handleClearAndAddToCart } = useRestaurantOrderPage()
+  const [lastFoodAddToCart] = useState<{
     foodId: string,
     restaurantId: string,
     quantity: number
@@ -50,25 +46,7 @@ const RestaurantOrderPage: React.FC = () => {
     }
   }, [])
 
-  const handleCardClick = useCallback((foodId: string) => {
-    if (id) {
-
-      setLastFoodAddToCart({
-        foodId: foodId,
-        restaurantId: id,
-        quantity: 1
-      })
-      handleAddToCart({
-        foodId: foodId,
-        restaurantId: id,
-        quantity: 1
-      })
-    }
-  }, [])
-
   const handleClearAndAddToCartClick = useCallback(() => {
-    console.log(lastFoodAddToCart, 'lastFoodAddToCart');
-
     if (lastFoodAddToCart?.foodId) {
       handleClearAndAddToCart(lastFoodAddToCart)
     }
@@ -77,11 +55,9 @@ const RestaurantOrderPage: React.FC = () => {
   return <div>
     <Nav dark bgColor='#f8f8f8' />
     <Container>
-      <Suspense fallback={<PageLoading />}>
-        {currentRestaurant && <RestaurantOrderCard  {...currentRestaurant} />}
-        {foods && <FoodCard foods={foods} handleAddToCart={handleCardClick} />}
-        <ShowErrorMessage askClean={askClean} handleAskClean={handleAskClean} handleConfirm={handleClearAndAddToCartClick} />
-      </Suspense>
+      <RestaurantOrderCard />
+      <RestaurantFoodTabs />
+      <ShowErrorMessage askClean={askClean} handleAskClean={handleAskClean} handleConfirm={handleClearAndAddToCartClick} />
     </Container>
   </div>
 }

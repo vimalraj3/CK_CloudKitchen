@@ -1,5 +1,7 @@
 import React, { PropsWithChildren, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../../hooks'
+import { useSelector } from 'react-redux'
+import { setLocation } from '../../state/slices/user.slice'
 interface ICity {
     setValue: (name: string) => void,
     isOpen: boolean
@@ -29,18 +31,22 @@ const City: React.FC<ICity> = ({ setValue, isOpen, region }) => {
     )
 }
 
-export const SearchBar = ({ region }: { region: string }) => {
+export const SearchBar = () => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
-    const [value, setValue] = useState<string>(region);
+    const { data } = useAppSelector(state => state.userState)
+    const dispatch = useAppDispatch()
+    const setValue = (value: string) => {
+        dispatch(setLocation(value))
+    }
     return (
         <section className=" md:h-[50px] w-[80%] max-w-[500px] md:mt-5 md:bg-[#fff] text-[#000] rounded-lg md:rounded-xl p-[6px] md:p-[12px] flex justify-center items-center shadow-inner flex-col md:flex-row font-moutserrat  ">
             <div className={`w-[100%] max-w-[250px] h-[50px] relative ${isOpen ? 'active' : ""}`} onClick={() => { setIsOpen(prev => prev = !prev) }}>
                 <div className="flex justify-between items-center bg-[#fff] px-3 md:py-0 h-[90%] md:h-[100%] rounded-md md:rounded-none w-[100%] md:p-4">
                     <i className="fa-solid fa-location-dot" style={{ color: " #ff7e8b" }}></i>
-                    <span className='capitalize'>{value}</span>
+                    <span className='capitalize'>{data.geo.region}</span>
                     <i className={`fa-solid fa-chevron-down  ${isOpen ? 'rotate' : "reverse-rotate"}`} style={{ color: "#ff7e8b" }}></i>
                 </div>
-                <City setValue={setValue} isOpen={isOpen} region={region} />
+                <City setValue={setValue} isOpen={isOpen} region={data.geo.region} />
             </div>
 
             <div className="w-[100%] max-w-[250px] bg-[#fff] mt-4 md:mt-0 rounded-md md:rounded-[0] flex justify-evenly items-center px-0 h-[45px] md:h-[50px]">

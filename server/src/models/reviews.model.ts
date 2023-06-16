@@ -14,12 +14,9 @@ export interface IReview {
 export interface IReviewModel {
   restaurant: IRestaurant | Types.ObjectId
   reviews: IReview[]
-  totalRating: number
-  totalRatingCount: number
-  averageRating: number
 }
 
-const ReviewSchema: Schema = new Schema<IReviewModel>({
+export const ReviewSchema: Schema = new Schema<IReviewModel>({
   restaurant: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Restaurant',
@@ -43,24 +40,10 @@ const ReviewSchema: Schema = new Schema<IReviewModel>({
       verified: { type: Boolean, required: true, default: false },
     },
   ],
-  totalRating: { type: Number, required: true, default: 0 },
-  totalRatingCount: { type: Number, required: true, default: 0 },
-  averageRating: { type: Number, required: true, default: 0 },
-})
-
-ReviewSchema.pre<IReviewModel>('save', function (next) {
-  if (
-    this.reviews &&
-    this.reviews[this.reviews.length - 1].create ===
-      this.reviews[this.reviews.length - 1].update
-  ) {
-    this.totalRating += this.reviews[this.reviews.length - 1].rating
-    ++this.totalRating
-    this.averageRating = this.totalRating / this.totalRatingCount
-  }
-  next()
 })
 
 const Review = mongoose.model('Review', ReviewSchema)
 
 export default Review
+
+// TODO Review controller

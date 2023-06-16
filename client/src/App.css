@@ -191,3 +191,19 @@ div.scrollbar-hide::-webkit-scrollbar {
 .border-1 {
   border: 1px solid;
 }
+
+.message-box {
+  clip-path: polygon(
+    0% 0%,
+    100% 0%,
+    100% 75%,
+    75% 75%,
+    78% 100%,
+    50% 75%,
+    0% 75%
+  );
+}
+
+.message-box-alt {
+  transform: rotateY(180deg);
+}

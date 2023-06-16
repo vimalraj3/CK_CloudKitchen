@@ -1,11 +1,11 @@
-interface ITitle {
-    city: string;
-}
+import { useAppSelector } from "../../../hooks";
 
-const Title: React.FC<ITitle> = ({ city }) => {
+const Title: React.FC = () => {
+
+    const { data } = useAppSelector(state => state.userState)
     return (
         <div>
-            <h2 className="font-moutserrat font-[500] text-2xl md:text-3xl">{`${city}'s Cloud kitchen`}</h2>
+            <h2 className="font-moutserrat font-[500] text-2xl md:text-3xl">{`${data.geo.region}'s Cloud kitchen`}</h2>
         </div>
     )
 }

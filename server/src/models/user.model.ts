@@ -3,6 +3,7 @@ import { IOrder } from './order.model'
 import { ICart } from './cart.model'
 import { IRestaurant } from './Restaurant.model'
 import { IAddress } from './address.model'
+import { IReview } from './reviews.model'
 
 export enum userRole {
   user = 'user',
@@ -24,6 +25,7 @@ export interface IUser {
   createdAt?: Date
   _id: Types.ObjectId
   address: Types.ObjectId | IAddress
+  reviews: Types.ObjectId[] | IReview[]
 }
 
 const roleEnum = {
@@ -41,6 +43,14 @@ const UserSchema: Schema = new Schema<IUser>({
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Order',
+      require: false,
+      select: false,
+    },
+  ],
+  reviews: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Review',
       require: false,
       select: false,
     },

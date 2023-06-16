@@ -1,10 +1,12 @@
 import React, { Suspense, memo, useCallback } from 'react'
 import { IFood } from '../../../types/Food.types'
-import { Button, Grid, IconButton } from '@mui/material'
+import { Button, Grid, IconButton, Skeleton } from '@mui/material'
+import { useAppSelector } from '../../../hooks'
+import { useParams } from 'react-router-dom'
+import { useRestaurantOrderPage } from '../../../hooks/useRestaurantOrderPage'
 
 interface IFoodCardCon {
     handleAddToCart: (id: string) => void
-    foods: IFood[]
 }
 
 interface IFoodCard extends IFood {
@@ -12,11 +14,9 @@ interface IFoodCard extends IFood {
 }
 const FoodCard: React.FC<IFoodCard> = memo(
     ({ time, title, restaurant, rating, price, image, _id, handleAddToCart }) => {
-
-
         return (
             <Grid item xs={12} sm={6} md={4}>
-                <div className="px-4 py-3 aspect-[4/3] w-[100%] rounded-lg md:hover:shadow-xl ease-in-out transition-shadow" >
+                <div className="px-4 py-3 aspect-[4/3] w-[100%] rounded-lg md:hover:shadow-xl ease-in-out transition-shadow bg-white" >
                     <section className="w-[100%]">
                         <Suspense fallback={<div className='w-[100%] h-[100%] bg-secondary'></div>}>
                             <img src={image[0]} width={'100%'} height={'100%'} alt={title} className='rounded-lg' loading='lazy' />
@@ -36,9 +36,17 @@ const FoodCard: React.FC<IFoodCard> = memo(
                     </section>
                     <section className='mt-1'>
                         <div className="flex justify-end items-center">
-                            <Button variant='outlined' onClick={() => { handleAddToCart(_id) }}>
-                                <div className='flex gap-2'>
-                                    <i className="fa-solid fa-cart-shopping"></i>                                    <p className=' md:block'>add to cart</p>
+                            <Button variant='outlined' onClick={() => { handleAddToCart(_id) }} sx={{
+                                color: '#ff7e8b',
+                                borderColor: '#ff7e8b',
+                                ":hover": {
+                                    borderColor: '#ff7e8b',
+
+                                }
+                            }}>
+                                <div className='flex gap-2 items-center'>
+                                    <p className=' md:block capitalize'>add to cart</p>
+                                    <i className="fa-solid fa-cart-shopping"></i>
                                 </div>
                             </Button>
                         </div>
@@ -47,20 +55,60 @@ const FoodCard: React.FC<IFoodCard> = memo(
             </Grid>
         )
     }
-
 )
-const FoodCardCon: React.FC<IFoodCardCon> = memo(
-    ({ foods, handleAddToCart }) => {
+
+
+const FoodCardLoading = () => (
+    <Grid item xs={12} sm={6} md={4}>
+        <div className="px-4 py-3 aspect-[4/3]  rounded-lg md:hover:shadow-xl ease-in-out transition-shadow w-[100%]" >
+            <section className="w-[100%] rounded-lg overflow-hidden">
+                <Skeleton variant="rectangular" width={316} height={210} animation='wave' />
+            </section>
+            <section className='mt-3 w-[100%]'>
+                <div className="flex justify-between items-center w-[100%]">
+                    <Skeleton variant="text" width={'30%'} sx={{ fontSize: '1.25rem' }} animation='wave' />
+                    <div className="flex w-[50px] justify-around rounded-sm items-center">
+                        <Skeleton variant="text" width={'100%'} sx={{ fontSize: '1.5rem' }} animation='wave' />
+                    </div>
+                </div>
+                <div className="flex justify-between items-center w-[100%]">
+                    <Skeleton variant="text" width={'40%'} sx={{ fontSize: '12px' }} animation='wave' />
+                </div>
+            </section>
+            <section className='flex justify-end items-center  mt-4'>
+                <div className="w-[6rem] h-[2.1rem]">
+                    <Skeleton variant="rectangular" width={'100%'} height={'100%'} animation='wave' />
+                </div>
+            </section>
+        </div>
+    </Grid>
+)
+
+const FoodCardCon: React.FC = memo(
+    () => {
+        const { foods, loading } = useAppSelector(state => state.foodState)
+        const { id } = useParams<{ id: string }>()
+        const { handleAddToCart } = useRestaurantOrderPage()
+
+
+        const handleCardClick = useCallback((foodId: string) => {
+            if (id) {
+                handleAddToCart({
+                    foodId: foodId,
+                    restaurantId: id,
+                    quantity: 1
+                })
+            }
+        }, [])
 
         return (
             <div>
-                <div className="w-[100%] mt-10">
-                    <h4 className='font-head text-2xl font-semibold'>Menu</h4>
+                <div className="w-[100%]">
                     <Grid container spacing={2}>
                         {
-                            foods.map((v, i) => {
+                            loading && !(foods.length) ? new Array(3).fill('12').map((v, i) => (<FoodCardLoading key={i} />)) : foods.map((v, i) => {
                                 return (
-                                    <FoodCard {...v} key={i} handleAddToCart={handleAddToCart} />
+                                    <FoodCard {...v} key={i} handleAddToCart={handleCardClick} />
                                 )
                             })
                         }

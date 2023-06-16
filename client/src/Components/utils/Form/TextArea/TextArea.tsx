@@ -17,7 +17,7 @@ export const TextArea = memo(
                     {`${label || name}: `}
                 </label>
                 <textarea
-                    className="py-2 mt-1 px-2 w-[100%] bg-[#f8f8f8] border-[#9c9c9c] border-2 rounded-md focus:outline-none text-sm font-para"
+                    className="py-2 mt-2 px-2 w-[100%] bg-white border-primary border-2 rounded-md focus:outline-none text-sm font-para"
                     id={name}
                     ref={ref}
                     name={name}

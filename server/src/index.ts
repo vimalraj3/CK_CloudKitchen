@@ -23,7 +23,7 @@ import './controllers/RootController'
 import './controllers/RestaurantController'
 import './controllers/OrderController'
 import './controllers/CartController'
-import { log } from 'winston'
+import './controllers/ReviewController'
 
 const currentDir = process.cwd()
 if (currentDir.endsWith('server')) {

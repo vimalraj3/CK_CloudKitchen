@@ -5,7 +5,7 @@ export default function CartIcon() {
     <div>
       <NavLink to={"/cart"}>
         <div className='cursor-pointer px-1 py-1'>
-          <i className="fa-solid fa-cart-shopping w-24 h-24"></i>
+          <i className="fa-solid fa-cart-shopping"></i>
         </div>
       </NavLink>
     </div>

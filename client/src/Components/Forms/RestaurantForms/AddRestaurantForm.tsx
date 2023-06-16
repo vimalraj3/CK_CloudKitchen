@@ -57,7 +57,7 @@ export const AddRestaurantForm: React.FC<IUserAddressEditForm> = ({ restaurant, 
             <Form<RestaurantFormFields> defaultValues={restaurant?.restaurantCity ? restaurant : defaultRestaurant} onSubmit={handleSubmit} schema={RestaurantSchema}>
                 {({ register, errors }) => {
                     return (
-                        <>
+                        <div className="flex flex-col gap-6">
                             <div>
                                 <Input aria-label={'Restaurant name'} label="Restaurant name"  {...register('restaurantName')} />
                                 {errors.restaurantName && (
@@ -187,7 +187,7 @@ export const AddRestaurantForm: React.FC<IUserAddressEditForm> = ({ restaurant, 
                                     cursor: 'pointer',
                                 }}
                             />
-                        </>
+                        </div>
                     )
                 }}
             </Form>

@@ -70,7 +70,7 @@ const HomeProduct: React.FC<Props> = ({ restaurants }) => {
 
     return (
         <div className='w-[90%] md:w-[80%] mx-auto max-w-[1200px] mt-4 md:mt-10'>
-            <Title city='Puducherry' />
+            <Title />
             <div className="flex flex-col md:flex-row my-3 gap-3 items-center">
                 <div className="w-[100%] md:w-[30%]">
                     <Search handleSearch={handleSearch} handleSearchSubmit={handleSearchSubmit} />

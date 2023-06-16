@@ -15,9 +15,8 @@ import {
 import { Axios } from '../../axios/config'
 import { ServerError } from '../../types/error.types'
 import { Login, SignUp } from '../../types/user.types'
-import axios, { AxiosResponse, AxiosError, isAxiosError } from 'axios'
+import axios, { AxiosError, isAxiosError } from 'axios'
 import { AppDispatch, RootState } from '../store'
-import { useAppDispatch } from '../../hooks'
 import { useHandleError } from '../../hooks/useHandleError'
 interface RejectedAction extends Action {
   payload: ServerError
@@ -33,7 +32,7 @@ const defaultUserSession: UserSession = {
     isAdmin: false,
   },
   geo: {
-    region: 'Location',
+    region: 'Puducherry',
   },
   address: [],
 }
@@ -106,21 +105,6 @@ export const signUpUser = createAsyncThunk<
 >('user/signup', async (user: SignUp, thunkApi) => {
   const response = await Axios.post<ServerResponse>('/auth/signup')
     .then(async (res) => {
-      let locate, lat, lon
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition((position) => {
-          lat = position.coords.latitude
-          lon = position.coords.longitude
-        })
-        if (lat && lon) {
-          locate = await axios.get(
-            `https://api.openweathermap.org/data/2.5/weather?lat={${lat}}&lon={${lon}}&appid={${
-              import.meta.env.VITE_LOCATION_API_KEY
-            }}`
-          )
-        }
-      }
-
       let userData = res.data.user
 
       const userSession: UserSession = {
@@ -133,7 +117,7 @@ export const signUpUser = createAsyncThunk<
           isAdmin: userData.role === 'admin' ? true : false,
         },
         geo: {
-          region: locate?.data.name || 'Your location',
+          region: 'puducherry',
         },
       }
 
@@ -196,7 +180,7 @@ export const fetchUser = createAsyncThunk<
             isAdmin: userData.role === 'admin' ? true : false,
           },
           geo: {
-            region: 'Your location',
+            region: 'Puducherry',
           },
         }
 
@@ -300,6 +284,19 @@ export const resetPasswordApi = createAsyncThunk<
   return response
 })
 
+// * Thunk action creator for reset password
+export const setLocation = createAsyncThunk<
+  string, // return type
+  string, // Types for function
+  {
+    rejectValue: ServerError
+    state: RootState
+    dispatch: AppDispatch
+  } // config
+>('user/setLocation', async (data, thunkApi) => {
+  return data
+})
+
 /**
  * isRejectedAction type guard function that checks if the action is rejected
  * @param action - action object
@@ -347,6 +344,11 @@ export const userSlice = createSlice({
       .addCase(fetchUserAddress.fulfilled, (state, action) => {
         state.loading = false
         state.data.address = action.payload
+        sessionStorage.setItem('User', JSON.stringify(state.data))
+      })
+      .addCase(setLocation.fulfilled, (state, action) => {
+        state.loading = false
+        state.data.geo.region = action.payload
         sessionStorage.setItem('User', JSON.stringify(state.data))
       })
       .addMatcher(isRejectedAction, (state, action) => {

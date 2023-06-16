@@ -17,6 +17,7 @@ import { IFood } from '../../types/Food.types'
 import { IOwner } from '../../types/owner.types'
 import { setError } from './error.slice'
 import { useHandleError } from '../../hooks/useHandleError'
+import { IReviewModel } from '../../types/reviews.types'
 
 interface RejectedAction extends Action {
   payload: ServerError
@@ -27,6 +28,7 @@ interface initialState {
   foods: IFood[]
   currentRestaurant: IRestaurant | null
   currentRestaurantId: string | null
+  reviews: IReviewModel | null
   owner: IOwner
   error: ServerError | null
 }
@@ -41,6 +43,7 @@ const initialState: initialState = {
     restaurantId: '',
   },
   error: null,
+  reviews: null,
 }
 
 interface ServerResponse {
@@ -54,7 +57,7 @@ const { setServerError } = useHandleError()
 // * ============================================================================
 // ? user fetchFoodAndRestaurantByRestaurantId
 export const fetchFoodAndRestaurantByRestaurantId = createAsyncThunk<
-  { food: IFood[]; restaurant: IRestaurant },
+  { food: IFood[]; restaurant: IRestaurant; reviews: IReviewModel },
   string,
   {
     rejectValue: ServerError
@@ -74,16 +77,6 @@ export const fetchFoodAndRestaurantByRestaurantId = createAsyncThunk<
         }
       })
     return response
-  },
-  {
-    condition: (args, { getState }) => {
-      const { foodState } = getState()
-      const { foods } = foodState
-      if (foods.length === 0) {
-        return true
-      }
-      return false
-    },
   }
 )
 
@@ -177,6 +170,29 @@ export const getAllFoods = createAsyncThunk<
 })
 
 // * ============================================================================
+// ?  Get all reviews
+export const getAllReviews = createAsyncThunk<
+  IReviewModel,
+  string,
+  {
+    rejectValue: ServerError
+    state: RootState
+    dispatch: AppDispatch
+  }
+>('foods/getAllReviews', async (restaurantId, thunkApi) => {
+  const response = await Axios.get(`/reviews/${restaurantId}`)
+    .then(async (res) => {
+      return res.data.reviews
+    })
+    .catch((err: ServerError) => {
+      if (isAxiosError(err)) {
+        return thunkApi.rejectWithValue(err.response?.data as ServerError)
+      }
+    })
+  return response
+})
+
+// * ============================================================================
 
 /**
  * isRejectedAction type guard function that checks if the action is rejected
@@ -202,6 +218,7 @@ export const foodSlice = createSlice({
           state.foods = action.payload.food
           state.currentRestaurant = action.payload.restaurant
           state.currentRestaurantId = action.payload.restaurant._id
+          state.reviews = action.payload.reviews
         }
       )
       .addCase(addFood.fulfilled, (state, action) => {
@@ -223,6 +240,10 @@ export const foodSlice = createSlice({
       .addCase(getAllFoods.fulfilled, (state, action) => {
         state.loading = false
         state.foods = action.payload
+      })
+      .addCase(getAllReviews.fulfilled, (state, action) => {
+        state.loading = false
+        state.reviews = action.payload
       })
       .addMatcher(isRejectedAction, (state, action) => {
         state.loading = false

@@ -12,7 +12,7 @@ interface IRestaurantCardCon {
   restaurants: IRestaurant[]
 }
 
-const RestaurantCard: React.FC<IRestaurantCard> = ({ restaurantName, restaurantDescription, averageRating, priceRange, handleCardClick, _id }) => {
+const RestaurantCard: React.FC<IRestaurantCard> = ({ restaurantName, restaurantDescription, averageRating, priceRange, handleCardClick, _id, rating }) => {
   return (
     <Grid item xs={12} sm={6} md={4}>
       <div className="px-4 py-3 aspect-[4/3] w-[100%] rounded-lg hover:shadow-xl ease-in-out transition-shadow cursor-pointer" onClick={() => handleCardClick(_id)}>
@@ -22,9 +22,9 @@ const RestaurantCard: React.FC<IRestaurantCard> = ({ restaurantName, restaurantD
         <section className='mt-1.5'>
           <div className="flex justify-between items-center">
             <h4 className='font-cardo text-[18px] font-[700]'>{restaurantName}</h4>
-            <div className="flex bg-green-500  w-[50px] justify-around rounded-sm items-center">
-              <p className="font-cardo font-[700] text-[14px] text-[#fff] text-center">{`${averageRating || 0}`}</p>
-              <i className="fa-solid fa-star text-white"></i>
+            <div className="flex bg-green-500  w-[40px] px-2 gap-2 justify-around rounded-sm items-center">
+              <p className="font-cardo font-[700] text-[14px] text-[#fff] text-center">{`${rating || 0}`}</p>
+              <i className="fa-solid fa-star text-white text-[12px]"></i>
             </div>
           </div>
           <div className="flex justify-between items-center">

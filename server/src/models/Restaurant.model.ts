@@ -1,4 +1,4 @@
-import mongoose, { Types } from 'mongoose'
+import mongoose, { HydratedDocument, Types } from 'mongoose'
 import { IFood } from './food.model'
 import { IUser } from './user.model'
 import { IOrder } from './order.model'
@@ -135,9 +135,13 @@ export interface IRestaurant {
 
   orders?: Types.DocumentArray<Types.ObjectId[] | IOrder[]>
 
-  reviews: IReviewModel | Types.ObjectId
+  reviews: IReviewModel[] | Types.ObjectId
 
   priceRange?: number
+
+  rating?: number
+  totalRating?: number
+  totalNumberOfRating?: number
 }
 
 const RestaurantSchema = new mongoose.Schema<IRestaurant>({
@@ -167,9 +171,21 @@ const RestaurantSchema = new mongoose.Schema<IRestaurant>({
   verified: { type: Boolean, default: false, required: true },
   verifyToken: { type: String, required: false },
   orders: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Order' }],
-  reviews: { type: mongoose.Schema.Types.ObjectId, ref: 'Review' },
+  reviews: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Review' }],
   priceRange: { type: Number, default: 0 },
+  totalNumberOfRating: { type: Number, default: 0 },
+  totalRating: { type: Number, default: 0 },
+  rating: { type: Number, required: true, default: 0 },
 })
+
+// RestaurantSchema.pre('save', function (next) {
+//   const restaurant = this as HydratedDocument<IRestaurant>
+//   if (restaurant.rating && restaurant.totalNumberOfRating) {
+//     restaurant.averageRating =
+//       restaurant.rating / restaurant.totalNumberOfRating
+//   }
+//   next()
+// })
 
 /**
  * Restaurant model for the restaurant schema

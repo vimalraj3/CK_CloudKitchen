@@ -85,7 +85,6 @@ export const FilterDrawer = () => {
                                                 value={filter.rating}
                                                 max={4}
                                                 onChange={(event, newValue) => (newValue) && handleRating(newValue)}
-                                                emptyIcon={<i className="fa-solid fa-star"></i>}
                                             />
                                             <p> & above</p>
                                         </div>
