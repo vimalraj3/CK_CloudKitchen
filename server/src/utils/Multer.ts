@@ -25,7 +25,6 @@ const upload = multer({
     fileSize: maxSize,
   },
   fileFilter: (req, file, cb) => {
-    console.log(file.mimetype)
     if (!whitelist.includes(file.mimetype)) {
       return cb(new Error('file is not allowed'))
     }

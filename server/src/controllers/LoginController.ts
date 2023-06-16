@@ -166,7 +166,6 @@ class LoginController {
       const hashPassword = await bcrypt.hash(password, LoginController.salt)
       user.password = hashPassword
       await user.save()
-      console.log(user, 'logincontroller 143')
 
       res.status(201).json({
         success: true,
@@ -179,7 +178,6 @@ class LoginController {
 
   @post('/logout')
   getLogout(req: Request, res: Response) {
-    console.log('Logout')
     req.session.destroy((err) => {
       if (!err) {
         res.status(201).json({
@@ -322,8 +320,6 @@ class LoginController {
         address: newUserAddress.address,
       })
     } catch (error) {
-      console.log(error)
-
       next(new AppError(`Something went wrong`, 500))
     }
   }
@@ -405,8 +401,6 @@ class LoginController {
         return addr
       })
 
-      console.log(JSON.stringify(updatedAddress))
-
       userAddress.address = updatedAddress as Types.DocumentArray<IAddress>
 
       await userAddress.save({ validateBeforeSave: false })
@@ -416,8 +410,6 @@ class LoginController {
         address: userAddress.address,
       })
     } catch (error) {
-      console.log(error)
-
       next(new AppError('Something went wrong', 500))
     }
   }

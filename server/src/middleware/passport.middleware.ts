@@ -39,7 +39,7 @@ const CreateUser = async ({
       return data
     })
     .catch((error: Error) => {
-      return console.log(error)
+      return
     })
   return user
 }

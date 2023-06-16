@@ -81,7 +81,6 @@ class OrderController {
         orders: order,
       })
     } catch (error) {
-      console.log(error)
       next(new AppError(`Something went wrong, try again later`, 500))
     }
   }

@@ -82,7 +82,6 @@ class OrderController {
         cart,
       })
     } catch (error) {
-      console.log(error)
       next(new AppError(`Something went wrong, try again later`, 500))
     }
   }
@@ -126,7 +125,6 @@ class OrderController {
         cart: cart,
       })
     } catch (error) {
-      console.log(error)
       next(new AppError(`Something went wrong, try again later`, 500))
     }
   }
@@ -180,7 +178,6 @@ class OrderController {
         cart: cart,
       })
     } catch (error) {
-      console.log(error)
       next(new AppError(`Something went wrong, try again later`, 500))
     }
   }
@@ -234,7 +231,6 @@ class OrderController {
         cart: cart,
       })
     } catch (error) {
-      console.log(error)
       next(new AppError(`Something went wrong, try again later`, 500))
     }
   }
@@ -282,7 +278,6 @@ class OrderController {
         cart: cart,
       })
     } catch (error) {
-      console.log(error)
       next(new AppError(`Something went wrong, try again later`, 500))
     }
   }

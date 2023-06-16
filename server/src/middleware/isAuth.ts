@@ -20,8 +20,6 @@ export const isAuth = async (
     .select('+cart +orders')
     .lean()
 
-  console.log(user, 'middleware')
-
   if (!user) {
     return next(new AppError('User not found', 400))
   }

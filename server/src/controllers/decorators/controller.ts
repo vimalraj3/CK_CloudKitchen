@@ -23,10 +23,7 @@ this function refers the root prefix in our case *\/auth\/* is root prefix😊
  */
 export function bodyValidators(keys: string[]): any {
   return function (req: Request, res: Response, next: NextFunction) {
-    console.log('hi form bodyVaildators', req.body)
-
     if (!req.body) {
-      console.log(req.body, 'not')
       return next(new AppError(`Invalid input data`, 400))
     }
 
@@ -38,7 +35,6 @@ export function bodyValidators(keys: string[]): any {
         isValid = false
         break
       }
-      console.log(req.body[key], key, 'iterate body')
 
       // checking required data is present or not
       if (!req.body[key]) {
