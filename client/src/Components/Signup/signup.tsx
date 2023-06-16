@@ -4,7 +4,6 @@ import './styles.css'
 import { PasswordInput, Input, Form } from '../utils/Form'
 import { Divider } from '../utils/Divider'
 import { Link, useNavigate } from 'react-router-dom'
-import GoogleIcon from '@mui/icons-material/Google'
 import { SignUp } from '../../types/user.types'
 import { signUpUser } from '../../state/slices/user.slice'
 import { useAppDispatch } from '../../hooks'
@@ -137,10 +136,7 @@ function index() {
             >
               <div className="flex gap-1 items-center justify-center">
                 {`Google `}{' '}
-                <GoogleIcon
-                  fontSize="small"
-                  sx={{ color: '#222', fontSize: '16px' }}
-                />
+                <i className="fa-brands fa-google text-md"></i>
               </div>
             </button>
             <Divider margin="0" color="#c1c1c1" size="1px" />

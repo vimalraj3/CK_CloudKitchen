@@ -1,8 +1,6 @@
 import React, { Suspense, memo, useCallback } from 'react'
 import { IFood } from '../../../types/Food.types'
 import { Button, Grid, IconButton } from '@mui/material'
-import StarIcon from '@mui/icons-material/Star';
-import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 
 interface IFoodCardCon {
     handleAddToCart: (id: string) => void
@@ -29,9 +27,7 @@ const FoodCard: React.FC<IFoodCard> = memo(
                             <h4 className='font-head text-lg'>{title}</h4>
                             <div className="flex bg-green-500  w-[50px] justify-around rounded-sm items-center">
                                 <p className="font-para font-[700] text-[14px] text-[#fff] text-center">{`${rating}`}</p>
-                                <StarIcon fontSize='small' sx={{
-                                    color: '#fff'
-                                }} />
+                                <i className="fa-solid fa-star text-white"></i>
                             </div>
                         </div>
                         <div className="flex justify-between items-center">
@@ -42,8 +38,7 @@ const FoodCard: React.FC<IFoodCard> = memo(
                         <div className="flex justify-end items-center">
                             <Button variant='outlined' onClick={() => { handleAddToCart(_id) }}>
                                 <div className='flex gap-2'>
-                                    <AddShoppingCartIcon />
-                                    <p className=' md:block'>add to cart</p>
+                                    <i className="fa-solid fa-cart-shopping"></i>                                    <p className=' md:block'>add to cart</p>
                                 </div>
                             </Button>
                         </div>

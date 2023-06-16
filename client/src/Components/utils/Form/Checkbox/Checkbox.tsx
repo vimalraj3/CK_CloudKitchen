@@ -1,8 +1,4 @@
 import Checkbox from '@mui/material/Checkbox';
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
 
 const label = { inputProps: { 'aria-label': 'Select your address' } };
 export const TickCheckbox = ({ checked, square }: { checked: boolean, square?: boolean }) => {
@@ -10,8 +6,8 @@ export const TickCheckbox = ({ checked, square }: { checked: boolean, square?: b
         <div>
             <Checkbox
                 {...label}
-                icon={square ? <CheckBoxOutlineBlankIcon /> : <CheckCircleOutlineIcon />}
-                checkedIcon={square ? <CheckBoxIcon /> : <CheckCircleIcon />}
+                icon={square ? <i className="fa-regular fa-square-check"></i> : <i className="fa-regular fa-circle-check"></i>}
+                checkedIcon={square ? <i className="fa-solid fa-square-check"></i> : <i className="fa-solid fa-circle-check"></i>}
                 color='success'
                 checked={checked}
             />

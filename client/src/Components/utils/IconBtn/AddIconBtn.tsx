@@ -1,4 +1,3 @@
-import AddIcon from '@mui/icons-material/Add';
 import { IconButton } from '@mui/material'
 import { memo } from 'react'
 
@@ -6,7 +5,7 @@ export const AddIconBtn = memo(
     () => {
         return (
             <IconButton aria-label="delete" size="small">
-                <AddIcon fontSize='small' className='cursor-pointer' />
+                <i className="fa-solid fa-plus cursor-pointer"></i>
             </IconButton>
         )
     }

@@ -3,12 +3,10 @@ import { Drawer } from './Drawer'
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import { Btn } from './../Btn'
 import Rating from '@mui/material/Rating';
-import StarIcon from '@mui/icons-material/Star';
 import { Button, Divider } from '@mui/material';
 import { PriceSelector } from '../Form/PriceSelector/PriceSelector';
 import { useAppDispatch, useAppSelector } from '../../../hooks';
 import { setFilter } from '../../../state/slices/FilterAndSearch.slice';
-import TuneIcon from '@mui/icons-material/Tune';
 export const FilterDrawer = () => {
     const anchor = 'right'
 
@@ -58,7 +56,7 @@ export const FilterDrawer = () => {
                         }
                     }} >
                         <div className='flex gap-2 items-center'>
-                            <TuneIcon />
+                            <i className="fa-solid fa-arrow-up-wide-short"></i>
                             Filter
                         </div>
                     </Button>
@@ -87,7 +85,7 @@ export const FilterDrawer = () => {
                                                 value={filter.rating}
                                                 max={4}
                                                 onChange={(event, newValue) => (newValue) && handleRating(newValue)}
-                                                emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
+                                                emptyIcon={<i className="fa-solid fa-star"></i>}
                                             />
                                             <p> & above</p>
                                         </div>

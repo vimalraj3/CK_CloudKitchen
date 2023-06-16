@@ -1,5 +1,4 @@
 import React from 'react'
-import LogoutIcon from '@mui/icons-material/Logout'
 import { NavLink } from 'react-router-dom'
 import { UserAvatar } from '../utils/UserAvatar/UserAvatar'
 

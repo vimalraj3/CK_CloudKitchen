@@ -3,7 +3,6 @@ import { Btn } from '../Btn'
 import { Button, Divider } from '@mui/material'
 import { useAppDispatch, useAppSelector } from '../../../hooks'
 import { setSortedBy } from '../../../state/slices/FilterAndSearch.slice'
-import ArrowIcon from '@mui/icons-material/KeyboardArrowDown';
 
 export const SortedBy = () => {
 
@@ -61,7 +60,7 @@ export const SortedBy = () => {
             }} >
                 <div className="flex items-center gap-3">
                     {`${sortedByTitle}`}
-                    <ArrowIcon className={`fa-solid fa-chevron-down ${open ? 'rotate' : "reverse-rotate"}`} />
+                    <i className={`fa-solid fa-chevron-down ${open ? 'rotate' : "reverse-rotate"}`}></i>
                 </div>
             </Button>
             {

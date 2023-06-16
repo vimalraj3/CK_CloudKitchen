@@ -1,6 +1,5 @@
 import { Grid } from '@mui/material';
 import productImg from '../../../assets/home/product.jpg'
-import StarIcon from '@mui/icons-material/Star';
 import { IRestaurant } from '../../../types/Restaurant.types';
 import { memo, useCallback, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -25,9 +24,7 @@ const RestaurantCard: React.FC<IRestaurantCard> = ({ restaurantName, restaurantD
             <h4 className='font-cardo text-[18px] font-[700]'>{restaurantName}</h4>
             <div className="flex bg-green-500  w-[50px] justify-around rounded-sm items-center">
               <p className="font-cardo font-[700] text-[14px] text-[#fff] text-center">{`${averageRating || 0}`}</p>
-              <StarIcon fontSize='small' sx={{
-                color: '#fff'
-              }} />
+              <i className="fa-solid fa-star text-white"></i>
             </div>
           </div>
           <div className="flex justify-between items-center">

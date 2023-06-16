@@ -2,7 +2,6 @@ import { styled } from '@mui/material/styles'
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
 import IconButton from '@mui/material/IconButton'
-import CloseIcon from '@mui/icons-material/Close'
 
 export interface DialogTitleProps {
     id: string
@@ -35,7 +34,7 @@ export const DialogBoxCustTitle = (props: DialogTitleProps) => {
                             color: (theme) => theme.palette.grey[500],
                         }}
                     >
-                        <CloseIcon />
+                        <i className="fa-solid fa-xmark"></i>
                     </IconButton>
                 ) : null}
             </div>

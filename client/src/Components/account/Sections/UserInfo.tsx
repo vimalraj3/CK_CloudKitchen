@@ -8,7 +8,6 @@ import { fetchUserAddress } from '../../../state/slices/address.slice'
 import { DialogBox } from '../../utils/DialogBox'
 import { UserAddressEditForm } from '../../Forms/AddressForms/UserAddressEditForm'
 
-import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
 import { EditBtn } from '../../utils/IconBtn/EditBtn'
 import { DeleteBtn } from '../../utils/IconBtn/DeleteBtn'
 import { UserAvatar } from '../../utils/UserAvatar/UserAvatar'
@@ -86,7 +85,7 @@ export const AddUserAddress: React.FC<IAddUserAddress> = memo(({ setDialogBoxOpe
   return (
     <div className='bg-[#F8F8F8] aspect-video p-3 md:p-5 w-[100%] md:max-w-[250px] rounded-lg flex justify-center items-center border-2' >
       <div className="cursor-pointer gap-2" onClick={() => setDialogBoxOpen(true)}>
-        <AddLocationAltIcon /> Add address
+        <i className="fa-solid fa-location-dot"></i> Add address
       </div>
     </div>
   )

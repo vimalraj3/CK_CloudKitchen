@@ -1,9 +1,6 @@
 import darkLogo from '../../assets/logos/darkLogo.png'
 import Container from '../Container';
 import { Social, SocialIcon } from '../utils/Social';
-import GitHubIcon from '@mui/icons-material/GitHub';
-import LinkedInIcon from '@mui/icons-material/LinkedIn';
-import EmailIcon from '@mui/icons-material/Email';
 import { Divider } from '../utils/Divider'
 import { Link, NavLink } from 'react-router-dom';
 import { footerLinks } from '../../data/footer.json'
@@ -12,15 +9,15 @@ import { useId } from 'react';
 const socialData = [
   {
     url: 'https://github.com/vimal-oneway',
-    icon: <GitHubIcon />
+    icon: <i className="fa-brands fa-github"></i>
   },
   {
     url: 'https://www.linkedin.com/in/vimal-raj-r-webie/',
-    icon: <LinkedInIcon />
+    icon: <i className="fa-brands fa-linkedin-in"></i>
   },
   {
     url: 'mailto:vimalic555@gmail.com',
-    icon: <EmailIcon />
+    icon: <i className="fa-regular fa-envelope"></i>
   }
 ]
 

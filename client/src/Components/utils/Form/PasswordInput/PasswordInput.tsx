@@ -1,5 +1,3 @@
-import VisibilityIcon from '@mui/icons-material/Visibility'
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
 import { useState, forwardRef, memo } from 'react'
 
 type InputProps = {
@@ -23,9 +21,8 @@ export const PasswordInput = memo(
             type={visible ? 'text' : 'password'}
             id={name}
             className="bg-[#f8f8f8] w-[90%] focus:outline-none text-sm font-para"
-            placeholder={`Enter your ${
-              name === 'repassword' ? 'confrim password' : name
-            }`}
+            placeholder={`Enter your ${name === 'repassword' ? 'confrim password' : name
+              }`}
             ref={ref}
             {...props}
           />
@@ -33,7 +30,7 @@ export const PasswordInput = memo(
             className="px-2 font-para bg-[#f8f8f8]"
             onClick={() => setVisible(!visible)}
           >
-            {visible ? <VisibilityOffIcon /> : <VisibilityIcon />}
+            {visible ? <i className="fa-solid fa-eye-slash"></i> : <i className="fa-solid fa-eye"></i>}
           </button>
         </div>
       </div>
