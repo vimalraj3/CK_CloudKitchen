@@ -4,7 +4,7 @@ import { get, controller, post, patch, del } from './decorators'
 import User, { IUser } from '../models/user.model'
 import dotenv from 'dotenv'
 import { createUser } from '../utils/CreateUser'
-import bcrypt, { hash } from 'bcrypt'
+import bcrypt from 'bcrypt'
 
 dotenv.config({ path: path.resolve(process.cwd(), './src/.env') })
 
@@ -17,10 +17,6 @@ import { decodedEmail, encodedEmail } from '../utils/encoder'
 import { isAuth } from '../middleware/isAuth'
 import { use } from './decorators'
 import UserAddress, { IAddress, IUserAddress } from '../models/address.model'
-import { AppRouter } from '../AppRouter'
-import logger from '../log/logger'
-import Restaurant from '../models/Restaurant.model'
-
 @controller('/auth')
 class LoginController {
   static salt: number = parseInt(process.env.SALT) || 10

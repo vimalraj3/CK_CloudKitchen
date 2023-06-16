@@ -1,17 +1,13 @@
 import { NextFunction, Request, Response } from 'express'
-import { get, controller, use, post, del, patch } from './decorators'
-import { IFood } from '../models/food.model'
+import { get, controller, use, post } from './decorators'
 import { bodyValidator } from './decorators/bodyValidator'
 import { isAdmin, isAuth } from '../middleware/isAuth'
 import { AppError } from '../utils/AppError'
-import Food from '../models/food.model'
 import Restaurant, { IRestaurant } from '../models/Restaurant.model'
 import { HydratedDocument, Types } from 'mongoose'
 import Cart, { ICart } from '../models/cart.model'
 import Order, { IOrder } from '../models/order.model'
 import User, { IUser } from '../models/user.model'
-import logger from '../log/logger'
-import { log } from 'winston'
 
 // TODO  Search for a food
 
@@ -23,13 +19,10 @@ class OrderController {
   async checkout(req: Request, res: Response, next: NextFunction) {
     try {
       const { addressId, restaurantId } = req.body
-      logger.info(req.user + 'info of user')
       if (!req.user?.cart) {
         next(new AppError(`Login to access this resource`, 404))
         return
       }
-
-      logger.info(req.user + 'info of user')
 
       const cartquery = Cart.findById(req.user.cart)
         .populate('foods.food')
@@ -117,7 +110,6 @@ class OrderController {
         orders,
       })
     } catch (error) {
-      logger.error(error)
       next(new AppError(`Something went wrong, try again later`, 500))
     }
   }
