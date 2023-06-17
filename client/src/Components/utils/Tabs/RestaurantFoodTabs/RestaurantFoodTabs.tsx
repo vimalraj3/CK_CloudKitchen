@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import { StyledTabs, StyledTab, TabPanel, allyProps } from '../Tabs';
 import FoodCardCon from '../../../Restaurant/RestaurantOrderPage/FoodCard';
 import { Reviews } from '../../../Restaurant/Reviews/Reviews';
+import { Description } from '../../../Restaurant/RestaurantOrderPage/Desciption/Description';
 
 
 export const RestaurantFoodTabs = () => {
@@ -37,7 +38,9 @@ export const RestaurantFoodTabs = () => {
                     </div>
                 </TabPanel>
                 <TabPanel value={value} index={2}>
-                    Item Three
+                    <div className='md:px-5'>
+                        <Description />
+                    </div>
                 </TabPanel>
             </div>
         </div >

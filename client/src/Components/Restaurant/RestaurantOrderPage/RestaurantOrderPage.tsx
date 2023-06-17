@@ -52,7 +52,7 @@ const RestaurantOrderPage: React.FC = () => {
     }
   }, [])
 
-  return <div>
+  return <div className='min-h-[90dvh]'>
     <Nav dark bgColor='#f8f8f8' />
     <Container>
       <RestaurantOrderCard />

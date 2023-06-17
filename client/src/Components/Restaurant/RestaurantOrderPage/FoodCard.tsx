@@ -22,7 +22,7 @@ const FoodCard: React.FC<IFoodCard> = memo(
                             <img src={image[0]} width={'100%'} height={'100%'} alt={title} className='rounded-lg' loading='lazy' />
                         </Suspense>
                     </section>
-                    <section className='mt-1.5'>
+                    <section className='mt-2.5'>
                         <div className="flex justify-between items-center">
                             <h4 className='font-head text-lg'>{title}</h4>
                             <div className="flex bg-green-500  w-[50px] justify-around rounded-sm items-center">
@@ -34,22 +34,20 @@ const FoodCard: React.FC<IFoodCard> = memo(
                             <p className='font-montserrat text-[12px] font-[500] text-[#9c9c9c]'>{`Price : ₹ ${price}`}</p>
                         </div>
                     </section>
-                    <section className='mt-1'>
-                        <div className="flex justify-end items-center">
-                            <Button variant='outlined' onClick={() => { handleAddToCart(_id) }} sx={{
-                                color: '#ff7e8b',
+                    <section className='mt-4'>
+                        <Button variant='outlined' onClick={() => { handleAddToCart(_id) }} sx={{
+                            color: '#ff7e8b',
+                            borderColor: '#ff7e8b',
+                            ":hover": {
                                 borderColor: '#ff7e8b',
-                                ":hover": {
-                                    borderColor: '#ff7e8b',
 
-                                }
-                            }}>
-                                <div className='flex gap-2 items-center'>
-                                    <p className=' md:block capitalize'>add to cart</p>
-                                    <i className="fa-solid fa-cart-shopping"></i>
-                                </div>
-                            </Button>
-                        </div>
+                            }
+                        }} fullWidth >
+                            <div className='flex gap-2 items-center'>
+                                <p className=' md:block capitalize'>add to cart</p>
+                                <i className="fa-solid fa-cart-shopping"></i>
+                            </div>
+                        </Button>
                     </section>
                 </div>
             </Grid>
@@ -104,7 +102,7 @@ const FoodCardCon: React.FC = memo(
         return (
             <div>
                 <div className="w-[100%]">
-                    <Grid container spacing={2}>
+                    <Grid container spacing={4}>
                         {
                             loading && !(foods.length) ? new Array(3).fill('12').map((v, i) => (<FoodCardLoading key={i} />)) : foods.map((v, i) => {
                                 return (

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { IRestaurant } from '../../../types/Restaurant.types'
-import { Skeleton } from '@mui/material'
+import { Rating, Skeleton } from '@mui/material'
 import { useAppDispatch, useAppSelector } from '../../../hooks'
 
 const RestaurantOrderCardLoading = () => (
@@ -41,28 +41,30 @@ export const RestaurantOrderCard: React.FC = () => {
         <>
             {
                 loading && !currentRestaurant ? (<RestaurantOrderCardLoading />) : currentRestaurant && (
-                    <div className="flex justify-between items-center md:items-start flex-col md:flex-row gap-3 md:gap-6 w-[100%]">
-                        <section className="w-[100%] md:w-[40%]">
-                            <img src={currentRestaurant.restaurantImage[0]} alt={currentRestaurant.restaurantName} className='rounded-md' />
-                        </section >
-                        <section className="w-[100%] md:w[40%]">
-                            <h3 className='font-head font-semibold text-lg md:text-3xl mb-2 md:mb-3'>{currentRestaurant.restaurantName}</h3>
-                            <div className="flex gap-2 mt-3">
-                                <p>Timing:</p>
-                                <p className='text-gray-500 font-para'>{new Date(currentRestaurant.restaurantHours.open).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}</p>
-                                <p className='text-gray-500'>-</p>
-                                <p className='text-gray-500 font-para'>{new Date(currentRestaurant.restaurantHours.close).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}</p>
+                    <div className="flex flex-col md:flex-row md:justify-between w-[100%] px-3 md:px-5 border-b border-dashed border-primary pt-3 pb-6 md:py-6">
+                        <div className='flex flex-col md:flex-row md:gap-6  md:items-center'>
+                            <div className='hidden md:block md:w-[100px]'>
+                                <img src={currentRestaurant.restaurantImage[0]} alt="image" width={'100%'} className='rounded-md' />
                             </div>
-                            <div className="flex gap-2 mt-3">
-                                <p>Address:</p>
+                            <div className='flex gap-2 flex-col'>
                                 <div>
-                                    <p className='text-gray-500 font-para'>{`${currentRestaurant.restaurantAddress},`}</p>
-                                    <p className='text-gray-500 font-para'>{`${currentRestaurant.restaurantCity},`}</p>
-                                    <p className='text-gray-500 font-para'>{`${currentRestaurant.restaurantRegion},`}</p>
-                                    <p className='text-gray-500 font-para'>{`${currentRestaurant.restaurantState} - ${currentRestaurant.restaurantZip}.`}</p>
+                                    <h3 className='font-head font-semibold text-lg md:text-2xl'>{currentRestaurant.restaurantName}</h3>
+                                    <div className='flex items-center gap-2'>
+                                        <p className={`text-gray-500 text-md`}>{`${currentRestaurant.restaurantCity}`}</p>
+                                    </div>
+                                </div>
+                                <div className='flex items-center gap-2'>
+                                    <p className=''>{`₹ ${currentRestaurant.priceRange} for two`}</p>
                                 </div>
                             </div>
-                        </section>
+                        </div>
+                        <div className='flex gap-2'>
+                            <Rating
+                                value={currentRestaurant.rating}
+                                readOnly
+                            />
+                            <p>{`(${currentRestaurant.totalNumberOfRating})`}</p>
+                        </div>
                     </div>
                 )
             }

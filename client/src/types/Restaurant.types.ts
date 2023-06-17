@@ -15,7 +15,7 @@ export interface IRestaurant {
   verifed: boolean
   rating: number
   totalRating?: number
-  averageRating?: number
+  totalNumberOfRating?: number
   priceRange: number
   _id: string
 }
