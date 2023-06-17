@@ -20,7 +20,7 @@ function Hero() {
                 Kitchen
               </h2>
             </div>
-            <SearchBar region={data.geo.region} />
+            <SearchBar />
           </div>
         </div>
       </div>

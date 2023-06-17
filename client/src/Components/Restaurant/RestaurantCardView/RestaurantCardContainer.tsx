@@ -12,7 +12,7 @@ interface IRestaurantCardCon {
   restaurants: IRestaurant[]
 }
 
-const RestaurantCard: React.FC<IRestaurantCard> = ({ restaurantName, restaurantDescription, averageRating, priceRange, handleCardClick, _id, rating }) => {
+const RestaurantCard: React.FC<IRestaurantCard> = ({ restaurantName, restaurantDescription, priceRange, handleCardClick, _id, rating }) => {
   return (
     <Grid item xs={12} sm={6} md={4}>
       <div className="px-4 py-3 aspect-[4/3] w-[100%] rounded-lg hover:shadow-xl ease-in-out transition-shadow cursor-pointer" onClick={() => handleCardClick(_id)}>
