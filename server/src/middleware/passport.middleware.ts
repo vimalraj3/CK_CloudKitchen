@@ -20,7 +20,7 @@ if (currentDir.endsWith('server')) {
 const options: StrategyOptions = {
   clientID: process.env.CLIENT_ID,
   clientSecret: process.env.CLIENT_SECRET || '',
-  callbackURL: `${process.env.SER_URL}/auth/google/callback`,
+  callbackURL: `${process.env.SER_URL}/api/auth/google/callback`,
 }
 
 const CreateUser = async ({
