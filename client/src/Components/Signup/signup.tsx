@@ -45,7 +45,7 @@ function index() {
   }
 
   const handleGoogleLogin = () => {
-    window.open(`${import.meta.env.VITE_REACT_SER_URL}/api/v1/google`, '_self')
+    window.open(`${import.meta.env.VITE_REACT_SER_URL}/api/auth/google`, '_self')
   }
 
   return (
