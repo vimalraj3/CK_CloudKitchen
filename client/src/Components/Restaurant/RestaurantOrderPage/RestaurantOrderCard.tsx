@@ -33,6 +33,8 @@ const RestaurantOrderCardLoading = () => (
     </div>
 )
 
+
+// * TITLE of Restaurant Card
 export const RestaurantOrderCard: React.FC = () => {
 
     const { loading, currentRestaurant } = useAppSelector(state => state.foodState)
@@ -41,30 +43,41 @@ export const RestaurantOrderCard: React.FC = () => {
         <>
             {
                 loading && !currentRestaurant ? (<RestaurantOrderCardLoading />) : currentRestaurant && (
-                    <div className="flex flex-col md:flex-row md:justify-between w-[100%] px-3 md:px-5 border-b border-dashed border-primary pt-3 pb-6 md:py-6">
+                    <div className="flex flex-col md:flex-row md:justify-between w-[100%] px-3 md:px-5 border-b border-dashed border-primary pb-6 md:py-6">
                         <div className='flex flex-col md:flex-row md:gap-6  md:items-center'>
                             <div className='hidden md:block md:w-[100px]'>
                                 <img src={currentRestaurant.restaurantImage[0]} alt="image" width={'100%'} className='rounded-md' />
                             </div>
                             <div className='flex gap-2 flex-col'>
-                                <div>
-                                    <h3 className='font-head font-semibold text-lg md:text-2xl'>{currentRestaurant.restaurantName}</h3>
-                                    <div className='flex items-center gap-2'>
-                                        <p className={`text-gray-500 text-md`}>{`${currentRestaurant.restaurantCity}`}</p>
+                                <h3 className='font-head font-semibold text-2xl md:text-2xl'>{currentRestaurant.restaurantName}</h3>
+                                <div className='flex items-center justify-between gap-2 mt-1'>
+                                    <p className={`text-gray-500 text-sm md:text-md`}>{`${currentRestaurant.restaurantCity}`}</p>
+                                    <div className='flex gap-2 items-center md:hidden'>
+                                        <Rating
+                                            value={currentRestaurant.rating} size='small'
+                                            readOnly
+                                        />
+                                        <p className='text-sm'>{`(${currentRestaurant.totalNumberOfRating})`}</p>
                                     </div>
+
                                 </div>
-                                <div className='flex items-center gap-2'>
-                                    <p className=''>{`₹ ${currentRestaurant.priceRange} for two`}</p>
+                                <div className='flex md:hidden items-center gap-2'>
+                                    <p className='text-sm'>{`₹ ${currentRestaurant.priceRange} for two`}</p>
                                 </div>
                             </div>
                         </div>
-                        <div className='flex gap-2'>
-                            <Rating
-                                value={currentRestaurant.rating}
-                                readOnly
-                            />
-                            <p>{`(${currentRestaurant.totalNumberOfRating})`}</p>
-                        </div>
+                        <section className='flex gap-4 flex-col'>
+                            <div className='hidden md:flex gap-2'>
+                                <Rating
+                                    value={currentRestaurant.rating}
+                                    readOnly
+                                />
+                                <p>{`(${currentRestaurant.totalNumberOfRating})`}</p>
+                            </div>
+                            <div className='hidden md:flex items-center justify-end'>
+                                <p className='text-sm'>{`₹ ${currentRestaurant.priceRange} for two`}</p>
+                            </div>
+                        </section>
                     </div>
                 )
             }

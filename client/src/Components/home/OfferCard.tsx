@@ -13,13 +13,13 @@ const offerCardData: IOfferCard[] = [
   {
     title: 'Dosa',
     offer: 20,
-    image: dosaImg,
+    image: 'https://res.cloudinary.com/dd39ktpmz/image/upload/v1685954177/ck/client_static/dbwrrfkvkhwwxlqzbuhi.avif',
     bgc: '#EEF5E4',
   },
   {
     title: 'Pizza',
     offer: 20,
-    image: pizzaImg,
+    image: 'https://res.cloudinary.com/dd39ktpmz/image/upload/v1685954177/ck/client_static/eh4xjrbveum2a9u0x59w.avif',
     bgc: '#F9ECDE',
   },
 ]
@@ -32,12 +32,12 @@ function OfferCard() {
           return (
             <div
               key={i}
-              className={`w-[100%] md:w-[45%] max-w-[600px] my-5 px-2 py-3 md:py-4 md:px-8 aspect-[4/3] md:aspect-[16/9] rounded-lg flex flex-col-reverse  md:flex-row justify-between items-center`}
+              className={`w-[100%] md:w-[50%] max-w-[600px] my-5 mx-5 px-2 py-5 md:py-4 md:px-8 aspect-[4/3] md:aspect-[16/9] rounded-lg flex flex-col-reverse md:flex-row justify-between items-center`}
               style={{
                 backgroundColor: bgc,
               }}
             >
-              <section className="mt-3 md:mt-0 flex flex-col items-center md:block">
+              <section className="mt-3 md:mt-0 flex flex-col items-center md:block w-[60%]">
                 <div>
                   <p className="font-cardo text-[1rem] md:text-[1.4rem] font-[400]">
                     {offer + '  % Off'}
@@ -61,15 +61,15 @@ function OfferCard() {
                   {title}
                 </h2>
 
-                <div className="flex justify-center items-center cursor-pointer  w-[100%] categoryBtn mt-2">
+                <div className="flex items-center cursor-pointer w-[100%] categoryBtn mt-2">
                   <p className="font-montserrat md:text-[.7rem] lg:text-[1rem]  ">
                     Shop by category
                   </p>
                   <i className="fa-solid fa-arrow-right animateArrow text-[#ff7e8b]"></i>
                 </div>
               </section>
-              <section className="md:w-[50%] w-[80%]">
-                <img src={image} alt={title} width={'100%'} />
+              <section>
+                <img src={image} alt={title} width={'100%'} height={'100%'} />
               </section>
             </div>
           )

@@ -2,7 +2,7 @@ import Category from './Category'
 import Hero from './Hero'
 
 import OfferCard from './OfferCard'
-import HomeProduct from '../Restaurant/RestaurantCardView/HomeProduct'
+import HomeProduct from '../Restaurant/RestaurantHomePage'
 
 import { IShowToast } from '../../types/showToast.types'
 import { useAppDispatch, useAppSelector } from '../../hooks'

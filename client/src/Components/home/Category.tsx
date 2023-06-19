@@ -80,7 +80,8 @@ const LeftArrow: React.FC<IArrow> = ({ cardPointer, setPointer }) => {
 
     if (cardPointer != 0) {
         return (
-            <div role="button" className="cursor-pointer absolute -left-[1.3rem] bg-[#fff] aspect-square w-[3rem] rounded-full text-[#fff] hidden md:flex justify-center items-center z-30" onClick={handleBackward}>
+            <div role="button" className="cursor-pointer absolute -left-[1.3rem] bg-[#fff] aspect-square w-[3rem] rounded-full text-[#fff] hidden md:flex justify-center items-center z-30" onClick={handleBackward}
+                aria-label='Move Backward'>
                 <i className="fa-solid fa-arrow-left text-[#000]"></i>
             </div>
         )
@@ -101,7 +102,7 @@ const RightArrow: React.FC<IArrow> = ({ cardPointer, setPointer }) => {
 
     if (cardPointer != 7) {
         return (
-            <div role="button" className="cursor-pointer absolute -right-[1.3rem] bg-[#fff] aspect-square w-[3rem] rounded-full text-[#fff] md:flex justify-center items-center z-30 hidden" onClick={handleForward}>
+            <div role="button" className="cursor-pointer absolute -right-[1.3rem] bg-[#fff] aspect-square w-[3rem] rounded-full text-[#fff] md:flex justify-center items-center z-30 hidden" onClick={handleForward} aria-label='Move forward'>
                 <i className="fa-solid fa-arrow-right text-[#000]"></i>
             </div>
         )
@@ -122,7 +123,7 @@ const CategoryTemp: React.FC<any> = () => {
                         {categoryData.map(({ image, name }: ICategoryData, i: number) => {
                             return (
                                 <div key={i} className="md:min-w-[25%] w-[6rem] mt-3 px-2.5 aspect-square flex flex-col items-center md:snap-start ">
-                                    <img src={image} alt={name + "img"} width={"100%"} loading="lazy" />
+                                    <img src={image} alt={name + "img"} width={"100%"} height={'100%'} loading="lazy" />
                                     <p>{name}</p>
                                 </div>
                             )

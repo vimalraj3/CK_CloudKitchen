@@ -44,6 +44,7 @@ const RestaurantOrderPage: React.FC = () => {
     if (id) {
       dispatch(fetchFoodAndRestaurantByRestaurantId(id))
     }
+    window.scrollTo(0, 0)
   }, [])
 
   const handleClearAndAddToCartClick = useCallback(() => {

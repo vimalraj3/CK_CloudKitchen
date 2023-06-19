@@ -6,8 +6,6 @@ const currentUrl = window.location.origin
 
 const axiosUrl = currentUrl.includes('localhost') ? localhost : serverUrl
 
-console.log(currentUrl, 'currenturl', axiosUrl, serverUrl)
-
 export const Axios = axios.create({
   baseURL: `${axiosUrl}/api`,
   withCredentials: true,

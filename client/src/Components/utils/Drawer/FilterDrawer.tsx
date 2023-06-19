@@ -7,6 +7,7 @@ import { Button, Divider } from '@mui/material';
 import { PriceSelector } from '../Form/PriceSelector/PriceSelector';
 import { useAppDispatch, useAppSelector } from '../../../hooks';
 import { setFilter } from '../../../state/slices/FilterAndSearch.slice';
+import { SortedBy } from '../SortedBy/SortedBy';
 export const FilterDrawer = () => {
     const anchor = 'right'
 
@@ -45,72 +46,81 @@ export const FilterDrawer = () => {
     }
 
     return (
-        <div>
-            <div>
-                <React.Fragment key={anchor}>
-                    <Button variant='outlined' size={'large'} onClick={() => toggleDrawer(true)} sx={{
+        <div className='w-[100%]'>
+            <React.Fragment key={anchor}>
+                <Button variant='outlined' size={'large'} onClick={() => toggleDrawer(true)}
+                    sx={{
+
+
                         color: '#ff7e8b',
                         borderColor: '#ff7e8b',
                         ":hover": {
                             borderColor: '#ff7e8b',
                         }
-                    }} >
-                        <div className='flex gap-2 items-center'>
-                            <i className="fa-solid fa-arrow-up-wide-short"></i>
-                            Filter
-                        </div>
-                    </Button>
-                    <div onClick={() => toggleDrawer(true)}>
+                    }} fullWidth >
+                    <div className='flex gap-2 items-center'>
+                        <i className="fa-solid fa-arrow-up-wide-short"></i>
+                        Filter
                     </div>
-                    <SwipeableDrawer
-                        anchor={anchor}
-                        open={state[anchor]}
-                        onClose={() => {
-                            toggleDrawer(false)
-                            handleFilterSubmit()
-                        }}
-                        onOpen={() => toggleDrawer(true)}
-                        disableBackdropTransition={false}
-                    >
-                        <div className="flex flex-col justify-between h-[100%] w-[100%] mx-auto py-6 px-4 font-para">
-                            <div className='flex flex-col gap-6 w-[100%] mx-auto'>
-                                <section>
-                                    <h4 className='font-head font-semibold'>
-                                        Rating
-                                    </h4>
-                                    <div className='flex flex-col w-[100%] gap-2 mt-2'>
-                                        <div className="flex gap-2">
-                                            <Rating
-                                                name="hover-feedback"
-                                                value={filter.rating}
-                                                max={4}
-                                                onChange={(event, newValue) => (newValue) && handleRating(newValue)}
-                                            />
-                                            <p> & above</p>
-                                        </div>
+                </Button>
+                <div onClick={() => toggleDrawer(true)}>
+                </div>
+                <SwipeableDrawer
+                    anchor={anchor}
+                    open={state[anchor]}
+                    onClose={() => {
+                        toggleDrawer(false)
+                        handleFilterSubmit()
+                    }}
+                    onOpen={() => toggleDrawer(true)}
+                    disableBackdropTransition={false}
+                >
+                    <div className="flex flex-col justify-between h-[100%] w-[100%] mx-auto py-6 px-4 font-para">
+                        <div className='flex flex-col gap-6 w-[100%] mx-auto'>
+                            <section>
+                                <h4 className='font-head font-semibold'>
+                                    Rating
+                                </h4>
+                                <div className='flex flex-col w-[100%] gap-2 mt-2'>
+                                    <div className="flex gap-2">
+                                        <Rating
+                                            name="hover-feedback"
+                                            value={filter.rating}
+                                            max={4}
+                                            onChange={(event, newValue) => (newValue) && handleRating(newValue)}
+                                        />
+                                        <p> & above</p>
                                     </div>
-                                </section>
-                                <section>
-                                    <h4 className='font-head font-semibold'>
-                                        Price
-                                    </h4>
-                                    <div className='w-[100%] mt-5'>
-                                        <PriceSelector />
-                                    </div>
-                                </section>
-                            </div>
-                            <div className="flex z-50">
-                                <Button color='success' variant='contained' fullWidth onClick={() => {
-                                    toggleDrawer(false)
-                                    handleFilterSubmit()
-                                }}>
-                                    Filter
-                                </Button>
-                            </div>
+                                </div>
+                            </section>
+                            <section>
+                                <h4 className='font-head font-semibold'>
+                                    Price
+                                </h4>
+                                <div className='w-[100%] mt-5'>
+                                    <PriceSelector />
+                                </div>
+                            </section>
+                            <section className='block md:hidden'>
+                                <h4 className='font-head font-semibold'>
+                                    Sorted by
+                                </h4>
+                                <div className='w-[100%] mt-3'>
+                                    <SortedBy />
+                                </div>
+                            </section>
                         </div>
-                    </SwipeableDrawer>
-                </React.Fragment>
-            </div>
+                        <div className="flex z-50">
+                            <Button color='success' variant='contained' fullWidth onClick={() => {
+                                toggleDrawer(false)
+                                handleFilterSubmit()
+                            }}>
+                                Filter
+                            </Button>
+                        </div>
+                    </div>
+                </SwipeableDrawer>
+            </React.Fragment>
         </div>
     )
 }

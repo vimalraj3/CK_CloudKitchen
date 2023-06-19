@@ -18,9 +18,7 @@ const FoodCard: React.FC<IFoodCard> = memo(
             <Grid item xs={12} sm={6} md={4}>
                 <div className="px-4 py-3 aspect-[4/3] w-[100%] rounded-lg md:hover:shadow-xl ease-in-out transition-shadow bg-white" >
                     <section className="w-[100%]">
-                        <Suspense fallback={<div className='w-[100%] h-[100%] bg-secondary'></div>}>
-                            <img src={image[0]} width={'100%'} height={'100%'} alt={title} className='rounded-lg' loading='lazy' />
-                        </Suspense>
+                        <img src={image[0]} width={'100%'} height={'100%'} alt={title} className='rounded-lg' loading='lazy' />
                     </section>
                     <section className='mt-2.5'>
                         <div className="flex justify-between items-center">

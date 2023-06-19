@@ -2,7 +2,7 @@ import React from 'react'
 import Box from '@mui/material/Box';
 import { StyledTabs, StyledTab, TabPanel, allyProps } from '../Tabs';
 import FoodCardCon from '../../../Restaurant/RestaurantOrderPage/FoodCard';
-import { Reviews } from '../../../Restaurant/Reviews/Reviews';
+import { Reviews } from '../../../Restaurant/RestaurantOrderPage/Reviews/Reviews';
 import { Description } from '../../../Restaurant/RestaurantOrderPage/Desciption/Description';
 
 

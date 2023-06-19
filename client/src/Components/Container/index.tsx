@@ -1,3 +1,4 @@
+import { useId } from "react";
 
 interface Props {
     children: React.ReactNode;
@@ -21,7 +22,7 @@ function Container({ children, bgColor, mt }: Props) {
     }
 
     return (
-        <div className={`w-[100%] bg-[${props.bgColor}] mt-7 md:mt-10`}>
+        <div className={`w-[100%] bg-[${props.bgColor}] mt-7 md:mt-10`} key={useId()}>
             <div className="w-[90%] max-w-[1200px] mx-auto md:px-[2rem] py-4">
                 {children}
             </div>

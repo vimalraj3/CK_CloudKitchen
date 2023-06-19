@@ -1,7 +1,7 @@
 import React from 'react'
-import { useAppSelector } from '../../../hooks'
-import { IReview } from '../../../types/reviews.types';
-import { UserAvatar } from '../../utils/UserAvatar/UserAvatar';
+import { useAppSelector } from '../../../../hooks'
+import { IReview } from '../../../../types/reviews.types';
+import { UserAvatar } from '../../../utils/UserAvatar/UserAvatar';
 import { Rating, Skeleton } from '@mui/material';
 
 

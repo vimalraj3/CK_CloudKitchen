@@ -11,16 +11,16 @@ export const ClearFilters = () => {
         dispatch(setClear())
     }
     return (
-        <div>
+        <>
             {
                 canClear && (
-                    <div className='bg-primary rounded-[4px] flex py-1.5 px-1 items-center justify-between'>
+                    <div className='bg-primary rounded-[4px] flex py-[.45rem] px-1 items-center justify-between' onClick={() => handleClear()} role='button' aria-label='Clear'>
                         <p className='text-white font-semibold font-para mx-2'>{`Clear`}</p>
-                        <div onClick={() => handleClear()}>
+                        <div>
                             <CloseIconBtn className='text-white' />
                         </div>
                     </div>)
             }
-        </div>
+        </>
     )
 }

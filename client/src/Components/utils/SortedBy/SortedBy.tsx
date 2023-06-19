@@ -45,36 +45,40 @@ export const SortedBy = () => {
 
 
     useEffect(() => {
-        let title: string = sortedBy.rating ? 'rating' : sortedBy.price.highToLow ? "High to low" : sortedBy.price.lowToHigh ? "low to high" : ''
-        setSortedBytitle(`${defaultSortedByTitle} ${title}`)
+        let title: string = sortedBy.rating ? 'rating' : sortedBy.price.highToLow ? "High to low" : sortedBy.price.lowToHigh ? "low to high" : defaultSortedByTitle
+        setSortedBytitle(`${title}`)
     }, [sortedBy])
 
     return (
-        <div className='relative'>
+        <div className='relative w-[100%]'>
             <Button variant='outlined' size={'large'} onClick={() => setOpen(!open)} sx={{
-                color: '#ff7e8b',
-                borderColor: '#ff7e8b',
+                color: { xs: '#000', sm: '#ff7e8b' },
+                borderColor: { xs: 'gray', sm: '#ff7e8b' },
                 ":hover": {
-                    borderColor: '#ff7e8b',
+                    bgColor: { xs: 'gray', sm: '#ff7e8b' },
+                },
+                ":focus": {
+                    bgColor: { xs: 'gray', sm: '#ff7e8b' },
+                    borderColor: { xs: 'gray', sm: '#ff7e8b' },
                 }
-            }} >
-                <div className="flex items-center gap-3">
+            }} fullWidth >
+                <div className="flex items-center gap-2 md:gap-3 capitalize">
                     {`${sortedByTitle}`}
                     <i className={`fa-solid fa-chevron-down ${open ? 'rotate' : "reverse-rotate"}`}></i>
                 </div>
             </Button>
             {
                 open && (
-                    <div className='rounded-md bg-white border-primary absolute top-[100%] mt-4 z-50 py-3 px-5 w-[100%] slider border-1' key={"BtnShow"}>
+                    <div className='rounded-md bg-white border-gray-400 md:border-primary absolute top-[100%] mt-4 z-50 py-3 px-5 w-[100%] slider border-1' key={"BtnShow"}>
                         <div className="flex flex-col gap-2" key={"BtnContainer"}>
                             {['rating', 'low to high', 'high to low'].map((v, i) => (
                                 <>
                                     <Button fullWidth key={`${v}:${i}`} onClick={() => handleSortedBySubmit(v)}
                                         sx={{
-                                            color: '#ff7e8b',
-                                            borderColor: '#ff7e8b',
+                                            color: { xs: '#ff7e8b', md: '#ff7e8b' },
+                                            borderColor: { xs: 'gray', md: '#ff7e8b' },
                                             ":hover": {
-                                                bgColor: '#ff7e8b',
+                                                bgColor: { xs: 'gray', md: '#ff7e8b' },
                                             }
                                         }}
                                     >
