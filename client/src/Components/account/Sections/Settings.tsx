@@ -57,7 +57,7 @@ const SwitchBtn = styled((props: SwitchProps) => (
 }))
 
 const SwitchOption = React.memo(() => {
-  const [checked, setChecked] = React.useState<boolean>(false)
+  const [checked, setChecked] = React.useState<boolean>(true)
   const changeCheck = () => {
     setChecked(!checked)
   }

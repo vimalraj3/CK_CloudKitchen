@@ -3,6 +3,7 @@ import { useAppSelector } from '../../../../hooks'
 import { IReview } from '../../../../types/reviews.types';
 import { UserAvatar } from '../../../utils/UserAvatar/UserAvatar';
 import { Rating, Skeleton } from '@mui/material';
+import { FoodLoading } from '../../../../state/slices/food.slice';
 
 
 const ReviewsLoading = () => (
@@ -44,12 +45,12 @@ export const Reviews = () => {
 
             {
 
-                loading ? (
+                loading.state && loading.currentLoading == FoodLoading.reviews ? (
                     new Array(4).fill('11').map((v, i) => (
                         <ReviewsLoading key={i} />
                     ))
                 ) : !reviews ? (<NoReviews />) : reviews.map((review, i) => (
-                    <div className='flex gap-7 items-start md:items-center w-[100%] md:w-[60%] mb-8' key={i}>
+                    <div className='flex gap-7 items-start md:items-center w-[100%] mb-8' key={i}>
                         <UserAvatar userName={review.user.userName || ""} src={review.user.avatar} isComment />
                         <div className='flex flex-col gap-1.5 md:gap-2.5 w-[100%]'>
                             <div className='flex flex-col md:flex-row gap-1 md:gap-0 md:justify-between md:items-center'>

@@ -1,56 +1,42 @@
 import React, { useEffect, useState } from 'react'
-import { Btn } from '../Btn'
+import { Btn } from '../../../utils/Btn'
 import { Button, Divider } from '@mui/material'
-import { useAppDispatch, useAppSelector } from '../../../hooks'
-import { setSortedBy } from '../../../state/slices/FilterAndSearch.slice'
+import { useAppDispatch, useAppSelector } from '../../../../hooks'
+import { SortedBy, getAllRestaurants, setSortedBy } from '../../../../state/slices/restaurants.slice'
 
-export const SortedBy = () => {
+export const SortedByBtn = () => {
 
     const [open, setOpen] = useState(false)
-    const defaultSortedByTitle = "sorted by"
-    const [sortedByTitle, setSortedBytitle] = useState(defaultSortedByTitle)
+    const defaultSortedByTitle = "sorted by" as const
+    const [sortedByTitle, setSortedBytitle] = useState<string>(defaultSortedByTitle)
+
+    const buttonValues = [{
+        name: 'rating',
+        value: SortedBy.rating
+    }, {
+        name: 'low to high',
+        value: SortedBy.lowToHigh
+    }, {
+        name: 'high to low',
+        value: SortedBy.highToLow
+    }] as const
 
     const dispatch = useAppDispatch()
-    const { sortedBy } = useAppSelector(state => state.filterAndSearchState)
+    const { sortedBy } = useAppSelector(state => state.restaurantsState)
 
-    const handleSortedBySubmit = (sortedByName: string) => {
-        switch (sortedByName) {
-            case 'rating':
-                dispatch(
-                    setSortedBy({
-                        rating: true,
-                        price: { lowToHigh: false, highToLow: false },
-                    })
-                )
-                break
-            case 'low to high':
-                dispatch(
-                    setSortedBy({
-                        rating: false,
-                        price: { lowToHigh: true, highToLow: false },
-                    })
-                )
-                break
-            case 'high to low':
-                dispatch(
-                    setSortedBy({
-                        rating: false,
-                        price: { lowToHigh: false, highToLow: true },
-                    })
-                )
-                break
-        }
+    const handleSortedBySubmit = async (sortedByValue: SortedBy) => {
+        await dispatch(setSortedBy(sortedByValue))
+        dispatch(getAllRestaurants())
         setOpen(false)
     }
 
-
     useEffect(() => {
-        let title: string = sortedBy.rating ? 'rating' : sortedBy.price.highToLow ? "High to low" : sortedBy.price.lowToHigh ? "low to high" : defaultSortedByTitle
-        setSortedBytitle(`${title}`)
+        const sortedByName = !(sortedBy === SortedBy.empty) ? buttonValues.find(({ name, value }) => value === sortedBy)?.name : ""
+        setSortedBytitle(`${defaultSortedByTitle} ${sortedByName}`)
     }, [sortedBy])
 
     return (
-        <div className='relative w-[100%]'>
+        <div className='relative w-[100%]' key={"sorted by btn component"}>
             <Button variant='outlined' size={'large'} onClick={() => setOpen(!open)} sx={{
                 color: { xs: '#000', sm: '#ff7e8b' },
                 borderColor: { xs: 'gray', sm: '#ff7e8b' },
@@ -61,7 +47,7 @@ export const SortedBy = () => {
                     bgColor: { xs: 'gray', sm: '#ff7e8b' },
                     borderColor: { xs: 'gray', sm: '#ff7e8b' },
                 }
-            }} fullWidth >
+            }} fullWidth key={"sorted by btn"} >
                 <div className="flex items-center gap-2 md:gap-3 capitalize">
                     {`${sortedByTitle}`}
                     <i className={`fa-solid fa-chevron-down ${open ? 'rotate' : "reverse-rotate"}`}></i>
@@ -71,9 +57,9 @@ export const SortedBy = () => {
                 open && (
                     <div className='rounded-md bg-white border-gray-400 md:border-primary absolute top-[100%] mt-4 z-50 py-3 px-5 w-[100%] slider border-1' key={"BtnShow"}>
                         <div className="flex flex-col gap-2" key={"BtnContainer"}>
-                            {['rating', 'low to high', 'high to low'].map((v, i) => (
+                            {buttonValues.map(({ name, value }, i) => (
                                 <>
-                                    <Button fullWidth key={`${v}:${i}`} onClick={() => handleSortedBySubmit(v)}
+                                    <Button fullWidth key={`${name}:${i}`} onClick={() => handleSortedBySubmit(value)}
                                         sx={{
                                             color: { xs: '#ff7e8b', md: '#ff7e8b' },
                                             borderColor: { xs: 'gray', md: '#ff7e8b' },
@@ -82,7 +68,7 @@ export const SortedBy = () => {
                                             }
                                         }}
                                     >
-                                        {v}
+                                        {name}
                                     </Button>
                                 </>
                             ))}

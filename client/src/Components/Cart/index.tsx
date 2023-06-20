@@ -1,19 +1,18 @@
-import React, { Suspense, lazy, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import Nav from '../Nav'
 import Main from './Card'
-// import { RestaurantCard } from './Card'
-import { useCart } from '../../hooks/useCart'
-import PageLoading from '../Loading/PageLoading'
 import { fetchUserAddress } from '../../state/slices/address.slice'
 import { useAppDispatch } from '../../hooks'
+import { fetchCartByUserId } from '../../state/slices/cart.slice'
 
 const index: React.FC = () => {
 
-    const { handlePageLoad } = useCart()
+    const dispatch = useAppDispatch()
     useEffect(() => {
-        handlePageLoad()
-    }, [])
 
+        dispatch(fetchCartByUserId())
+        dispatch(fetchUserAddress())
+    }, [])
 
     return (
         <div>

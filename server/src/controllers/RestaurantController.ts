@@ -161,7 +161,56 @@ class RestaurantController {
   @get('/all')
   async getAllRestaurants(req: Request, res: Response, next: NextFunction) {
     try {
-      const restaurants = await Restaurant.find({}).lean()
+      const { rating, priceRange, sortOption, searchQuery } = req.query
+
+      // Construct the filter object based on the provided query parameters
+      const filter: any = {}
+
+      if (rating) {
+        filter.rating = { $gte: parseFloat(rating as string) } // Convert rating to a number and filter products with a rating greater than or equal to the specified value
+      }
+
+      if (priceRange) {
+        const [minPrice, maxPrice] = (priceRange as string).split('-')
+        const min = parseFloat(minPrice)
+        const max = parseFloat(maxPrice)
+        if (min == 0) {
+          filter.priceRange = {
+            $lte: max,
+          }
+        } else if (max == 0) {
+          filter.priceRange = {
+            $gte: min,
+          }
+        } else {
+          filter.priceRange = {
+            $gte: min,
+            $lte: max,
+          }
+        }
+      }
+      let restaurantsQuery = Restaurant.find({})
+
+      if (searchQuery) {
+        restaurantsQuery = restaurantsQuery.find({
+          restaurantName: { $regex: `${searchQuery}`, $options: 'i' },
+        })
+      }
+
+      if (filter) {
+        restaurantsQuery = restaurantsQuery.find(filter)
+      }
+
+      if (sortOption === 'price-low-to-high') {
+        restaurantsQuery = restaurantsQuery.sort({ price: 1 }) // Sort by ascending price
+      } else if (sortOption === 'price-high-to-low') {
+        restaurantsQuery = restaurantsQuery.sort({ price: -1 }) // Sort by descending price
+      } else if (sortOption === 'rating') {
+        restaurantsQuery = restaurantsQuery.sort({ rating: 1 }) // Sort by ascending rating
+      }
+
+      const restaurants = await restaurantsQuery.lean()
+
       if (!restaurants) return next(new AppError('No restaurants found', 404))
       res.status(200).json({
         success: true,
@@ -176,11 +225,6 @@ class RestaurantController {
   async getRestaurantById(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params
-      // const data = await Restaurant.findById(id)
-      //   .populate(['foods', 'reviews'])
-      //   .populate('reviews.reviews.user')
-      //   .lean()
-
       const [reviews, data] = await Promise.all([
         Review.findOne({ restaurant: id }).populate('reviews.user').lean(),
         Restaurant.findById(id).populate(['foods']).lean(),
@@ -197,8 +241,6 @@ class RestaurantController {
         reviews,
       })
     } catch (error) {
-      console.log(error)
-
       return next(new AppError(`Something went wrong`, 500))
     }
   }
@@ -266,21 +308,17 @@ class RestaurantController {
 
       if (!req.user)
         return next(new AppError(`Login to access this resource`, 401))
-      console.log(req.user, 'error')
       const restaurant: HydratedDocument<IRestaurant> | null =
         await Restaurant.findOneAndDelete({
           _id: id,
           user: req.user._id,
         }).lean()
       await User.findByIdAndUpdate(req.user._id, { restaurant: null })
-      console.log(restaurant)
 
       if (!restaurant) return next(new AppError(`No Restaurant found`, 404))
 
       res.status(200).json({ success: true, message: 'successfully deleted' })
     } catch (error) {
-      console.log(error)
-
       return next(new AppError(`Something went wrong`, 500))
     }
   }

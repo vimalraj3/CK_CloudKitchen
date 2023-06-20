@@ -1,13 +1,11 @@
 import React, { Children, useCallback } from 'react'
-import { Drawer } from './Drawer'
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
-import { Btn } from './../Btn'
 import Rating from '@mui/material/Rating';
 import { Button, Divider } from '@mui/material';
-import { PriceSelector } from '../Form/PriceSelector/PriceSelector';
-import { useAppDispatch, useAppSelector } from '../../../hooks';
-import { setFilter } from '../../../state/slices/FilterAndSearch.slice';
-import { SortedBy } from '../SortedBy/SortedBy';
+import { PriceSelector } from '../../../utils/Form/PriceSelector/PriceSelector';
+import { useAppDispatch, useAppSelector } from '../../../../hooks';
+import { getAllRestaurants, setFilter } from '../../../../state/slices/restaurants.slice';
+import { SortedByBtn } from '../SortedBy/SortedBy';
 export const FilterDrawer = () => {
     const anchor = 'right'
 
@@ -21,23 +19,25 @@ export const FilterDrawer = () => {
     const iOS =
         typeof navigator !== 'undefined' && /iPad|iPhone|iPod/.test(navigator.userAgent);
 
-    const { filter, search, sortedBy } = useAppSelector(state => state.filterAndSearchState)
-    const dispatch = useAppDispatch()
+    const { filter, search, sortedBy } = useAppSelector(state => state.restaurantsState)
 
 
     const toggleDrawer = (open: boolean) => {
         setState({ ...state, [anchor]: open });
     };
 
+    const dispatch = useAppDispatch()
+
 
     const handleFilterSubmit = () => {
         console.log('closing');
-
         console.log(filter, 'filter', 'submitted', sortedBy, 'sortedBy')
+        dispatch(getAllRestaurants())
+
     }
 
-    const handleRating = (value: number) => {
-        dispatch(
+    const handleRating = async (value: number) => {
+        await dispatch(
             setFilter({
                 ...filter,
                 rating: value,
@@ -106,7 +106,7 @@ export const FilterDrawer = () => {
                                     Sorted by
                                 </h4>
                                 <div className='w-[100%] mt-3'>
-                                    <SortedBy />
+                                    <SortedByBtn />
                                 </div>
                             </section>
                         </div>
@@ -124,6 +124,3 @@ export const FilterDrawer = () => {
         </div>
     )
 }
-
-
-// TODO customized the filter btns

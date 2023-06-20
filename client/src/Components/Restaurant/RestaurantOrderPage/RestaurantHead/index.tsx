@@ -1,33 +1,36 @@
 import React, { useState } from 'react'
-import { IRestaurant } from '../../../types/Restaurant.types'
+import { IRestaurant } from '../../../../types/Restaurant.types'
 import { Rating, Skeleton } from '@mui/material'
-import { useAppDispatch, useAppSelector } from '../../../hooks'
+import { useAppDispatch, useAppSelector } from '../../../../hooks'
 
 const RestaurantOrderCardLoading = () => (
-    <div className="flex justify-between items-center md:items-start flex-col md:flex-row gap-3 md:gap-6 w-[100%]">
-        <section className="w-[100%] md:w[40vw]">
-            <Skeleton variant="rectangular" width='100%' height={'350px'} />
-        </section>
-        <section className="w-[100%] md:w[40vw]">
-            <Skeleton variant="text" sx={{ fontSize: { sm: '1.125rem', md: '1.87rem' }, width: '70%' }} />
-            <Skeleton variant="text" sx={{ fontSize: '1rem', width: '100%' }} />
-            <Skeleton variant="text" sx={{ fontSize: '1rem', width: '100%' }} />
-            <Skeleton variant="text" sx={{ fontSize: '1rem', width: '100%' }} />
-            <Skeleton variant="text" sx={{ fontSize: '1rem', width: '100%' }} />
-            <Skeleton variant="text" sx={{ fontSize: '1rem', width: '100%' }} />
-            <Skeleton variant="text" sx={{ fontSize: '1rem', width: '100%' }} />
-            <div className="flex gap-2 mt-2 w-[50%]">
-                <Skeleton variant="text" sx={{ fontSize: '1rem', width: '100%' }} />
-                <Skeleton variant="text" sx={{ fontSize: '1rem', width: '100%' }} />
+
+    <div className="flex flex-col md:flex-row md:justify-between w-[100%] px-3 md:px-5 border-b border-dashed border-primary pb-6 md:py-6 md:items-center md:gap-9">
+        <div className='flex flex-col md:flex-row md:gap-6  md:items-center w-[100%] md:w-[50%]'>
+            <div className='hidden md:block md:w-[300px] aspect-video'>
+                <Skeleton variant="rectangular" width='100%' height={'100%'} animation='wave' />
             </div>
-            <div className="flex gap-2 mt-2 w-[50%]">
-                <Skeleton variant="text" sx={{ fontSize: '1rem', width: '100%' }} />
-                <div className='w-[100%]'>
-                    <Skeleton variant="text" sx={{ fontSize: '1rem', width: '100%' }} />
-                    <Skeleton variant="text" sx={{ fontSize: '1rem', width: '100%' }} />
-                    <Skeleton variant="text" sx={{ fontSize: '1rem', width: '100%' }} />
-                    <Skeleton variant="text" sx={{ fontSize: '1rem', width: '100%' }} />
+            <div className='flex gap-2 flex-col w-[100%]'>
+                <Skeleton variant="text" sx={{ fontSize: { sm: '1.85rem', md: '2rem' }, width: '100%' }} animation='wave' />
+                <div className='flex items-center justify-between gap-2 mt-1 w-[100%]'>
+                    <div className='w-[50%] md:w-[100%]'>
+                        <Skeleton variant="text" sx={{ fontSize: { sm: '3rem', md: '1rem' }, width: '100%' }} animation='wave' />
+                    </div>
+                    <div className='flex gap-2 items-center md:hidden w-[30%]'>
+                        <Skeleton animation='wave' variant="text" sx={{ fontSize: '3rem', width: '100%' }} />
+                    </div>
                 </div>
+                <div className='flex md:hidden items-center gap-2 w-[100%]'>
+                    <Skeleton variant="text" animation='wave' sx={{ fontSize: '1.65rem', width: '100%' }} />
+                </div>
+            </div>
+        </div>
+        <section className='flex gap-4 flex-col w-[100%] md:w-[10%]'>
+            <div className='hidden md:flex gap-2'>
+                <Skeleton variant="text" animation='wave' sx={{ fontSize: '1.125rem', width: '100%' }} />
+            </div>
+            <div className='hidden md:flex items-center justify-end'>
+                <Skeleton variant="text" animation='wave' sx={{ fontSize: '1rem', width: '100%' }} />
             </div>
         </section>
     </div>

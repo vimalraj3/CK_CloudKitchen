@@ -1,12 +1,12 @@
 import React from 'react'
 import { useAppDispatch, useAppSelector } from '../../../../hooks'
 import { CloseIconBtn } from '../../../utils/IconBtn/CloseIconBtn'
-import { setClear } from '../../../../state/slices/FilterAndSearch.slice'
+import { setClear } from '../../../../state/slices/restaurants.slice'
 
 export const ClearFilters = () => {
 
     const dispatch = useAppDispatch()
-    const { canClear } = useAppSelector(state => state.filterAndSearchState)
+    const { canClear } = useAppSelector(state => state.restaurantsState)
     const handleClear = () => {
         dispatch(setClear())
     }

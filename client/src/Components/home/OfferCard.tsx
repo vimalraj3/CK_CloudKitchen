@@ -1,7 +1,3 @@
-import dosaImg from '../../assets/home/dosa.png'
-import pizzaImg from '../../assets/home/pizza.png'
-import { Typography } from '@mui/material'
-import Underline from '../../assets/utils/underline.png'
 interface IOfferCard {
   title: string
   image: string
@@ -39,30 +35,18 @@ function OfferCard() {
             >
               <section className="mt-3 md:mt-0 flex flex-col items-center md:block w-[60%]">
                 <div>
-                  <p className="font-cardo text-[1rem] md:text-[1.4rem] font-[400]">
-                    {offer + '  % Off'}
-                  </p>
-
-                  <div className="md:flex  hidden">
-                    <img src={Underline} alt="underline" />
-                    <Typography
-                      ml={1}
-                      fontFamily={'montserrat'}
-                      component={'p'}
-                      fontSize={'.8rem'}
-                      fontWeight={400}
-                    >
-                      Sale
-                    </Typography>
-                  </div>
+                  <p className='text-sm'>Sale</p>
+                  <span className="font-head text-[1rem] md:text-[1.4rem] font-[400] underline-curve">
+                    {offer + '  % Off '}
+                  </span>
                 </div>
 
-                <h2 className="font-montserrat font-[600] text-[1.5rem] md:text-[2rem]">
+                <h2 className="font-head font-[600] text-[1.5rem] md:text-[2rem] mt-3">
                   {title}
                 </h2>
 
-                <div className="flex items-center cursor-pointer w-[100%] categoryBtn mt-2">
-                  <p className="font-montserrat md:text-[.7rem] lg:text-[1rem]  ">
+                <div className="flex items-center cursor-pointer w-[100%] categoryBtn">
+                  <p className="font-para md:text-[.7rem] lg:text-[1rem]  ">
                     Shop by category
                   </p>
                   <i className="fa-solid fa-arrow-right animateArrow text-[#ff7e8b]"></i>
@@ -71,11 +55,11 @@ function OfferCard() {
               <section>
                 <img src={image} alt={title} width={'100%'} height={'100%'} />
               </section>
-            </div>
+            </div >
           )
         }
       )}
-    </section>
+    </section >
   )
 }
 

@@ -14,8 +14,7 @@ import { ServerError } from '../../types/error.types'
 import { isAxiosError } from 'axios'
 import { AppDispatch, RootState } from '../store'
 import { IOwner } from '../../types/owner.types'
-import { setError } from './error.slice'
-import { useHandleError } from '../../hooks/useHandleError'
+import { IFilters } from './restaurants.slice'
 
 interface RejectedAction extends Action {
   payload: ServerError
@@ -40,16 +39,9 @@ const initialState: initialState = {
   error: null,
 }
 
-interface ServerResponse {
-  restaurant: IRestaurant
-  success: boolean
-}
-// * ============================================================================
-// ? Centerized error handling
-const { setServerError } = useHandleError()
-
 // * ============================================================================
 // ? user fetchRestaurantByUserId
+
 export const fetchRestaurantByUserId = createAsyncThunk<
   IRestaurant,
   void,
@@ -174,26 +166,6 @@ export const deleteRestaurantById = createAsyncThunk<
 
 // * ============================================================================
 // ?  Get all restaurants
-export const getAllRestaurants = createAsyncThunk<
-  IRestaurant[],
-  void,
-  {
-    rejectValue: ServerError
-    state: RootState
-    dispatch: AppDispatch
-  }
->('restaurant/getAllRestaurants', async (_, thunkApi) => {
-  const response = await Axios.get(`/restaurant/all`)
-    .then(async (res) => {
-      return res.data.restaurants
-    })
-    .catch((err: ServerError) => {
-      if (isAxiosError(err)) {
-        return thunkApi.rejectWithValue(err.response?.data as ServerError)
-      }
-    })
-  return response
-})
 
 // * ============================================================================
 
@@ -233,10 +205,6 @@ export const restaurantSlice = createSlice({
       .addCase(deleteRestaurantById.fulfilled, (state, action) => {
         state.loading = false
         state.restaurant = null
-      })
-      .addCase(getAllRestaurants.fulfilled, (state, action) => {
-        state.loading = false
-        state.restaurants = action.payload
       })
       .addMatcher(isRejectedAction, (state, action) => {
         state.loading = false

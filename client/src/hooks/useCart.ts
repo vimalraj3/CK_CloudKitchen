@@ -20,9 +20,5 @@ export const useCart = () => {
     }
   }
 
-  const handlePageLoad = () => {
-    dispatch(fetchCartByUserId)
-    dispatch(fetchUserAddress())
-  }
-  return { handleCartQuantity, handleCartDelete, handlePageLoad }
+  return { handleCartQuantity, handleCartDelete }
 }

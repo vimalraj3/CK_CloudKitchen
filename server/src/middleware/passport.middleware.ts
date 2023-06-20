@@ -39,6 +39,8 @@ const CreateUser = async ({
       return data
     })
     .catch((error: Error) => {
+      console.log('Error', error)
+
       return
     })
   return user

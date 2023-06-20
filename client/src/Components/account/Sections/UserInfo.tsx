@@ -26,6 +26,7 @@ interface IUserEmail {
 
 const UserEmail: React.FC<IUserEmail> = memo(
   ({ email, userName }) => {
+
     return (
       <div>
         <h4 className='text-md md:text-lg font-medium font-head'>{email}</h4>
@@ -54,7 +55,7 @@ export const UserAddress: React.FC<IUserAddress> = memo(
           <h5 className='text-lg font-medium font-head capitalize'>{`${addressName} `}</h5>
           {
             !selector ? (
-              <div className='flex'>
+              <div className='flex gap-2'>
                 <div onClick={() => handleEvents && handleEvents(_id, true)}>
                   <EditBtn />
                 </div>
@@ -83,7 +84,7 @@ interface IAddUserAddress {
 }
 export const AddUserAddress: React.FC<IAddUserAddress> = memo(({ setDialogBoxOpen }) => {
   return (
-    <div className='bg-[#F8F8F8] aspect-video p-3 md:p-5 w-[100%] md:max-w-[250px] rounded-lg flex justify-center items-center border-2' >
+    <div className='bg-[#F8F8F8] aspect-video p-3 md:p-5 w-[100%] md:max-w-[250px] border-2 flex justify-center items-center h-full' >
       <div className="cursor-pointer gap-2" onClick={() => setDialogBoxOpen(true)}>
         <i className="fa-solid fa-location-dot"></i> Add address
       </div>

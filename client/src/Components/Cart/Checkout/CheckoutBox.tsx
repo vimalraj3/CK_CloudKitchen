@@ -1,6 +1,6 @@
 import { Button, Skeleton } from '@mui/material'
 import { useAppSelector } from '../../../hooks'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useCheckout } from '../../../hooks/useCheckout'
 
 
@@ -9,21 +9,14 @@ export const CheckoutBox: React.FC = React.memo(
     () => {
         const { handlePlaceOrder } = useCheckout()
         const { totalPrice, cart, restaurant, loading } = useAppSelector(state => state.cartState)
+
         return (
             <>
                 {
-                    !restaurant || !restaurant.restaurantName ? (
-                        <div className="flex flex-col gap-4 rounded-lg w-[100%]">
-                            <Skeleton variant="rectangular" sx={{
-                                width: '100%',
-                                height: '100%'
-                            }}
-                                animation="wave" />
-                        </div>
-                    ) : (
-                        <div className="flex flex-col gap-4 rounded-lg w-[100%]">
-                            <div className="">
-                                <h2 className='font-bold md:text-2xl font-head'>Checkout</h2>
+                    restaurant ? (
+                        <div className="flex flex-col gap-2 rounded-lg w-[40%]">
+                            <h2 className='font-bold md:text-2xl font-head'>Checkout</h2>
+                            <div>
                                 <h3 className="font-semibold font-head md:text-md mt-5">{restaurant?.restaurantName}</h3>
                                 <div className="my-2 w-[100%]">
                                     {
@@ -56,6 +49,18 @@ export const CheckoutBox: React.FC = React.memo(
                                 >
                                     Buy
                                 </Button>
+                            </div>
+                        </div>
+                    ) : (
+                        <div>
+                            <div>
+                                <h2 className='font-bold md:text-2xl font-head'>Checkout</h2>
+                                <div className='flex items-center justify-center flex-col '>
+                                    <div>
+                                        <img src="https://res.cloudinary.com/dd39ktpmz/image/upload/v1687276814/c7qjhuxe5xdqobh5s6mz.png" alt="No bills" width={'100%'} height={'100%'} />
+                                    </div>
+                                    <h4 className='font-head text-2xl font-semibold text-center'>No bill found</h4>
+                                </div>
                             </div>
                         </div>
                     )

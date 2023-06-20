@@ -1,17 +1,14 @@
 import Container from '../Container'
 import Nav from '../Nav'
-import './styles.css'
 import { useState } from 'react'
 import { Form, PasswordInput, Input } from '../utils/Form'
 
-import { Btn } from '../utils/Btn'
 import { Divider } from '../utils/Divider'
 
 import { Link, useNavigate } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../hooks'
 import { loginUser } from '../../state/slices/user.slice'
 import { Login } from '../../types/user.types'
-import { IShowToast } from '../../types/showToast.types'
 import { Text } from '../utils/Text'
 import * as yup from 'yup'
 import ForgetPassword from '../DialogBox/ForgetBox'
@@ -53,6 +50,8 @@ function index() {
   }
 
   const handleGoogleLogin = () => {
+    console.log(import.meta.env.VITE_REACT_SER_URL, 'server url');
+
     window.open(`${import.meta.env.VITE_REACT_SER_URL}/api/auth/google`, '_self')
   }
 

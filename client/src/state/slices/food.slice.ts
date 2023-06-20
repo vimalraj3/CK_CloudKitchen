@@ -19,12 +19,27 @@ import { setError } from './error.slice'
 import { useHandleError } from '../../hooks/useHandleError'
 import { IReviewModel } from '../../types/reviews.types'
 
+export enum FoodLoading {
+  reviews = 'food/fetchFoodAndRestaurantByRestaurantId/pending',
+  food = 'food/fetchFoodAndRestaurantByRestaurantId/pending',
+  restaurant = 'food/fetchFoodAndRestaurantByRestaurantId/pending',
+  addFood = 'food/addFood/pending',
+  updateFood = 'food/updateFoodById/pending',
+  deleteFood = 'food/deleteFoodById/pending',
+  getAllFood = 'foods/getAllFoods/pending',
+  getAllReviews = 'foods/getAllReviews/pending',
+  empty = '',
+}
+
 interface RejectedAction extends Action {
   payload: ServerError
 }
 
 interface initialState {
-  loading: boolean
+  loading: {
+    state: boolean
+    currentLoading: FoodLoading
+  }
   foods: IFood[]
   currentRestaurant: IRestaurant | null
   currentRestaurantId: string | null
@@ -34,7 +49,10 @@ interface initialState {
 }
 
 const initialState: initialState = {
-  loading: false,
+  loading: {
+    state: false,
+    currentLoading: FoodLoading.empty,
+  },
   foods: [],
   currentRestaurant: null,
   currentRestaurantId: null,
@@ -46,10 +64,6 @@ const initialState: initialState = {
   reviews: null,
 }
 
-interface ServerResponse {
-  food: IRestaurant
-  success: boolean
-}
 // * ============================================================================
 // ? Centerized error handling
 const { setServerError } = useHandleError()
@@ -214,7 +228,10 @@ export const foodSlice = createSlice({
       .addCase(
         fetchFoodAndRestaurantByRestaurantId.fulfilled,
         (state, action) => {
-          state.loading = false
+          state.loading = {
+            state: false,
+            currentLoading: FoodLoading.empty,
+          }
           state.foods = action.payload.food
           state.currentRestaurant = action.payload.restaurant
           state.currentRestaurantId = action.payload.restaurant._id
@@ -222,11 +239,17 @@ export const foodSlice = createSlice({
         }
       )
       .addCase(addFood.fulfilled, (state, action) => {
-        state.loading = false
+        state.loading = {
+          state: false,
+          currentLoading: FoodLoading.empty,
+        }
         state.foods[state.foods.length] = action.payload
       })
       .addCase(updateFoodById.fulfilled, (state, action) => {
-        state.loading = false
+        state.loading = {
+          state: false,
+          currentLoading: FoodLoading.empty,
+        }
         state.foods = state.foods.map((v) => {
           if (v._id === action.payload._id) {
             v = action.payload
@@ -235,22 +258,37 @@ export const foodSlice = createSlice({
         })
       })
       .addCase(deleteFoodById.fulfilled, (state, action) => {
-        state.loading = false
+        state.loading = {
+          state: false,
+          currentLoading: FoodLoading.empty,
+        }
       })
       .addCase(getAllFoods.fulfilled, (state, action) => {
-        state.loading = false
+        state.loading = {
+          state: false,
+          currentLoading: FoodLoading.empty,
+        }
         state.foods = action.payload
       })
       .addCase(getAllReviews.fulfilled, (state, action) => {
-        state.loading = false
+        state.loading = {
+          state: false,
+          currentLoading: FoodLoading.empty,
+        }
         state.reviews = action.payload
       })
       .addMatcher(isRejectedAction, (state, action) => {
-        state.loading = false
+        state.loading = {
+          state: false,
+          currentLoading: FoodLoading.empty,
+        }
         state.error = action.payload
       })
-      .addMatcher(isPending, (state) => {
-        state.loading = true
+      .addMatcher(isPending, (state, action) => {
+        state.loading = {
+          state: true,
+          currentLoading: action.type as FoodLoading,
+        }
       })
   },
 })

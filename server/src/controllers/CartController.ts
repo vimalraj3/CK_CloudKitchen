@@ -9,6 +9,7 @@ import Cart, { ICart, IFoodCart } from '../models/cart.model'
 import User, { IUser } from '../models/user.model'
 import { isAuth } from '../middleware/isAuth'
 import { log } from 'winston'
+import { IRestaurant } from '../models/Restaurant.model'
 
 // TODO  Search for a food
 
@@ -169,7 +170,7 @@ class OrderController {
         .populate('foods.food')
         .lean()
 
-      if (!cart) {
+      if (!cart || cart.foods.length == 0) {
         return next(new AppError(`Cart not found`, 404))
       }
 
@@ -256,6 +257,7 @@ class OrderController {
       let deletedFoodPrice,
         deletedFoodQuantity = 0
 
+      // * filter the object form foods array
       const foods = cart.foods.filter((val: any) => {
         if (val._id.toString() === id) {
           deletedFoodPrice = val.food.price
@@ -264,14 +266,33 @@ class OrderController {
         return val._id.toString() !== id
       })
 
+      // * If cart is emtpy set cart to intial state
+      if (foods.length == 0) {
+        cart.restaurantId = ' ' as any
+        cart.foods = []
+        await cart.save({
+          validateBeforeSave: false,
+        })
+
+        res.status(200).json({
+          success: true,
+          cart: cart,
+        })
+        return
+      }
+
+      // * check price and quantity exists
       if (!deletedFoodPrice || !deletedFoodQuantity) {
         return next(new AppError('Food not found', 404))
       }
 
+      // * sets values
       cart.totalPrice -= deletedFoodPrice * deletedFoodQuantity
       cart.foods = foods
 
-      await cart.save()
+      await cart.save({
+        validateBeforeSave: false,
+      })
 
       res.status(200).json({
         success: true,

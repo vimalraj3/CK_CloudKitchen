@@ -1,8 +1,6 @@
 import { SearchBar } from '../Nav/SearchBar'
 import Nav from '../Nav'
-import { useAppSelector } from '../../hooks'
 function Hero() {
-  const { data } = useAppSelector((state) => state.userState)
   return (
     <>
       <div className="relative h-[60vh] w-[100%]">

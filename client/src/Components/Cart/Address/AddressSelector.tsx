@@ -4,7 +4,7 @@ import { DialogBox } from '../../utils/DialogBox'
 import { UserAddressEditForm } from '../../Forms/AddressForms/UserAddressEditForm'
 import { IAddress } from '../../../types/user.types'
 import { useAppSelector, useEditUserAddress } from '../../../hooks'
-import { Skeleton } from '@mui/material'
+import { Grid, Skeleton } from '@mui/material'
 import { useCheckout } from '../../../hooks/useCheckout'
 
 export const AddressSelector = () => {
@@ -45,15 +45,21 @@ export const AddressSelector = () => {
                 ) : (
                     <div className='w-[100%] rounded-lg mt-2'>
                         <h3 className='font-head font-semibold md:text-2xl text-md'>Select your Address</h3>
-                        <div className="flex gap-5 md:gap-8 mt-5 flex-wrap justify-center">
-                            {
-                                address.map((v, i) => {
-                                    return (
-                                        <UserAddress {...v} key={i} selector handleSelector={handleSetAddressId} selectedId={addressId} />
-                                    )
-                                })
-                            }
-                            <AddUserAddress setDialogBoxOpen={setDialogBoxOpen} />
+                        <div className="flex gap-5 md:gap-8 mt-5 justify-center">
+                            <Grid container spacing={2}>
+                                {
+                                    address.map((v, i) => {
+                                        return (
+                                            <Grid item xs={12} md={4} lg={4}>
+                                                <UserAddress {...v} key={i} selector handleSelector={handleSetAddressId} selectedId={addressId} />
+                                            </Grid>
+                                        )
+                                    })
+                                }
+                                <Grid item xs={12} md={4} lg={4}>
+                                    <AddUserAddress setDialogBoxOpen={setDialogBoxOpen} />
+                                </Grid>
+                            </Grid>
                         </div>
                         <DialogBox open={dialogBoxOpen} setOpen={setDialogBoxOpen} title='Change address' btns={false} >
                             <UserAddressEditForm handleSubmit={handleSubmitEditForm} />

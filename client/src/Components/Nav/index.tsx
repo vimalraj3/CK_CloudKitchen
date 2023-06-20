@@ -13,19 +13,9 @@ interface INavProps {
   bgColor?: string
 }
 
-const desktopDropDown = [
-  {
-    name: 'account',
-    to: '/account',
-  },
-  {
-    name: 'settings',
-    to: '/account#userSettings',
-  },
-]
 
 
-const mobileNoUserDropDown = [
+const DropDown = [
   {
     name: 'login',
     to: '/login',
@@ -40,22 +30,39 @@ const mobileNoUserDropDown = [
   },
 ]
 
+
+const userDropDown = [
+  {
+    name: 'account',
+    to: '/account',
+  },
+  {
+    name: 'logout',
+    to: '/logout',
+  },
+]
+
+const adminDropDown = [
+  {
+    name: 'dashboard',
+    to: '/dashboard'
+  }
+]
+
 const mobileUserDropDown = [
   {
     name: 'cart',
     to: '/cart'
   },
-  ...desktopDropDown,
-
+  ...userDropDown,
 ]
+
 
 const Nav: React.FC<INavProps> = ({
   dark = false,
   textColor = '#fff',
   bgColor = 'transparent',
 }) => {
-  const [isNavOpen, setIsNavOpen] = useState<boolean>(false)
-  const [isUserOptionOpen, setIsUserOptionOpen] = useState<boolean>(false)
 
   const { data } = useAppSelector((state) => state.userState)
   return (
@@ -80,9 +87,9 @@ const Nav: React.FC<INavProps> = ({
         {/* nav  links */}
         <section>
           {/* desktop nav  links */}
-          {!data?.userName ? (
+          {!data.auth.isAuth ? (
             <div className="md:flex justify-between items-center  hidden">
-              <NavLink to={'/re'}>
+              <NavLink to={'/restaurant/add'}>
                 <button className="mr-5 text-xl">Add cloud kitchen</button>
               </NavLink>
               <NavLink to={'/login'}>
@@ -92,11 +99,18 @@ const Nav: React.FC<INavProps> = ({
                 <button className="text-xl">Sign up</button>
               </NavLink>
             </div>
+          ) : !(data.auth.isAdmin) ? (
+            <>
+              <div className="md:flex justify-between items-center gap-6 hidden">
+                <Cart />
+                <UserAvatarNav userName={data?.userName} src={data.avatar} dropDown={userDropDown} />
+              </div>
+            </>
           ) : (
             <>
               <div className="md:flex justify-between items-center gap-6 hidden">
                 <Cart />
-                <UserAvatarNav userName={data?.userName} src={data.avatar} dropDown={desktopDropDown} />
+                <UserAvatarNav userName={data?.userName} src={data.avatar} dropDown={[...adminDropDown, ...userDropDown]} />
               </div>
             </>
           )}
@@ -108,12 +122,17 @@ const Nav: React.FC<INavProps> = ({
               !data.userName ? (
                 <>
                   {/* Moblie nav links*/}
-                  <UserAvatarNav userName={data?.userName} src={data.avatar} isHamBuger={true} dropDown={mobileUserDropDown} dark={dark} />
+                  <UserAvatarNav userName={data?.userName} src={data.avatar} isHamBuger={true} dropDown={DropDown} dark={dark} />
                 </>
-              ) :
+              ) : !(data.role == "admin") ?
                 <>
                   <div className="mb-2">
                     <UserAvatarNav userName={data?.userName} src={data.avatar} dropDown={mobileUserDropDown} />
+                  </div>
+                </> :
+                <>
+                  <div className="mb-2">
+                    <UserAvatarNav userName={data?.userName} src={data.avatar} dropDown={[...adminDropDown, ...mobileUserDropDown]} />
                   </div>
                 </>
             }

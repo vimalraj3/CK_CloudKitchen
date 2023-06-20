@@ -1,15 +1,4 @@
 import { useState } from 'react'
-import cakeImg from "../../assets/home/cake.png"
-import biriyaniImg from "../../assets/home/biriyani.png"
-import dosaImg from "../../assets/home/dosa.png"
-import firedriceImg from "../../assets/home/firedrice.png"
-import noodlesImg from "../../assets/home/noodles.png"
-import paneerImg from "../../assets/home/paneer.png"
-import pizzaImg from "../../assets/home/pizza.png"
-import rollsImg from "../../assets/home/rolls.png"
-import shawarmaImg from "../../assets/home/shawarma.png"
-import thaliImg from "../../assets/home/thali.png"
-
 interface ICategoryData {
     image: string;
     name: string;

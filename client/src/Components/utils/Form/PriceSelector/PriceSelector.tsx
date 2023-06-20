@@ -4,11 +4,11 @@ import InputLabel from '@mui/material/InputLabel';
 import InputAdornment from '@mui/material/InputAdornment';
 import FormControl from '@mui/material/FormControl';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
-import { setPriceFilter } from '../../../../state/slices/FilterAndSearch.slice';
+import { setPriceFilter } from '../../../../state/slices/restaurants.slice';
 
 export const PriceSelector: React.FC = () => {
     const dispatch = useAppDispatch()
-    const { filter } = useAppSelector(state => state.filterAndSearchState)
+    const { filter } = useAppSelector(state => state.restaurantsState)
 
     const handleChangePrice =
         (value: string, isMin: boolean) => {

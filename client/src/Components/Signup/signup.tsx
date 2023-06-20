@@ -1,6 +1,5 @@
 import Container from '../Container'
 import Nav from '../Nav'
-import './styles.css'
 import { PasswordInput, Input, Form } from '../utils/Form'
 import { Divider } from '../utils/Divider'
 import { Link, useNavigate } from 'react-router-dom'

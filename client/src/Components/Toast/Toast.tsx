@@ -39,7 +39,8 @@ export const ShowToast: React.FC<any> = () => {
 
     const showToast: IShowToast = React.useCallback(
         (message: string, type: string) => {
-            setState({ open: true, type, message, Transition: SlideTransition });
+            message !== "Cart not found" &&
+                setState({ open: true, type, message, Transition: SlideTransition });
         }, []
     )
 
@@ -61,15 +62,13 @@ export const ShowToast: React.FC<any> = () => {
     }, [addressError])
 
     React.useEffect(() => {
-
         if (checkoutError && checkoutError.message !== "") {
             showToast(checkoutError.message, checkoutError.success ? 'success' : "error")
         }
     }, [checkoutError])
 
     React.useEffect(() => {
-
-        if (cartError && cartError.message !== "") {
+        if (cartError && cartError.message !== "" && cartError.message !== "Cart not found") {
             showToast(cartError.message, cartError.success ? 'success' : "error")
         }
     }, [cartError])

@@ -1,9 +1,10 @@
 import React, { Suspense, memo, useCallback } from 'react'
-import { IFood } from '../../../types/Food.types'
+import { IFood } from '../../../../types/Food.types'
 import { Button, Grid, IconButton, Skeleton } from '@mui/material'
-import { useAppSelector } from '../../../hooks'
+import { useAppSelector } from '../../../../hooks'
 import { useParams } from 'react-router-dom'
-import { useRestaurantOrderPage } from '../../../hooks/useRestaurantOrderPage'
+import { useRestaurantOrderPage } from '../../../../hooks/useRestaurantOrderPage'
+import { FoodLoading } from '../../../../state/slices/food.slice'
 
 interface IFoodCardCon {
     handleAddToCart: (id: string) => void
@@ -14,6 +15,7 @@ interface IFoodCard extends IFood {
 }
 const FoodCard: React.FC<IFoodCard> = memo(
     ({ time, title, restaurant, rating, price, image, _id, handleAddToCart }) => {
+
         return (
             <Grid item xs={12} sm={6} md={4}>
                 <div className="px-4 py-3 aspect-[4/3] w-[100%] rounded-lg md:hover:shadow-xl ease-in-out transition-shadow bg-white" >
@@ -38,7 +40,6 @@ const FoodCard: React.FC<IFoodCard> = memo(
                             borderColor: '#ff7e8b',
                             ":hover": {
                                 borderColor: '#ff7e8b',
-
                             }
                         }} fullWidth >
                             <div className='flex gap-2 items-center'>
@@ -102,7 +103,7 @@ const FoodCardCon: React.FC = memo(
                 <div className="w-[100%]">
                     <Grid container spacing={4}>
                         {
-                            loading && !(foods.length) ? new Array(3).fill('12').map((v, i) => (<FoodCardLoading key={i} />)) : foods.map((v, i) => {
+                            loading.state && loading.currentLoading === FoodLoading.food && !(foods.length) ? new Array(3).fill('12').map((v, i) => (<FoodCardLoading key={i} />)) : foods.map((v, i) => {
                                 return (
                                     <FoodCard {...v} key={i} handleAddToCart={handleCardClick} />
                                 )

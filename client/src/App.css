@@ -207,3 +207,19 @@ div.scrollbar-hide::-webkit-scrollbar {
 .message-box-alt {
   transform: rotateY(180deg);
 }
+
+/* * curved Underline  */
+.underline-curve {
+  position: relative;
+}
+
+.underline-curve:after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  border-top: solid 3px #ff7e8b;
+  left: 0;
+  bottom: -10px;
+  border-radius: 50%;
+  height: 8px;
+}

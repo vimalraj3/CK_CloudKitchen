@@ -12,11 +12,9 @@ const Signup = lazy(() => import('./Components/Signup/signup'))
 const Account = lazy(() => import('./Components/account/Account'))
 const AddRestaurant = lazy(() => import('./Components/Restaurant/AddRestaurantPage'))
 const Restaurant = lazy(() => import('./Components/Restaurant/AddRestaurantPage'))
-// import Restaurant from './Components/Restaurant/RestaurantHome'
 const ResetPassword = lazy(() => import('./Components/ResetPassword/ResetPassword'))
-const RestauranProfile = lazy(() => import('./Components/Restaurant/RestaurantOrderPage/RestaurantOrderPage'))
+const RestauranProfile = lazy(() => import('./Components/Restaurant/RestaurantOrderPage'))
 const Cart = lazy(() => import('./Components/Cart'))
-// import RestauranProfile from './Components/Restaurant/RestaurantOrderPage/RestaurantOrderPage' 
 
 
 import { useAppDispatch } from './hooks'

@@ -4,15 +4,16 @@ import { useAppSelector } from './useAppSelector'
 import { useAppDispatch } from './useAppDispatch'
 import {
   IFilters,
+  getAllRestaurants,
   setFilter,
   setSearch,
   setSortedBy,
-} from '../state/slices/FilterAndSearch.slice'
+} from '../state/slices/restaurants.slice'
 
 export const useSearch = () => {
   // * state Delcaration
   const { search, filter, sortedBy } = useAppSelector(
-    (state) => state.filterAndSearchState
+    (state) => state.restaurantsState
   )
 
   // *dispatch
@@ -23,17 +24,11 @@ export const useSearch = () => {
     dispatch(setSearch(e.target.value))
   }, [])
 
-  // // * handle clear everything
-  // const handleClearSearch = useCallback(() => {
-  //   setSearch('')
-  //   setSortedBy(sortedByDefault)
-  //   setFilter(filtersDefault)
-  // }, [])
-
   // * handle Search Submit
   const handleSearchSubmit = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
       console.log(search, 'search', 'submitted')
+      dispatch(getAllRestaurants())
     },
     []
   )
@@ -42,10 +37,5 @@ export const useSearch = () => {
     search,
     handleSearch,
     handleSearchSubmit,
-    // handleRating,
-    ratingValue: filter.rating,
-    // handleFilterSubmit,
-    priceMin: filter.price.min,
-    priceMax: filter.price.max,
   }
 }

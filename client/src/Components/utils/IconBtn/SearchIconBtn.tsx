@@ -6,9 +6,10 @@ interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 export const SearchIconBtn: React.FC<Props> = (props) => {
+    const { handleClick, className } = props
     return (
-        <IconButton aria-label="delete" size="small" onClick={props.handleClick}>
-            <i className="fa-solid fa-magnifying-glass"></i>
+        <IconButton aria-label="delete" size="small" onClick={handleClick}>
+            <i className={`fa-solid fa-magnifying-glass ${className}`}></i>
         </IconButton>
     )
 }

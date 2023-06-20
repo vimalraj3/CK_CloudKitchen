@@ -318,7 +318,7 @@ export const cartReducer = createSlice({
         state = initialState
       })
       .addCase(setAskClean.fulfilled, (state, action) => {
-        state.askClean = !state.askClean
+        state.askClean = false
       })
       .addMatcher(isRejectedAction, (state, action) => {
         state.loading = false

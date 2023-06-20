@@ -5,9 +5,9 @@ import { RestaurantCardItem } from "./RestaurantCardItem"
 import { useNavigate } from "react-router-dom"
 import { CheckoutBox } from "../Checkout/CheckoutBox"
 import { useCart } from "../../../hooks/useCart"
-import React, { useCallback, useEffect } from "react"
+import React, { useEffect } from "react"
 import { AddressSelector } from "../Address/AddressSelector"
-import { useCheckout } from "../../../hooks/useCheckout"
+import { NotFoundCart } from "../NotFound/NotFoundCart"
 interface IRestaurantCardTitleProps {
     total: number
     id: string
@@ -20,8 +20,6 @@ const RestaurantCardTitle: React.FC<IRestaurantCardTitleProps> = ({
     id
 }) => {
     const navigate = useNavigate()
-    console.log(restaurant, total, id, 'restaurant card title');
-
     return (
         <>
             <div className="flex items-center justify-between gap-2">
@@ -32,20 +30,16 @@ const RestaurantCardTitle: React.FC<IRestaurantCardTitleProps> = ({
     )
 }
 
-const RestaurantCard: React.FC = () => {
-    const { loading, cart, restaurant, totalPrice } = useAppSelector(state => state.cartState)
 
-    const { handlePageLoad } = useCart()
-    useEffect(() => {
-        handlePageLoad()
-    }, [])
+const RestaurantCard: React.FC = () => {
+    const { loading, cart, restaurant, totalPrice, error } = useAppSelector(state => state.cartState)
+
 
     const tempArrayLoading: string[] = [...Array(5).fill('fdsfafdsa')];
 
     return (
         <div>
             <Container>
-
                 <div className="min-h-[70svh]">
                     {
 
@@ -62,27 +56,33 @@ const RestaurantCard: React.FC = () => {
                                 }
                                 <div className="flex flex-col gap-3 md:gap-8">
                                     {
-                                        cart ? cart.map((v, i) => {
-                                            return (
-                                                <RestaurantCardItem key={i} id={v._id}   {...v} />
-                                            )
-                                        }) : (
+                                        loading && error?.success ? (
                                             tempArrayLoading.map((v, i) => {
                                                 return (
                                                     <RestaurantCardItemLoading key={i} />
                                                 )
                                             })
-                                        )
+                                        ) : cart.length == 0 ? (<NotFoundCart />) : cart.map((v, i) => {
+                                            return (
+                                                <RestaurantCardItem key={i} id={v._id}   {...v} />
+                                            )
+                                        })
                                     }
                                 </div>
                             </div>
-                            <div className="flex gap-8 md:gap-8 flex-col md:flex-row">
-                                <div className="w-[100%] md:w-[60%]">
-                                    <AddressSelector />
-                                </div>
-                                <div className="w-[100%] md:w-[40%]">
-                                    <CheckoutBox />
-                                </div>
+                            <div className="flex gap-8 md:gap-8 flex-col">
+                                {
+                                    cart.length !== 0 && (
+                                        <>
+                                            <div className="w-[100%] md:w-[100%]">
+                                                <AddressSelector />
+                                            </div>
+                                            <div className="w-[100%] md:w-[100%]">
+                                                <CheckoutBox />
+                                            </div>
+                                        </>
+                                    )
+                                }
                             </div>
                         </div>
                     }

@@ -4,7 +4,7 @@
   "description": "### foodie is a platform where connecting home kitchen and cloud kitchen to customers😋.",
   "main": "index.js",
   "scripts": {
-    "dev": "concurrently \"npm run dev --prefix backend\"  \"npm run dev --prefix frontend\" ",
+    "dev": "concurrently \"npm start --prefix server\"  \"npm run dev --prefix client\" ",
     "build": "cd server && npm install && npm run build  && cd ../client && npm install && npm run build",
     "start": "TG_ALLOW_MIXED=ALLOW  node server/dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"

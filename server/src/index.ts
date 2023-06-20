@@ -41,7 +41,7 @@ const SECRET: string = process.env.COOKIE_SECRET
 const DB_URL: string = process.env.DB_URL
 
 var cookieOpt: CookieOptions = {
-  maxAge: 604800000,
+  maxAge: 3 * 24 * 60 * 60,
   sameSite: 'strict',
   secure: false,
 }
@@ -56,7 +56,7 @@ var sess: SessionOptions = {
   secret: SECRET,
   store: new MongoStore({
     mongoUrl: DB_URL,
-    ttl: 14 * 24 * 60 * 60, // 14 days
+    ttl: 3 * 24 * 60 * 60, // 3 days
   }),
   cookie: cookieOpt,
 }
@@ -66,12 +66,12 @@ app.use(session(sess))
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(cors(corsOption))
-app.use('/api/', AppRouter.getInstance())
-app.use(ErrorHandler)
 
 app.get(
-  'api/auth/google',
+  '/api/auth/google',
   (req, res, next) => {
+    console.log('Api get re')
+
     res.header(
       'Access-Control-Allow-Methods',
       'GET, POST, PUT, DELETE, OPTIONS'
@@ -84,7 +84,7 @@ app.get(
 )
 
 app.get(
-  'api/auth/google/callback',
+  '/api/auth/google/callback',
   passport.authenticate('google', {
     failureRedirect: `${env.SER_URL}/login`,
   }),
@@ -92,6 +92,8 @@ app.get(
     res.redirect(`${env.SER_URL}/`)
   }
 )
+app.use('/api/', AppRouter.getInstance())
+app.use(ErrorHandler)
 
 app.use(express.static(path.join(__dirname, '../../client/dist')))
 app.get('*', (req: Request, res: Response) =>

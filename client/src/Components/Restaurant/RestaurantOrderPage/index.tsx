@@ -1,15 +1,13 @@
-import React, { Suspense, lazy, memo, useCallback, useEffect, useMemo, useState } from 'react'
+import React, { memo, useCallback, useEffect, useState } from 'react'
 import Nav from '../../Nav'
 import Container from '../../Container'
 import { useAppDispatch, useAppSelector } from '../../../hooks'
-import { fetchFoodAndRestaurantByRestaurantId, getAllReviews } from '../../../state/slices/food.slice'
+import { fetchFoodAndRestaurantByRestaurantId } from '../../../state/slices/food.slice'
 import { useParams } from 'react-router-dom'
 import { useRestaurantOrderPage } from '../../../hooks/useRestaurantOrderPage'
 import { DialogBox } from '../../utils/DialogBox'
-import { RestaurantOrderCard } from './RestaurantOrderCard'
-import FoodCard from './FoodCard'
-import { RestaurantFoodTabs } from '../../utils/Tabs/RestaurantFoodTabs/RestaurantFoodTabs'
-
+import { RestaurantOrderCard } from './RestaurantHead'
+import { MoblieFood } from './MoblieFoodLayout/MoblieFoodLayout'
 const ShowErrorMessage: React.FC<{ askClean: boolean; handleAskClean: () => void; handleConfirm: () => void }> = memo(
   ({ askClean, handleAskClean, handleConfirm }) => {
     return (
@@ -57,7 +55,7 @@ const RestaurantOrderPage: React.FC = () => {
     <Nav dark bgColor='#f8f8f8' />
     <Container>
       <RestaurantOrderCard />
-      <RestaurantFoodTabs />
+      <MoblieFood />
       <ShowErrorMessage askClean={askClean} handleAskClean={handleAskClean} handleConfirm={handleClearAndAddToCartClick} />
     </Container>
   </div>

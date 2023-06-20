@@ -2,7 +2,7 @@ import darkLogo from '../../assets/logos/darkLogo.png'
 import Container from '../Container';
 import { Social, SocialIcon } from '../utils/Social';
 import { Divider } from '../utils/Divider'
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { footerLinks } from '../../data/footer.json'
 import { useId } from 'react';
 
@@ -22,13 +22,15 @@ const socialData = [
 ]
 
 function index() {
+
+  const navigate = useNavigate()
   return (
     <Container bgColor='#f8f8f8'>
       <div className="flex flex-col w-full md:flex-row justify-center md:justify-between items-center gap-2 md:gap-0">
-        <div className="w-[75px]">
+        <div className="w-[75px] cursor-pointer" onClick={() => { navigate(`/`) }}>
           <img src={darkLogo} alt="CK_Logo" width={"100%"} />
         </div>
-        <div className="flex flex-col justify-center items-center gap-2 my-1 md:gap-0 md:my-0">
+        {/* <div className="flex flex-col justify-center items-center gap-2 my-1 md:gap-0 md:my-0">
           {
             footerLinks.map((v, i) => {
               return <div className='underline' key={useId()}>
@@ -36,7 +38,7 @@ function index() {
               </div>
             })
           }
-        </div>
+        </div> */}
         <Social>
           {
             socialData.map(({ url, icon }, i) => {
@@ -50,7 +52,7 @@ function index() {
 
       <Divider margin='1rem' color='#ff7e8b' size='2px' />
 
-      <p className='text-center mt-3 text-[#9c9c9c]'>{`This website is make by `}
+      <p className='text-center mt-3 text-[#9c9c9c]'>{`This fake website is make by `}
         <Link to={'https://github.com/vimal-oneway'}>
           <span className='text-[#c85656] underline cursor-pointer'>{`vimal-oneway❤️`}</span>
         </Link>
