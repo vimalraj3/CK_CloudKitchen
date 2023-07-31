@@ -275,33 +275,38 @@ export const cartReducer = createSlice({
     builder
       .addCase(fetchCartByUserId.fulfilled, (state, action) => {
         state.loading = false
-        state.restaurant = action.payload.cart.restaurantId
+        if (!action.payload.cart) return
+        state.restaurant = action.payload.cart?.restaurantId
         state.cart = action.payload.cart.foods
-        state.totalPrice = action.payload.cart.totalPrice
+        state.totalPrice = action.payload.cart?.totalPrice
         state.askClean = false
       })
       .addCase(addToCart.fulfilled, (state, action) => {
         state.loading = false
+        if (!action.payload.cart) return
         if (action.payload.cart.foods) state.cart = action.payload.cart.foods
-        state.restaurant = action.payload.cart.restaurantId
+        state.restaurant = action.payload?.cart?.restaurantId
         state.askClean = false
-        state.totalPrice = action.payload.cart.totalPrice
+        state.totalPrice = action.payload?.cart?.totalPrice
       })
       .addCase(updateCartById.fulfilled, (state, action) => {
         state.loading = false
+        if (!action.payload.cart) return
         state.cart = action.payload.cart.foods
-        state.restaurant = action.payload.cart.restaurantId
+        state.restaurant = action.payload.cart?.restaurantId
         state.askClean = false
         state.totalPrice = action.payload.cart.totalPrice
       })
       .addCase(deleteCartFoodById.fulfilled, (state, action) => {
         state.loading = false
+        if (!action.payload.cart) return
         state.cart = action.payload.cart.foods
-        state.totalPrice = action.payload.cart.totalPrice
-        state.restaurant = action.payload.cart.restaurantId
+        state.totalPrice = action.payload.cart?.totalPrice
+        state.restaurant = action.payload.cart?.restaurantId
       })
       .addCase(clearAndAddToCart.fulfilled, (state, action) => {
         state.loading = false
+        if (!action.payload.cart) return
         state.cart = action.payload.cart.foods
         state.totalPrice = action.payload.cart.totalPrice
         state.restaurant = action.payload.cart.restaurantId
@@ -309,6 +314,7 @@ export const cartReducer = createSlice({
       })
       .addCase(clearCart.fulfilled, (state, action) => {
         state.loading = false
+        if (!action.payload.cart) return
         state.cart = action.payload.cart.foods
         state.totalPrice = action.payload.cart.totalPrice
         state.restaurant = action.payload.cart.restaurantId

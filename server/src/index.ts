@@ -10,7 +10,6 @@ import MongoStore from 'connect-mongo'
 import { env } from 'process'
 import cors, { CorsOptions } from 'cors'
 import bodyParser from 'body-parser'
-import multer from 'multer'
 
 import { ErrorHandler } from './utils/ErrorHandler'
 import { AppRouter } from './AppRouter'
@@ -25,12 +24,30 @@ import './controllers/OrderController'
 import './controllers/CartController'
 import './controllers/ReviewController'
 
+// const currentDir = process.cwd()
+// if (currentDir.endsWith('server')) {
+//   dotenv.config({ path: path.resolve(currentDir, '/src/.env') })
+// } else {
+//   dotenv.config({ path: path.resolve(currentDir, './server/dist/.env') })
+// }
+
+// dotenv.config()
 const currentDir = process.cwd()
+console.log(currentDir)
+
 if (currentDir.endsWith('server')) {
+  console.log(currentDir)
+
   dotenv.config({ path: path.resolve(currentDir, './src/.env') })
 } else {
   dotenv.config({ path: path.resolve(currentDir, './server/dist/.env') })
 }
+
+// console.log(
+//   process.env.CLIENT_ID,
+//   process.env.CLIENT_SECRET,
+//   process.env.SER_URL
+// )
 
 const app = express()
 const corsOption: CorsOptions = {
