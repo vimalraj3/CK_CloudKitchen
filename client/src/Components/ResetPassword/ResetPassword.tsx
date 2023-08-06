@@ -1,14 +1,13 @@
 import React from 'react'
 import Container from '../Container'
-import { Form, Input, PasswordInput } from '../utils/Form'
+import { Form, Input, PasswordInput } from '../UI/Form'
 import Nav from '../Nav'
 import * as yup from 'yup'
-import { Text } from '../utils/Text'
+import { Text } from '../UI/Text'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useAppDispatch } from '../../hooks'
 import { resetPasswordApi } from '../../state/slices/user.slice'
 import { IShowToast } from '../../types/showToast.types'
-
 
 const ResetPassword = () => {
   const navigate = useNavigate()
@@ -102,6 +101,5 @@ const ResetPassword = () => {
     </>
   )
 }
-
 
 export default ResetPassword

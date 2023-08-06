@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback } from 'react'
 import { useAppDispatch } from './useAppDispatch'
 import {
   addToCart,
@@ -9,10 +9,7 @@ import { useAppSelector } from './useAppSelector'
 
 export const useRestaurantOrderPage = () => {
   const dispatch = useAppDispatch()
-  // const stateRestaurantId = useAppSelector(
-  //   (state) => state.cartState.restaurantId
-  // )
-  const { cart, restaurant } = useAppSelector((state) => state.cartState)
+  const { cart } = useAppSelector((state) => state.cartState)
   interface addToCartProps {
     foodId: string
     restaurantId: string
@@ -21,28 +18,15 @@ export const useRestaurantOrderPage = () => {
 
   const handleAddToCart = useCallback(
     ({ foodId, restaurantId, quantity }: addToCartProps) => {
-      console.log(restaurant?._id, cart, 'restaurantId')
-      if (cart.length === 0 || !cart) {
-        console.log('cart is empty')
-
-        dispatch(
-          addToCart({
-            foodId: foodId,
-            restaurantId: restaurantId,
-            quantity: quantity,
-          })
-        )
-      } else if (restaurant?._id == restaurantId) {
-        dispatch(
-          addToCart({
-            foodId: foodId,
-            restaurantId: restaurantId,
-            quantity: quantity,
-          })
-        )
-      } else {
-        dispatch(setAskClean())
-      }
+      console.log(cart, 'restaurantId')
+      console.log('cart is empty')
+      dispatch(
+        addToCart({
+          foodId: foodId,
+          restaurantId: restaurantId,
+          quantity: quantity,
+        })
+      )
     },
     []
   )

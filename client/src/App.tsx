@@ -3,38 +3,43 @@ import { Suspense, lazy, useEffect } from 'react'
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
-const Products = lazy(() => import('./Components/Products'))
 const Home = lazy(() => import('./Components/home/Home'))
 const ProductFrom = lazy(() => import('./Components/ProductFrom'))
 const Login = lazy(() => import('./Components/Login/Login'))
 const Footer = lazy(() => import('./Components/Footer'))
 const Signup = lazy(() => import('./Components/Signup/signup'))
 const Account = lazy(() => import('./Components/account/Account'))
-const AddRestaurant = lazy(() => import('./Components/Restaurant/AddRestaurantPage'))
-const Restaurant = lazy(() => import('./Components/Restaurant/AddRestaurantPage'))
-const ResetPassword = lazy(() => import('./Components/ResetPassword/ResetPassword'))
-const RestauranProfile = lazy(() => import('./Components/Restaurant/RestaurantOrderPage'))
+const ResetPassword = lazy(
+  () => import('./Components/ResetPassword/ResetPassword')
+)
 const Cart = lazy(() => import('./Components/Cart'))
+const Food = lazy(() => import('./Components/Food/Food'))
 
-
-import { useAppDispatch } from './hooks'
-import { fetchUser } from './state/slices/user.slice'
+import { useAppDispatch, useAppSelector } from './hooks'
 import PageLoading from './Components/Loading/PageLoading'
-import { fetchCartByUserId } from './state/slices/cart.slice'
-import { ShowToast } from './Components/Toast/Toast'
-import { fetchUserAddress } from './state/slices/address.slice'
+import { Toaster } from 'react-hot-toast'
+import { getAllFoods } from './state/slices/food.slice'
+import { fetchUser } from './state/slices/user.slice'
 
 function App() {
   const dispatch = useAppDispatch()
 
+  const email = useAppSelector((state) => state.userState.data.email)
+
+  const getUser = async () => {
+    const user = await sessionStorage.getItem('User')
+    if (email || user) {
+      dispatch(fetchUser())
+    }
+  }
+
   useEffect(() => {
-    dispatch(fetchUser())
-    dispatch(fetchCartByUserId())
-    dispatch(fetchUserAddress())
+    getUser()
+    dispatch(getAllFoods())
   }, [])
 
   return (
-    <div className="app font-para">
+    <div className="app font-para scroll-smooth">
       <BrowserRouter>
         <Suspense fallback={<PageLoading />}>
           <Routes>
@@ -42,39 +47,22 @@ function App() {
               <Route index element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
-              <Route
-                path="/restaurants"
-                element={<Products />}
-              />
-              <Route
-                path="/restaurant/product/add"
-                element={<ProductFrom />}
-              />
-              <Route
-                path="/account"
-                element={<Account />}
-              />
-              <Route
-                path="/cart"
-                element={<Cart />}
-              />
-              <Route
-                path="/restaurant/:id"
-                element={<RestauranProfile />}
-              />
-              <Route path="/restaurant/add" element={<Restaurant />} />
-              <Route
-                path="/resetpassword/:token"
-                element={<ResetPassword />}
-              />
+              <Route path="/food/add" element={<ProductFrom />} />
+              <Route path="/account" element={<Account />} />
+              <Route path="/cart" element={<Cart />} />
+              <Route path="/food/:id" element={<Food />} />
+              <Route path="/resetpassword/:token" element={<ResetPassword />} />
             </Route>
           </Routes>
           <Footer />
         </Suspense>
       </BrowserRouter>
-      <ShowToast />
+      <Toaster position="top-center" />
     </div>
   )
 }
 
 export default App
+
+// TODO 1. Food component
+// TODO 2. Foods component

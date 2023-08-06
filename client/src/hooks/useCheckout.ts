@@ -16,9 +16,9 @@ export const useCheckout = () => {
   }, [])
 
   const handlePlaceOrder = useCallback(
-    (restaurantId: string) => {
-      if (addressId !== '' && restaurantId !== '') {
-        dispatch(placeOrderCheckout({ addressId, restaurantId }))
+    (cartId: string) => {
+      if (addressId !== '' && cartId !== '') {
+        dispatch(placeOrderCheckout({ addressId, cartId }))
       }
     },
     [addressId, dispatch]

@@ -1,13 +1,13 @@
 import Container from '../Container'
 import Nav from '../Nav'
-import { PasswordInput, Input, Form } from '../utils/Form'
-import { Divider } from '../utils/Divider'
+import { PasswordInput, Input, Form } from '../UI/Form'
+import { Divider } from '../UI/Divider'
 import { Link, useNavigate } from 'react-router-dom'
 import { SignUp } from '../../types/user.types'
 import { signUpUser } from '../../state/slices/user.slice'
 import { useAppDispatch } from '../../hooks'
 import * as yup from 'yup'
-import { Text } from '../utils/Text'
+import { Text } from '../UI/Text'
 interface ISignupForm extends SignUp {
   repassword: string
 }
@@ -44,7 +44,10 @@ function index() {
   }
 
   const handleGoogleLogin = () => {
-    window.open(`${import.meta.env.VITE_REACT_SER_URL}/api/auth/google`, '_self')
+    window.open(
+      `${import.meta.env.VITE_REACT_SER_URL}/api/auth/google`,
+      '_self'
+    )
   }
 
   return (
@@ -134,8 +137,7 @@ function index() {
               }}
             >
               <div className="flex gap-1 items-center justify-center">
-                {`Google `}{' '}
-                <i className="fa-brands fa-google text-md"></i>
+                {`Google `} <i className="fa-brands fa-google text-md"></i>
               </div>
             </button>
             <Divider margin="0" color="#c1c1c1" size="1px" />

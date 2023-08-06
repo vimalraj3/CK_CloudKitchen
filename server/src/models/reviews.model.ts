@@ -1,5 +1,4 @@
-import mongoose, { Schema, Document, Types } from 'mongoose'
-import { IRestaurant } from './Restaurant.model'
+import mongoose, { Schema, Types } from 'mongoose'
 import { IFood } from './food.model'
 import { IUser } from './user.model'
 
@@ -12,14 +11,14 @@ export interface IReview {
   update: Date
 }
 export interface IReviewModel {
-  restaurant: IRestaurant | Types.ObjectId
+  food: IFood | Types.ObjectId
   reviews: IReview[]
 }
 
 export const ReviewSchema: Schema = new Schema<IReviewModel>({
-  restaurant: {
+  food: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Restaurant',
+    ref: 'Food',
     required: true,
   },
   reviews: [

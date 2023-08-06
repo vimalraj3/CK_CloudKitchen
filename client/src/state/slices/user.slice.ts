@@ -15,9 +15,11 @@ import {
 import { Axios } from '../../axios/config'
 import { ServerError } from '../../types/error.types'
 import { Login, SignUp } from '../../types/user.types'
-import axios, { AxiosError, isAxiosError } from 'axios'
+import { AxiosError, isAxiosError } from 'axios'
 import { AppDispatch, RootState } from '../store'
-import { useHandleError } from '../../hooks/useHandleError'
+import toast from 'react-hot-toast'
+import { useEventCallback } from '@mui/material'
+import { useNavigate } from 'react-router-dom'
 interface RejectedAction extends Action {
   payload: ServerError
 }
@@ -37,6 +39,8 @@ const defaultUserSession: UserSession = {
   address: [],
 }
 
+const sessionStorageData = sessionStorage.getItem('User')
+
 const initialState = {
   loading: false,
   data: defaultUserSession,
@@ -47,9 +51,6 @@ interface ServerResponse {
   user: IUser
   success: boolean
 }
-
-// ? Centerized error handling
-const { setServerError } = useHandleError()
 
 /**
  * login user thunk action creator function that returns a promise of IUser type and takes user object and ThunkAPI as arguments
@@ -62,32 +63,28 @@ export const loginUser = createAsyncThunk<
   Login, // Types for function
   {
     rejectValue: ServerError
-    state: RootState
   } // config
 >('user/login', async (user: Login, thunkApi) => {
-  try {
-    const { data } = await Axios.post<ServerResponse>('/auth/login', user)
-    console.log(data, 'logoin data')
-
-    const userSession: UserSession = {
-      ...defaultUserSession,
-      ...data.user,
-      auth: {
-        isAuth: true,
-        isUser: data.user.role === 'user' ? true : false,
-        isAdmin: data.user.role === 'admin' ? true : false,
-      },
-      geo: {
-        region: '',
-      },
-    }
-    return userSession
-  } catch (error) {
-    if (isAxiosError(error)) {
-      return error.response?.data
-    }
-    return { message: 'something went wrong', success: false }
-  }
+  const response = await Axios.post<ServerResponse>('/auth/login', user)
+    .then((data: any) => {
+      const userSession: UserSession = {
+        ...defaultUserSession,
+        ...data.data.user,
+        auth: {
+          isAuth: true,
+          isUser: data.data.user.role === 'user' ? true : false,
+          isAdmin: data.data.user.role === 'admin' ? true : false,
+        },
+        geo: {
+          region: '',
+        },
+      }
+      return userSession
+    })
+    .catch((error) => {
+      return thunkApi.rejectWithValue(error.response?.data as ServerError)
+    })
+  return response
 })
 
 /**
@@ -303,7 +300,7 @@ export const setLocation = createAsyncThunk<
  * @returns boolean
  */
 function isRejectedAction(action: AnyAction): action is RejectedAction {
-  return action.type.endsWith('rejected')
+  return action.type.endsWith('rejected') && action.type.startsWith('user')
 }
 
 export const userSlice = createSlice({
@@ -317,7 +314,8 @@ export const userSlice = createSlice({
         (state, action: PayloadAction<UserSession>) => {
           state.data = action.payload
           state.loading = false
-          sessionStorage.setItem('User', JSON.stringify(action.payload))
+
+          sessionStorage.setItem('User', JSON.stringify(action.payload.email))
         }
       )
       .addCase(
@@ -325,7 +323,7 @@ export const userSlice = createSlice({
         (state, action: PayloadAction<UserSession>) => {
           state.loading = false
           state.data = action.payload
-          sessionStorage.setItem('User', JSON.stringify(action.payload))
+          sessionStorage.setItem('User', JSON.stringify(action.payload.email))
         }
       )
       .addCase(
@@ -333,7 +331,7 @@ export const userSlice = createSlice({
         (state, action: PayloadAction<UserSession>) => {
           state.loading = false
           state.data = action.payload
-          sessionStorage.setItem('User', JSON.stringify(action.payload))
+          sessionStorage.setItem('User', JSON.stringify(action.payload.email))
         }
       )
       .addCase(userLogout.fulfilled, (state, action) => {
@@ -344,16 +342,25 @@ export const userSlice = createSlice({
       .addCase(fetchUserAddress.fulfilled, (state, action) => {
         state.loading = false
         state.data.address = action.payload
-        sessionStorage.setItem('User', JSON.stringify(state.data))
       })
       .addCase(setLocation.fulfilled, (state, action) => {
         state.loading = false
         state.data.geo.region = action.payload
-        sessionStorage.setItem('User', JSON.stringify(state.data))
       })
       .addMatcher(isRejectedAction, (state, action) => {
         state.loading = false
+
         state.error = action.payload
+        console.log(action.payload, 'user error')
+
+        if (
+          action.payload.message &&
+          action.payload.message === 'welcome back, Please login'
+        ) {
+          toast(`👋 ${action.payload.message}`)
+        } else {
+          toast.error(action.payload.message)
+        }
       })
       .addMatcher(isPending, (state) => {
         state.loading = true

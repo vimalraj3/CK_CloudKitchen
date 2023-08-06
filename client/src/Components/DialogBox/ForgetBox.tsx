@@ -8,7 +8,7 @@ import DialogTitle from '@mui/material/DialogTitle'
 import Slide from '@mui/material/Slide'
 import { TransitionProps } from '@mui/material/transitions'
 import { Typography } from '@mui/material'
-import { Input } from '../utils/Form'
+import { Input } from '../UI/Form'
 import { IShowToast } from '../../types/showToast.types'
 import { useAppDispatch } from '../../hooks'
 import { forgetPasswordApi } from '../../state/slices/user.slice'
@@ -84,6 +84,5 @@ export default function ForgetPassword() {
     </div>
   )
 }
-
 
 //  TODO need to improve and implement yup and form data , testing

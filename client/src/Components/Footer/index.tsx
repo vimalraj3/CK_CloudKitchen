@@ -1,34 +1,36 @@
 import darkLogo from '../../assets/logos/darkLogo.png'
-import Container from '../Container';
-import { Social, SocialIcon } from '../utils/Social';
-import { Divider } from '../utils/Divider'
-import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { footerLinks } from '../../data/footer.json'
-import { useId } from 'react';
+import Container from '../Container'
+import { Social, SocialIcon } from '../UI/Social'
+import { Divider } from '../UI/Divider'
+import { Link, useNavigate } from 'react-router-dom'
 
 const socialData = [
   {
     url: 'https://github.com/vimal-oneway',
-    icon: <i className="fa-brands fa-github"></i>
+    icon: <i className="fa-brands fa-github"></i>,
   },
   {
     url: 'https://www.linkedin.com/in/vimal-raj-r-webie/',
-    icon: <i className="fa-brands fa-linkedin-in"></i>
+    icon: <i className="fa-brands fa-linkedin-in"></i>,
   },
   {
     url: 'mailto:vimalic555@gmail.com',
-    icon: <i className="fa-regular fa-envelope"></i>
-  }
+    icon: <i className="fa-regular fa-envelope"></i>,
+  },
 ]
 
 function index() {
-
   const navigate = useNavigate()
   return (
-    <Container bgColor='#f8f8f8'>
+    <Container bgColor="#f8f8f8">
       <div className="flex flex-col w-full md:flex-row justify-center md:justify-between items-center gap-2 md:gap-0">
-        <div className="w-[75px] cursor-pointer" onClick={() => { navigate(`/`) }}>
-          <img src={darkLogo} alt="CK_Logo" width={"100%"} />
+        <div
+          className="w-[75px] cursor-pointer"
+          onClick={() => {
+            navigate(`/`)
+          }}
+        >
+          <img src={darkLogo} alt="CK_Logo" width={'100%'} />
         </div>
         {/* <div className="flex flex-col justify-center items-center gap-2 my-1 md:gap-0 md:my-0">
           {
@@ -40,25 +42,26 @@ function index() {
           }
         </div> */}
         <Social>
-          {
-            socialData.map(({ url, icon }, i) => {
-              return <SocialIcon url={url} key={i}>
+          {socialData.map(({ url, icon }, i) => {
+            return (
+              <SocialIcon url={url} key={i}>
                 {icon}
               </SocialIcon>
-            })
-          }
+            )
+          })}
         </Social>
       </div>
 
-      <Divider margin='1rem' color='#ff7e8b' size='2px' />
+      <Divider margin="1rem" color="#ff7e8b" size="2px" />
 
-      <p className='text-center mt-3 text-[#9c9c9c]'>{`This fake website is make by `}
+      <p className="text-center mt-3 text-[#9c9c9c]">
+        {`This fake website is make by `}
         <Link to={'https://github.com/vimal-oneway'}>
-          <span className='text-[#c85656] underline cursor-pointer'>{`vimal-oneway❤️`}</span>
+          <span className="text-[#c85656] underline cursor-pointer">{`vimal-oneway❤️`}</span>
         </Link>
       </p>
-    </Container >
-  );
+    </Container>
+  )
 }
 
-export default index;
+export default index

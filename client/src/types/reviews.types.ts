@@ -1,4 +1,3 @@
-import { IRestaurant } from './Restaurant.types'
 import { IUser } from './user.types'
 
 export interface IReview {
@@ -11,6 +10,5 @@ export interface IReview {
 }
 
 export interface IReviewModel {
-  restaurant: IRestaurant
   reviews: IReview[]
 }

@@ -4,18 +4,13 @@ import {
   createSlice,
   Action,
   isPending,
-  PayloadAction,
-  ThunkDispatch,
-  ThunkAction,
 } from '@reduxjs/toolkit'
-import { IRestaurant } from '../../types/Restaurant.types'
 import { Axios } from '../../axios/config'
 import { ServerError } from '../../types/error.types'
 import { isAxiosError } from 'axios'
 import { AppDispatch, RootState, store } from '../store'
-import { IFoodCart, ServerResponseICart } from '../../types/cart.types'
-import { useHandleError } from '../../hooks/useHandleError'
 import { IOrder } from '../../types/order.types'
+import toast from 'react-hot-toast'
 interface RejectedAction extends Action {
   payload: ServerError
 }
@@ -44,7 +39,7 @@ const initialState: initialState = {
 // ? place order
 export const placeOrderCheckout = createAsyncThunk<
   ServerResponse,
-  { addressId: string; restaurantId: string },
+  { addressId: string; cartId: string },
   {
     rejectValue: ServerError
     state: RootState
@@ -158,6 +153,13 @@ export const checkoutReducer = createSlice({
       })
       .addMatcher(isRejectedAction, (state, action) => {
         state.loading = false
+        if (state.error && state.error.message !== action.payload.message) {
+          if (action.payload.success) {
+            toast.success(action.payload.message)
+          } else {
+            toast.error(action.payload.message)
+          }
+        }
         state.error = action.payload
       })
       .addMatcher(isPending, (state) => {

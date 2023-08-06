@@ -9,18 +9,12 @@ export interface IFoodCart {
 }
 export interface ICart {
   user: IUser | Types.ObjectId
-  restaurantId: IRestaurant | Types.ObjectId
   foods: IFoodCart[]
   totalPrice: number
 }
 
 const CartSchema = new mongoose.Schema<ICart>({
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  restaurantId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Restaurant',
-    required: true,
-  },
   foods: [
     {
       food: {

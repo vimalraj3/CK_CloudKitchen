@@ -11,24 +11,25 @@ import User, { IUser } from '../models/user.model'
 import { pushReview } from '../utils/pushReview'
 import Review, { IReviewModel } from '../models/reviews.model'
 import { isAutoAccessorPropertyDeclaration } from 'typescript'
+import Food, { IFood } from '../models/food.model'
 
 // TODO  Search for a food
 
 @controller('/review')
 class ReviewController {
   @post('/add')
-  @bodyValidator('message', 'rating', 'restaurantId')
+  @bodyValidator('message', 'rating', 'foodId')
   @use(isAuth)
   async addReview(req: Request, res: Response, next: NextFunction) {
     try {
-      const { message, rating, restaurantId } = req.body
+      const { message, rating, foodId } = req.body
       if (!req.user) {
         next(new AppError(`Login to access this resource`, 404))
         return
       }
 
       // * Create or push review
-      const restaurantReview: HydratedDocument<IReviewModel> | null =
+      const foodReview: HydratedDocument<IReviewModel> | null =
         await pushReview(
           {
             message,
@@ -38,61 +39,60 @@ class ReviewController {
             create: new Date(),
             update: new Date(),
           },
-          restaurantId
+          foodId
         )
 
-      if (!restaurantReview)
-        return next(new AppError('Something went worng', 500))
+      if (!foodReview) return next(new AppError('Something went worng', 500))
 
-      const totalRating = restaurantReview.reviews.reduce(
+      const totalRating = foodReview.reviews.reduce(
         (sum, review) => sum + review.rating,
         0
       )
 
-      const totalNumberOfRating = restaurantReview.reviews.length
+      const totalNumberOfRating = foodReview.reviews.length
 
-      const restaurantRating = totalRating / totalNumberOfRating
+      const foodRating = totalRating / totalNumberOfRating
 
-      const restaurantquery = await Restaurant.findByIdAndUpdate(
-        restaurantId,
+      const foodQuery = Food.findByIdAndUpdate(
+        foodId,
         {
-          $push: { reviews: restaurantReview._id },
+          $push: { reviews: foodReview._id },
           $inc: { totalNumberOfRating: 1 },
-          $set: { rating: restaurantRating },
+          $set: { rating: foodRating },
         },
         { new: true }
       )
 
       const userquery = User.findByIdAndUpdate(
         { _id: req.user._id },
-        { $push: { reviews: restaurantReview._id } } // Push the new review into the reviews array
+        { $push: { reviews: foodReview._id } } // Push the new review into the reviews array
       )
 
-      const [user, restaurant]: [
+      const [user, food]: [
         HydratedDocument<IUser> | null,
-        HydratedDocument<IRestaurant> | null
-      ] = await Promise.all([userquery, restaurantquery])
+        HydratedDocument<IFood> | null
+      ] = await Promise.all([userquery, foodQuery])
 
       res.status(200).json({
         success: true,
-        reviews: restaurantReview,
+        reviews: foodReview,
       })
     } catch (error) {
       next(new AppError(`Something went wrong, try again later`, 500))
     }
   }
 
-  @del('/:restaurantId/:reviewId')
+  @del('/:foodId/:reviewId')
   @use(isAuth)
   async deleteReview(req: Request, res: Response, next: NextFunction) {
     try {
-      const { restaurantId, reviewId } = req.params
+      const { foodId, reviewId } = req.params
 
-      if (!restaurantId || !reviewId || !req.user)
+      if (!foodId || !reviewId || !req.user)
         return next(new AppError('Something went wrong', 500))
 
       const reviews: HydratedDocument<IReviewModel> | null =
-        await Review.findOne({ restaurant: restaurantId })
+        await Review.findOne({ food: foodId })
 
       if (!reviews) return next(new AppError('Restaurant not found', 404))
 
@@ -106,13 +106,13 @@ class ReviewController {
       if (
         !(
           review.user.toString() === req.user._id.toString() ||
-          reviews.restaurant.toString() === restaurantId
+          reviews.food.toString() === foodId
         )
       )
         return next(new AppError("You're not allowed to delete", 401))
 
       const updatedRestaurant = await Review.findOneAndUpdate(
-        { restaurant: restaurantId },
+        { food: foodId },
         {
           $pull: { reviews: { _id: reviewId } },
         },
@@ -129,14 +129,10 @@ class ReviewController {
   }
 
   @get('/:id')
-  async getReviewsOfRestaurant(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  async getReviewsOfFood(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params
-      const reviews = await Order.findOne({ restaurant: id }).lean()
+      const reviews = await Review.findOne({ food: id }).lean()
 
       if (!reviews) return next(new AppError('Review not found', 404))
 

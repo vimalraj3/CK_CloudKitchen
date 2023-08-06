@@ -5,94 +5,138 @@ import {
   Action,
   isPending,
 } from '@reduxjs/toolkit'
-import {
-  IRestaurant,
-  AddRestaurantFormValidationType,
-} from '../../types/Restaurant.types'
 import { Axios } from '../../axios/config'
 import { ServerError } from '../../types/error.types'
 import { isAxiosError } from 'axios'
 import { AppDispatch, RootState } from '../store'
 import { IFood } from '../../types/Food.types'
-import { IOwner } from '../../types/owner.types'
-import { setError } from './error.slice'
-import { useHandleError } from '../../hooks/useHandleError'
-import { IReviewModel } from '../../types/reviews.types'
-
-export enum FoodLoading {
-  reviews = 'food/fetchFoodAndRestaurantByRestaurantId/pending',
-  food = 'food/fetchFoodAndRestaurantByRestaurantId/pending',
-  restaurant = 'food/fetchFoodAndRestaurantByRestaurantId/pending',
-  addFood = 'food/addFood/pending',
-  updateFood = 'food/updateFoodById/pending',
-  deleteFood = 'food/deleteFoodById/pending',
-  getAllFood = 'foods/getAllFoods/pending',
-  getAllReviews = 'foods/getAllReviews/pending',
-  empty = '',
-}
+import { IReview, IReviewModel } from '../../types/reviews.types'
+import toast from 'react-hot-toast'
 
 interface RejectedAction extends Action {
   payload: ServerError
 }
 
-interface initialState {
-  loading: {
-    state: boolean
-    currentLoading: FoodLoading
+export interface IFilters {
+  rating: number
+  price: {
+    min: number
+    max: number
   }
-  foods: IFood[]
-  currentRestaurant: IRestaurant | null
-  currentRestaurantId: string | null
-  reviews: IReviewModel | null
-  owner: IOwner
-  error: ServerError | null
 }
+
+export enum SortedBy {
+  rating = 'rating',
+  lowToHigh = 'price-low-to-high',
+  highToLow = 'price-high-to-low',
+  empty = '',
+}
+const filtersDefault: IFilters = {
+  rating: 0,
+  price: {
+    min: 0,
+    max: 0,
+  },
+}
+
+interface initialState {
+  loading: boolean
+  foods: IFood[]
+  error: ServerError | null
+  search: string
+  sortedBy: SortedBy
+  filter: IFilters
+  canClear: boolean
+  food: IFood | null
+  reviews: IReview[]
+}
+
+const sortedByDefault: SortedBy = SortedBy.empty
 
 const initialState: initialState = {
-  loading: {
-    state: false,
-    currentLoading: FoodLoading.empty,
-  },
+  loading: false,
   foods: [],
-  currentRestaurant: null,
-  currentRestaurantId: null,
-  owner: {
-    isOwner: false,
-    restaurantId: '',
-  },
+  food: null,
   error: null,
-  reviews: null,
+  search: '',
+  sortedBy: sortedByDefault,
+  filter: filtersDefault,
+  canClear: false,
+  reviews: [],
 }
 
-// * ============================================================================
-// ? Centerized error handling
-const { setServerError } = useHandleError()
-
-// * ============================================================================
-// ? user fetchFoodAndRestaurantByRestaurantId
-export const fetchFoodAndRestaurantByRestaurantId = createAsyncThunk<
-  { food: IFood[]; restaurant: IRestaurant; reviews: IReviewModel },
-  string,
+export const setSortedBy = createAsyncThunk<
+  SortedBy,
+  SortedBy,
   {
-    rejectValue: ServerError
     state: RootState
     dispatch: AppDispatch
   }
->(
-  'food/fetchFoodAndRestaurantByRestaurantId',
-  async (restaurantId, thunkApi) => {
-    const response = await Axios.get(`/restaurant/${restaurantId}`)
-      .then(async (res) => {
-        return res.data
-      })
-      .catch((err: ServerError) => {
-        if (isAxiosError(err)) {
-          return thunkApi.rejectWithValue(err.response?.data as ServerError)
-        }
-      })
-    return response
+>('foods/filter/setSortedBy', async (sortedBy, thunkApi) => {
+  return sortedBy
+})
+
+// * ============================================================================
+// ? set filter
+export const setFilter = createAsyncThunk<
+  IFilters,
+  IFilters,
+  {
+    state: RootState
+    dispatch: AppDispatch
   }
-)
+>('foods/ilter/setFilter', async (filter, thunkApi) => {
+  return filter
+})
+
+// * ============================================================================
+// ? set Clear
+export const setClear = createAsyncThunk<
+  IFood[],
+  void,
+  {
+    state: RootState
+    dispatch: AppDispatch
+  }
+>('foods/filter/setClear', async (_, thunkApi) => {
+  let queryUrl = '/food/all?'
+  const response = await Axios.get(queryUrl)
+    .then(async (res) => {
+      return res.data.foods
+    })
+    .catch((err: ServerError) => {
+      if (isAxiosError(err)) {
+        return thunkApi.rejectWithValue(err.response?.data as ServerError)
+      }
+    })
+  return response
+})
+
+// * ============================================================================
+// ? set price filter
+export const setPriceFilter = createAsyncThunk<
+  { value: number; isMin: boolean },
+  { value: number; isMin: boolean },
+  {
+    state: RootState
+    dispatch: AppDispatch
+  }
+>('foods/filter/setPriceFilter', async ({ value, isMin }, thunkApi) => {
+  return { value: value >= 0 ? value : 0, isMin }
+})
+
+// * ============================================================================
+// ? set search
+export const setSearch = createAsyncThunk<
+  string,
+  string,
+  {
+    state: RootState
+    dispatch: AppDispatch
+  }
+>('foods/filter/setSearch', async (search, thunkApi) => {
+  return search
+})
 
 // * ============================================================================
 // ? Add new food
@@ -104,7 +148,7 @@ export const addFood = createAsyncThunk<
     state: RootState
     dispatch: AppDispatch
   }
->('food/addFood', async (food, thunkApi) => {
+>('foods/addFood', async (food, thunkApi) => {
   const response = await Axios.post('/food/new', food)
     .then((res) => res.data.food)
     .catch((err) => {
@@ -126,7 +170,7 @@ export const updateFoodById = createAsyncThunk<
     state: RootState
     dispatch: AppDispatch
   }
->('food/updateFoodById', async ({ data, id }, thunkApi) => {
+>('foods/updateFoodById', async ({ data, id }, thunkApi) => {
   const response = await Axios.patch(`/food/${id}`, { update: data })
     .then((res) => res.data.food)
     .catch((err) => {
@@ -147,7 +191,7 @@ export const deleteFoodById = createAsyncThunk<
     state: RootState
     dispatch: AppDispatch
   }
->('food/deleteFoodById', async (id, thunkApi) => {
+>('foods/deleteFoodById', async (id, thunkApi) => {
   const response = await Axios.delete(`/food/${id}`)
     .then(async (res) => {
       return res.data
@@ -171,11 +215,47 @@ export const getAllFoods = createAsyncThunk<
     dispatch: AppDispatch
   }
 >('foods/getAllFoods', async (_, thunkApi) => {
-  const response = await Axios.get(`/food/all`)
+  let queryUrl = '/food/all?'
+
+  const { search, sortedBy, filter } = thunkApi.getState().foodState
+
+  if (search) queryUrl += `searchQuery=${search}&`
+
+  if (sortedBy) queryUrl += `sortOption=${sortedBy}&`
+
+  const { min, max } = filter.price
+  if (min > 0 || max > 0) {
+    queryUrl += `price=${min}-${max}&`
+  }
+
+  if (filter.rating) queryUrl += `rating=${filter.rating}`
+
+  const response = await Axios.get(queryUrl)
     .then(async (res) => {
+      return res.data.foods
+    })
+    .catch((err: ServerError) => {
+      if (isAxiosError(err)) {
+        return thunkApi.rejectWithValue(err.response?.data as ServerError)
+      }
+    })
+  return response
+})
+
+export const getFoodById = createAsyncThunk<
+  IFood,
+  string,
+  { rejectValue: ServerError; state: RootState; dispatch: AppDispatch }
+>('foods/getFoodById', async (id, thunkApi) => {
+  const response = await Axios.get(`/food/${id}`)
+    .then(async (res) => {
+      console.log(res.data, 'res.data')
+
       return res.data.food
     })
     .catch((err: ServerError) => {
+      console.log(err, ' error')
+
       if (isAxiosError(err)) {
         return thunkApi.rejectWithValue(err.response?.data as ServerError)
       }
@@ -193,8 +273,8 @@ export const getAllReviews = createAsyncThunk<
     state: RootState
     dispatch: AppDispatch
   }
->('foods/getAllReviews', async (restaurantId, thunkApi) => {
-  const response = await Axios.get(`/reviews/${restaurantId}`)
+>('foods/getAllReviews', async (foodId, thunkApi) => {
+  const response = await Axios.get(`/reviews/${foodId}`)
     .then(async (res) => {
       return res.data.reviews
     })
@@ -214,7 +294,11 @@ export const getAllReviews = createAsyncThunk<
  * @returns boolean
  */
 function isRejectedAction(action: AnyAction): action is RejectedAction {
-  return action.type.endsWith('rejected')
+  action.type
+  return (
+    (action.type as string).startsWith('foods') &&
+    action.type.endsWith('rejected')
+  )
 }
 
 // * ============================================================================
@@ -225,69 +309,75 @@ export const foodSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(
-        fetchFoodAndRestaurantByRestaurantId.fulfilled,
-        (state, action) => {
-          state.loading = {
-            state: false,
-            currentLoading: FoodLoading.empty,
-          }
-          state.foods = action.payload.food
-          state.currentRestaurant = action.payload.restaurant
-          state.currentRestaurantId = action.payload.restaurant._id
-          state.reviews = action.payload.reviews
-        }
-      )
       .addCase(addFood.fulfilled, (state, action) => {
-        state.loading = {
-          state: false,
-          currentLoading: FoodLoading.empty,
-        }
+        state.loading = false
         state.foods[state.foods.length] = action.payload
       })
       .addCase(updateFoodById.fulfilled, (state, action) => {
-        state.loading = {
-          state: false,
-          currentLoading: FoodLoading.empty,
-        }
-        state.foods = state.foods.map((v) => {
-          if (v._id === action.payload._id) {
-            v = action.payload
-          }
-          return v
-        })
+        ;(state.loading = false),
+          (state.foods = state.foods.map((v) => {
+            if (v._id === action.payload._id) {
+              v = action.payload
+            }
+            return v
+          }))
       })
       .addCase(deleteFoodById.fulfilled, (state, action) => {
-        state.loading = {
-          state: false,
-          currentLoading: FoodLoading.empty,
-        }
+        state.loading = false
       })
       .addCase(getAllFoods.fulfilled, (state, action) => {
-        state.loading = {
-          state: false,
-          currentLoading: FoodLoading.empty,
-        }
+        state.loading = false
         state.foods = action.payload
       })
       .addCase(getAllReviews.fulfilled, (state, action) => {
-        state.loading = {
-          state: false,
-          currentLoading: FoodLoading.empty,
-        }
-        state.reviews = action.payload
+        state.loading = false
+      })
+      .addCase(setFilter.fulfilled, (state, action) => {
+        state.filter = action.payload
+        state.canClear = true
+        state.loading = false
+      })
+      .addCase(setSortedBy.fulfilled, (state, action) => {
+        state.sortedBy = action.payload
+        state.canClear = true
+        state.loading = false
+      })
+      .addCase(setSearch.fulfilled, (state, action) => {
+        state.search = action.payload
+        state.loading = false
+        state.canClear = true
+      })
+      .addCase(setPriceFilter.fulfilled, (state, action) => {
+        const { isMin, value } = action.payload
+        state.canClear = true
+        isMin
+          ? (state.filter.price.min = value)
+          : (state.filter.price.max = value)
+        state.loading = false
+      })
+      .addCase(setClear.fulfilled, (state, action) => {
+        state.search = ''
+        state.canClear = false
+        state.filter = filtersDefault
+        state.sortedBy = sortedByDefault
+        state.foods = action.payload
+        state.loading = false
+      })
+      .addCase(getFoodById.fulfilled, (state, action) => {
+        state.loading = false
+        state.food = action.payload
       })
       .addMatcher(isRejectedAction, (state, action) => {
-        state.loading = {
-          state: false,
-          currentLoading: FoodLoading.empty,
-        }
+        state.loading = false
+        console.log(action.payload, 'action.payload food')
+
+        toast.error(action.payload.message)
         state.error = action.payload
       })
       .addMatcher(isPending, (state, action) => {
-        state.loading = {
-          state: true,
-          currentLoading: action.type as FoodLoading,
+        if (action.type.startsWith('foods')) {
+          state.loading = true
+          console.log(state.loading, 'loading')
         }
       })
   },

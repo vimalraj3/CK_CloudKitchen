@@ -1,9 +1,7 @@
-import { IRestaurant } from './Restaurant.types'
 import { IUser } from './user.types'
 
 export interface IFood {
   user: IUser | string
-  restaurant: IRestaurant | string
   title: string
   price: number
   description: string

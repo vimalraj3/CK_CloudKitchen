@@ -3,20 +3,25 @@ interface IOfferCard {
   image: string
   offer: number
   bgc: string
+  searchFor: string
 }
 
 const offerCardData: IOfferCard[] = [
   {
     title: 'Dosa',
     offer: 20,
-    image: 'https://res.cloudinary.com/dd39ktpmz/image/upload/v1685954177/ck/client_static/dbwrrfkvkhwwxlqzbuhi.avif',
+    image:
+      'https://res.cloudinary.com/dd39ktpmz/image/upload/v1685954177/ck/client_static/dbwrrfkvkhwwxlqzbuhi.avif',
     bgc: '#EEF5E4',
+    searchFor: 'search for Dosa',
   },
   {
     title: 'Pizza',
     offer: 20,
-    image: 'https://res.cloudinary.com/dd39ktpmz/image/upload/v1685954177/ck/client_static/eh4xjrbveum2a9u0x59w.avif',
+    image:
+      'https://res.cloudinary.com/dd39ktpmz/image/upload/v1685954177/ck/client_static/eh4xjrbveum2a9u0x59w.avif',
     bgc: '#F9ECDE',
+    searchFor: 'search for Pizza',
   },
 ]
 
@@ -24,7 +29,7 @@ function OfferCard() {
   return (
     <section className="w-[90%] mx-auto max-w-[1200px] mt-5 md:mt-10 flex justify-evenly items-center flex-col md:flex-row">
       {offerCardData.map(
-        ({ title, offer, image, bgc }: IOfferCard, i: number) => {
+        ({ title, offer, image, bgc, searchFor }: IOfferCard, i: number) => {
           return (
             <div
               key={i}
@@ -35,7 +40,7 @@ function OfferCard() {
             >
               <section className="mt-3 md:mt-0 flex flex-col items-center md:block w-[60%]">
                 <div>
-                  <p className='text-sm'>Sale</p>
+                  <p className="text-sm">Sale</p>
                   <span className="font-head text-[1rem] md:text-[1.4rem] font-[400] underline-curve">
                     {offer + '  % Off '}
                   </span>
@@ -47,7 +52,7 @@ function OfferCard() {
 
                 <div className="flex items-center cursor-pointer w-[100%] categoryBtn">
                   <p className="font-para md:text-[.7rem] lg:text-[1rem]  ">
-                    Shop by category
+                    {searchFor}
                   </p>
                   <i className="fa-solid fa-arrow-right animateArrow text-[#ff7e8b]"></i>
                 </div>
@@ -55,11 +60,11 @@ function OfferCard() {
               <section>
                 <img src={image} alt={title} width={'100%'} height={'100%'} />
               </section>
-            </div >
+            </div>
           )
         }
       )}
-    </section >
+    </section>
   )
 }
 

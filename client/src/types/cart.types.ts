@@ -8,14 +8,12 @@ export interface IFoodCart {
 }
 
 export interface ICart {
-  restaurant: IRestaurant
   cart: IFoodCart[]
   totalPrice: number
   _id: string
 }
 
 export interface ServerResponseICart {
-  restaurantId: IRestaurant
   foods: IFoodCart[]
   totalPrice: number
 }

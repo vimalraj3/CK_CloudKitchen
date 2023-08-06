@@ -17,6 +17,7 @@ import { decodedEmail, encodedEmail } from '../utils/encoder'
 import { isAuth } from '../middleware/isAuth'
 import { use } from './decorators'
 import UserAddress, { IAddress, IUserAddress } from '../models/address.model'
+import { log } from 'winston'
 @controller('/auth')
 class LoginController {
   static salt: number = parseInt(process.env.SALT) || 10
@@ -25,36 +26,49 @@ class LoginController {
   @post('/login')
   @bodyValidator('email', 'password')
   async postLogin(req: Request, res: Response, next: NextFunction) {
-    const { email, password } = req.body
+    try {
+      const { email, password } = req.body
+      log('info', 'ping LoginController.postLogin', { email, password })
+      let user: any = await User.findOne({
+        email,
+      }).select('+password')
+      // .lean()
 
-    const user: HydratedDocument<IUser> | null = await User.findOne({ email })
-      .select('+password')
-      .lean()
-
-    if (!user) {
-      res.status(404).json({
-        success: false,
-        message: `User not found, please sign in`,
-      })
-      return
-    }
-
-    if (user.password) {
-      bcrypt.compare(password, user.password).then((isMatch) => {
-        if (!isMatch) {
-          next(new AppError(`Invalid email or password`, 401))
-          return
-        }
-
-        req.session.uid = user._id.toString()
-
-        delete user['password']
-
-        res.status(200).json({
-          success: true,
-          user,
+      log('info', user)
+      if (!user) {
+        res.status(404).json({
+          success: false,
+          message: `User not found, please sign in`,
         })
-      })
+        log('info', 'user not found LoginController.postLogin', { user })
+        return
+      }
+
+      if (user.password) {
+        bcrypt.compare(password, user.password).then((isMatch) => {
+          if (!isMatch) {
+            next(new AppError(`Invalid email or password`, 401))
+            return
+          }
+
+          req.session.uid = user._id.toString()
+
+          delete user['password']
+          log('info', 'password matched LoginController.postLogin', { user })
+
+          res.status(200).json({
+            success: true,
+            user,
+          })
+          return
+        })
+      } else {
+        next(new AppError(`Invalid email or password`, 401))
+        return
+      }
+    } catch (error) {
+      log('error', 'LoginController.postLogin', { error })
+      next(new AppError(`Something went wrong`, 500))
     }
   }
 
@@ -190,15 +204,22 @@ class LoginController {
   }
 
   @get('/getuser')
-  async getUser(req: Request, res: Response) {
+  async getUser(req: Request, res: Response, next: NextFunction) {
     const session = req.session
     const id = session?.uid || session.passport?.user
+    console.log('id', id)
+
+    if (!id) {
+      next(new AppError(`welcome back, Please login`, 403))
+      return
+    }
+
     const user: HydratedDocument<IUser> | null = await User.findById(id).lean()
 
     if (!user) {
       res.status(403).json({
         success: false,
-        message: `Please Login`,
+        message: `user not found`,
       })
       return
     }

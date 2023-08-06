@@ -1,7 +1,7 @@
 import Category from './Category'
 import Hero from './Hero'
 import OfferCard from './OfferCard'
-import Restaurant from '../Restaurant/RestaurantHomePage'
+import Food from '../Food/Foods'
 
 export default function Home() {
   return (
@@ -9,7 +9,9 @@ export default function Home() {
       <Hero />
       <OfferCard />
       <Category />
-      <Restaurant />
+      <Food />
     </div>
   )
 }
+// TODO - Add the following components to the Home page:
+// TODO - Add Food Component

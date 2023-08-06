@@ -4,19 +4,19 @@ import Review, { IReviewModel, IReview } from '../models/reviews.model'
 // Function to push a new review into the reviews array
 export const pushReview = (
   reviewData: IReview,
-  restaurantId: string
+  foodId: string
 ): Promise<HydratedDocument<IReviewModel> | null> => {
   return new Promise(async (resolve, reject) => {
     try {
       const review = await Review.findOneAndUpdate(
-        { restaurant: restaurantId },
+        { food: foodId },
         { $push: { reviews: reviewData } }, // Push the new review into the reviews array
         { new: true } // Return the updated document
       )
 
       if (!review) {
         const newReview = new Review({
-          restaurant: restaurantId,
+          food: foodId,
           reviews: [reviewData],
         })
         const savedReview = await newReview.save()

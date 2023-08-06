@@ -4,23 +4,24 @@ import { IFood } from '../models/food.model'
 import { bodyValidator } from './decorators/bodyValidator'
 import { AppError } from '../utils/AppError'
 import Food from '../models/food.model'
-import { HydratedDocument, Types } from 'mongoose'
-import Cart, { ICart, IFoodCart } from '../models/cart.model'
+import { HydratedDocument } from 'mongoose'
+import Cart, { ICart } from '../models/cart.model'
 import User, { IUser } from '../models/user.model'
 import { isAuth } from '../middleware/isAuth'
 import { log } from 'winston'
-import { IRestaurant } from '../models/Restaurant.model'
-
 // TODO  Search for a food
 
 @controller('/cart')
 class OrderController {
   @post('/add')
-  @bodyValidator('foodId', 'quantity', 'restaurantId')
+  @bodyValidator('foodId', 'quantity')
   @use(isAuth)
   async addCart(req: Request, res: Response, next: NextFunction) {
     try {
-      const { foodId, quantity, restaurantId } = req.body
+      const { foodId, quantity } = req.body
+
+      console.log(req.body)
+
       if (!req.user?._id) {
         next(new AppError(`Login to access this resource`, 404))
         return
@@ -48,7 +49,6 @@ class OrderController {
       if (!cart) {
         cart = await Cart.create({
           user: req.user._id,
-          restaurantId: restaurantId,
           foods: [{ food: foodId, quantity }],
           totalPrice: food?.price * quantity,
         })
@@ -61,18 +61,8 @@ class OrderController {
         if (isExist !== -1) {
           return next(new AppError('Food already added to your cart', 500))
         }
-
-        if (restaurantId !== cart.restaurantId.toString()) {
-          return next(
-            new AppError(
-              'you can  order food only one cloud kitchen at a time',
-              500
-            )
-          )
-        } else {
-          cart.foods.push({ food: foodId, quantity })
-          cart.totalPrice += food?.price * quantity
-        }
+        cart.foods.push({ food: foodId, quantity })
+        cart.totalPrice += food?.price * quantity
         await cart.save()
       }
 
@@ -83,16 +73,17 @@ class OrderController {
         cart,
       })
     } catch (error) {
+      console.log(error)
       next(new AppError(`Something went wrong, try again later`, 500))
     }
   }
 
   @post('/clearandaddtocart')
-  @bodyValidator('foodId', 'quantity', 'restaurantId')
+  @bodyValidator('foodId', 'quantity')
   @use(isAuth)
   async clearAndAddToCart(req: Request, res: Response, next: NextFunction) {
     try {
-      const { foodId, quantity, restaurantId } = req.body
+      const { foodId, quantity } = req.body
       if (!req.user?._id) {
         next(new AppError(`Login to access this resource`, 404))
         return
@@ -108,7 +99,6 @@ class OrderController {
       const cart: HydratedDocument<ICart> | null = await Cart.findOneAndUpdate(
         { user: req.user._id },
         {
-          restaurantId: restaurantId,
           foods: [{ food: foodId, quantity }],
           totalPrice: food?.price * quantity,
         }
@@ -139,7 +129,7 @@ class OrderController {
         return
       }
 
-      let cart: HydratedDocument<ICart> | null = await Cart.findOneAndUpdate({
+      let cart: HydratedDocument<ICart> | null = await Cart.findOne({
         user: req.user._id,
       })
 
@@ -147,7 +137,7 @@ class OrderController {
 
       res.status(200).json({
         success: true,
-        cart: cart,
+        cart,
       })
     } catch (error) {
       next(new AppError(`Something went wrong, try again later`, 500))
@@ -166,7 +156,6 @@ class OrderController {
       let cart: HydratedDocument<ICart> | null = await Cart.findOne({
         user: req.user._id,
       })
-        .populate('restaurantId')
         .populate('foods.food')
         .lean()
 
@@ -179,6 +168,8 @@ class OrderController {
         cart: cart,
       })
     } catch (error) {
+      console.log(error)
+
       next(new AppError(`Something went wrong, try again later`, 500))
     }
   }
@@ -268,7 +259,6 @@ class OrderController {
 
       // * If cart is emtpy set cart to intial state
       if (foods.length == 0) {
-        cart.restaurantId = ' ' as any
         cart.foods = []
         await cart.save({
           validateBeforeSave: false,
@@ -277,6 +267,7 @@ class OrderController {
         res.status(200).json({
           success: true,
           cart: cart,
+          message: `cart is empty`,
         })
         return
       }
@@ -297,6 +288,7 @@ class OrderController {
       res.status(200).json({
         success: true,
         cart: cart,
+        message: `Deleted food from cart`,
       })
     } catch (error) {
       next(new AppError(`Something went wrong, try again later`, 500))

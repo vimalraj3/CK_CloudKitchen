@@ -1,18 +1,17 @@
 import Container from '../Container'
 import Nav from '../Nav'
 import { useState } from 'react'
-import { Form, PasswordInput, Input } from '../utils/Form'
+import { Form, PasswordInput, Input } from '../UI/Form'
 
-import { Divider } from '../utils/Divider'
+import { Divider } from '../UI/Divider'
 
 import { Link, useNavigate } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../hooks'
 import { loginUser } from '../../state/slices/user.slice'
 import { Login } from '../../types/user.types'
-import { Text } from '../utils/Text'
+import { Text } from '../UI/Text'
 import * as yup from 'yup'
 import ForgetPassword from '../DialogBox/ForgetBox'
-
 
 function index() {
   const navigate = useNavigate()
@@ -44,15 +43,18 @@ function index() {
 
   const onSubmit = async (data: Login) => {
     const resultAction = await dispatch(loginUser(data))
+
     if (loginUser.fulfilled.match(resultAction)) {
       navigate(-1)
     }
   }
 
   const handleGoogleLogin = () => {
-    console.log(import.meta.env.VITE_REACT_SER_URL, 'server url');
-
-    window.open(`${import.meta.env.VITE_REACT_SER_URL}/api/auth/google`, '_self')
+    console.log(import.meta.env.VITE_REACT_SER_URL, 'server url')
+    const url =
+      import.meta.env.VITE_REACT_SER_URL ||
+      import.meta.env.VITE_REACT_SER_URL_LOCAL
+    window.open(`${url}/api/auth/google`, '_self')
   }
 
   return (

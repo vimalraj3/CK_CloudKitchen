@@ -7,7 +7,7 @@ import { isAdmin, isAuth } from '../middleware/isAuth'
 import { AppError } from '../utils/AppError'
 import { uploaderSingle } from '../utils/Multer'
 import Food from '../models/food.model'
-import Restaurant, { IRestaurant } from '../models/Restaurant.model'
+
 import { HydratedDocument, IfAny } from 'mongoose'
 import { stringToDate } from '../utils/StringToDate'
 
@@ -16,7 +16,7 @@ import { stringToDate } from '../utils/StringToDate'
 @controller('/food')
 class FoodController {
   @post('/new')
-  @bodyValidator('price', 'open', 'close', 'title', 'category')
+  @bodyValidator('price', 'open', 'close', 'title', 'category', 'description')
   @use(uploaderSingle('image'))
   @use(isAdmin)
   @use(isAuth)
@@ -41,20 +41,14 @@ class FoodController {
       // ? create the product
       const foodData: IFood = {
         user: req.user?._id,
-        restaurant: req.user?.restaurant,
         title,
         price,
         time: { open: openTiming, close: closeTiming },
         image: [image],
         category,
+        description,
       }
       const food: HydratedDocument<IFood> | null = await Food.create(foodData)
-
-      let restaurant: HydratedDocument<IRestaurant> | null =
-        await Restaurant.findById(req.user?.restaurant)
-
-      restaurant?.foods?.push(food?._id)
-      await restaurant?.save()
 
       if (!food) return next(new AppError('Unable to add Product', 500))
 
@@ -68,20 +62,66 @@ class FoodController {
     }
   }
 
-  // * get all food
   @get('/all')
-  async getProducts(req: Request, res: Response, next: NextFunction) {
+  async getAllRestaurants(req: Request, res: Response, next: NextFunction) {
     try {
-      const products: IFood[] | null = await Food.find<IFood>({})
-      if (!products) {
-        next(new AppError(`Product not Found`, 404))
+      const { rating, price, sortOption, searchQuery } = req.query
+
+      // Construct the filter object based on the provided query parameters
+      const filter: any = {}
+
+      if (rating) {
+        filter.rating = { $gte: parseFloat(rating as string) }
       }
-      res.status(404).json({
+
+      if (price) {
+        const [minPrice, maxPrice] = (price as string).split('-')
+        const min = parseFloat(minPrice)
+        const max = parseFloat(maxPrice)
+        if (min == 0) {
+          filter.price = {
+            $lte: max,
+          }
+        } else if (max == 0) {
+          filter.price = {
+            $gte: min,
+          }
+        } else {
+          filter.price = {
+            $gte: min,
+            $lte: max,
+          }
+        }
+      }
+      let foodsQuery = Food.find({})
+
+      if (searchQuery) {
+        foodsQuery = foodsQuery.find({
+          title: { $regex: `${searchQuery}`, $options: 'i' },
+        })
+      }
+
+      if (filter) {
+        foodsQuery = foodsQuery.find(filter)
+      }
+
+      if (sortOption === 'price-low-to-high') {
+        foodsQuery = foodsQuery.sort({ price: 1 }) // Sort by ascending price
+      } else if (sortOption === 'price-high-to-low') {
+        foodsQuery = foodsQuery.sort({ price: -1 }) // Sort by descending price
+      } else if (sortOption === 'rating') {
+        foodsQuery = foodsQuery.sort({ rating: 1 }) // Sort by ascending rating
+      }
+
+      const foods = await foodsQuery.lean()
+
+      if (!foods) return next(new AppError('No foods found', 404))
+      res.status(200).json({
         success: true,
-        food: products,
+        foods,
       })
     } catch (error) {
-      return next(new AppError(`Something went wrong, try again later`, 500))
+      return next(new AppError(`Something went wrong`, 500))
     }
   }
 
@@ -89,25 +129,27 @@ class FoodController {
   @get('/:id')
   async getProduct(req: Request, res: Response, next: NextFunction) {
     try {
-      const product: HydratedDocument<IFood> | null = await Food.findOne<IFood>(
-        {
-          restaurant: req.params.id,
-        }
-      )
-        .populate('restaurant')
-        .lean()
-      if (!product) {
-        next(new AppError(`Unable to find the product`, 500))
+      if (!req.params.id) {
+        next(new AppError(`Please provide a food id`, 400))
         return
       }
-      const { restaurant, ...foods } = product
+      const food: HydratedDocument<IFood> | null = await Food.findById<IFood>(
+        req.params.id
+      )
+        .populate('reviews')
+        .lean()
+      if (!food) {
+        next(new AppError(`Food not found`, 404))
+        return
+      }
 
       res.status(200).json({
         success: true,
-        restaurant: restaurant,
-        food: foods,
+        food: food,
       })
     } catch (error) {
+      console.log(error)
+
       return next(new AppError(`Something went wrong`, 500))
     }
   }
@@ -121,10 +163,10 @@ class FoodController {
       const { id } = req.params
       const food: IFood | null = await Food.findOneAndUpdate<IFood>({
         _id: id,
-        restaurant: req.user?.restaurant,
+        user: req.user?._id,
       })
 
-      if (!food) return next(new AppError(`Unable to Delete `, 500))
+      if (!food) return next(new AppError(`Unable to Delete`, 500))
 
       return res.status(200).json({
         success: true,
@@ -146,7 +188,7 @@ class FoodController {
       const { update } = req.body
 
       const food = await Food.findOneAndUpdate<IFood>(
-        { _id: id, restaurant: req.user?.restaurant },
+        { _id: id, user: req.user?._id },
         update
       )
 

@@ -1,5 +1,4 @@
 import { IFood } from './Food.types'
-import { IRestaurant } from './Restaurant.types'
 
 export interface IFoodOrder {
   foods: IFood[]
@@ -10,6 +9,5 @@ export interface IFoodOrder {
 
 export interface IOrder {
   orders: IFoodOrder[]
-  restaurant: IRestaurant
   status: string
 }
