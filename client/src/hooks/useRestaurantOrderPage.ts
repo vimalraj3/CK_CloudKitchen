@@ -23,7 +23,6 @@ export const useRestaurantOrderPage = () => {
       dispatch(
         addToCart({
           foodId: foodId,
-          restaurantId: restaurantId,
           quantity: quantity,
         })
       )

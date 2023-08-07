@@ -10,21 +10,14 @@ import path from 'path'
 
 import dotenv from 'dotenv'
 
-dotenv.config()
-// const currentDir = process.cwd()
-// console.log(currentDir)
+// dotenv.config()
+const currentDir = process.cwd()
 
-// if (currentDir.endsWith('server')) {
-//   dotenv.config({ path: path.resolve(currentDir, './src/.env') })
-// } else {
-//   dotenv.config({ path: path.resolve(currentDir, './server/dist/.env') })
-// }
-
-// console.log(
-//   process.env.CLIENT_ID,
-//   process.env.CLIENT_SECRET,
-//   process.env.SER_URL
-// )
+if (currentDir.endsWith('server')) {
+  dotenv.config({ path: path.resolve(currentDir, './src/.env') })
+} else {
+  dotenv.config({ path: path.resolve(currentDir, './server/dist/.env') })
+}
 
 const options: StrategyOptions = {
   clientID: process.env.CLIENT_ID,

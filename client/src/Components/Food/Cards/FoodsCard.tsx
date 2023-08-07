@@ -8,6 +8,7 @@ import { FoodCard } from './FoodCard'
 import { FoodCardSkeleton } from './Loading'
 import { FoodNotFound } from './NotFound'
 import { getAllFoods } from '../../../state/slices/food.slice'
+import toast from 'react-hot-toast'
 
 const FoodCardCon: React.FC = memo(() => {
   const email = useAppSelector((state) => state.userState.data.email)
@@ -25,9 +26,33 @@ const FoodCardCon: React.FC = memo(() => {
         return
       }
 
-      foodId && dispatch(addToCart({ foodId, quantity: 1 }))
+      if (!foodId) return
 
-      console.log(foods, loading, 'food card con', error, foodId, 'id', email)
+      const data = dispatch(addToCart({ foodId, quantity: 1 }))
+
+      toast.promise(
+        data,
+        {
+          loading: 'Adding to cart',
+          success: (data) => {
+            if (!data.payload?.success) {
+              throw data.payload?.message
+            }
+            return `${data.payload?.message.trim()}`
+          },
+          error: (err) => {
+            return `${err}`
+          },
+        },
+        {
+          success: {
+            duration: 2000,
+          },
+          error: {
+            duration: 2000,
+          },
+        }
+      )
     },
     [dispatch]
   )
@@ -38,12 +63,11 @@ const FoodCardCon: React.FC = memo(() => {
 
   useEffect(() => {
     if (!foods && !error) {
-      console.log('fetcing')
-
       dispatch(getAllFoods())
     }
     console.log(foods, loading, error, 'foods')
   })
+
   return (
     <div className="w-[100%] max-w-[1200px] mx-auto mt-5">
       {loading ? (

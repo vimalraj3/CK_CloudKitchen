@@ -1,12 +1,10 @@
-import { useId } from "react"
-import { IFood } from "../../../types/Food.types"
-import { IOrder } from "../../../types/order.types"
-
+import { useId } from 'react'
+import { IFood } from '../../../types/Food.types'
+import { IOrder } from '../../../types/order.types'
 
 export interface IRestaurantCardProps {
   orders: IOrder
 }
-
 
 interface IRestaurantCardTitleProps {
   restaurant: string
@@ -29,7 +27,9 @@ const RestaurantCardTitle: React.FC<IRestaurantCardTitleProps> = ({
     <>
       <div className="flex justify-between items-center gap-2">
         <div>
-          <h3 className="font-bold font-head text-sm md:text-lg">{restaurant}</h3>
+          <h3 className="font-bold font-head text-sm md:text-lg">
+            {restaurant}
+          </h3>
           <p className="text-xs md:text-sm">Total: ${total}</p>
         </div>
         <div>
@@ -52,7 +52,12 @@ const RestaurantCardItem: React.FC<IRestaurantCardItemProps> = ({
     <>
       <div className="flex items-center mt-2">
         <div className="flex flex-row justify-start items-center gap-4">
-          <img src={image[0]} alt={title} className="w-16 h-16 rounded-md" loading="lazy" />
+          <img
+            src={image[0]}
+            alt={title}
+            className="w-16 h-16 rounded-md"
+            loading="lazy"
+          />
           <div>
             <h3 className="font-semibold font-head md:text-lg">{title}</h3>
             <p className="text-sm font-para mt-1">₹ {price}</p>
@@ -64,24 +69,19 @@ const RestaurantCardItem: React.FC<IRestaurantCardItemProps> = ({
   )
 }
 
-export const RestaurantCard: React.FC<IRestaurantCardProps> = ({
-  orders
-}) => {
+export const RestaurantCard: React.FC<IRestaurantCardProps> = ({ orders }) => {
   const date = new Date(orders.date)
   return (
     <div key={date.toLocaleTimeString()}>
-      <RestaurantCardTitle
+      {/* <RestaurantCardTitle
         date={date.toLocaleDateString()}
         total={orders.totalPrice}
         status={orders.status}
-        restaurant={orders.restaurant.restaurantName}
-      />
+      /> */}
       <div className="flex flex-col gap-3 mt-1">
-        {
-          orders.foods.map((food, i) => (
-            <RestaurantCardItem {...food.food} quantity={food.quantity} key={i} />
-          ))
-        }
+        {orders.foods.map((food, i) => (
+          <RestaurantCardItem {...food.food} quantity={food.quantity} key={i} />
+        ))}
       </div>
     </div>
   )

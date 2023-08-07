@@ -230,7 +230,12 @@ export const getAllFoods = createAsyncThunk<
 
   if (filter.rating) queryUrl += `rating=${filter.rating}`
 
-  const response = await Axios.get(queryUrl)
+  const controller = new AbortController()
+  const signal = controller.signal
+
+  const response = await Axios.get(queryUrl, {
+    signal,
+  })
     .then(async (res) => {
       return res.data.foods
     })
@@ -239,6 +244,7 @@ export const getAllFoods = createAsyncThunk<
         return thunkApi.rejectWithValue(err.response?.data as ServerError)
       }
     })
+
   return response
 })
 
@@ -314,13 +320,13 @@ export const foodSlice = createSlice({
         state.foods[state.foods.length] = action.payload
       })
       .addCase(updateFoodById.fulfilled, (state, action) => {
-        ;(state.loading = false),
-          (state.foods = state.foods.map((v) => {
-            if (v._id === action.payload._id) {
-              v = action.payload
-            }
-            return v
-          }))
+        state.loading = false
+        state.foods = state.foods.map((v) => {
+          if (v._id === action.payload._id) {
+            v = action.payload
+          }
+          return v
+        })
       })
       .addCase(deleteFoodById.fulfilled, (state, action) => {
         state.loading = false
@@ -370,7 +376,6 @@ export const foodSlice = createSlice({
       .addMatcher(isRejectedAction, (state, action) => {
         state.loading = false
         console.log(action.payload, 'action.payload food')
-
         toast.error(action.payload.message)
         state.error = action.payload
       })

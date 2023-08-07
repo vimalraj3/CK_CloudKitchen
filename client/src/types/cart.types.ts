@@ -1,5 +1,4 @@
 import { IFood } from './Food.types'
-import { IRestaurant } from './Restaurant.types'
 
 export interface IFoodCart {
   food: IFood

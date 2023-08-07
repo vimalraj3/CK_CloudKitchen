@@ -71,6 +71,7 @@ class OrderController {
       res.status(200).json({
         success: true,
         cart,
+        message: 'Food added to cart successfully',
       })
     } catch (error) {
       console.log(error)
@@ -160,7 +161,7 @@ class OrderController {
         .lean()
 
       if (!cart || cart.foods.length == 0) {
-        return next(new AppError(`Cart not found`, 404))
+        return next(new AppError(`🛒 Your cart is empty`, 404))
       }
 
       res.status(200).json({
@@ -221,6 +222,7 @@ class OrderController {
       res.status(200).json({
         success: true,
         cart: cart,
+        message: 'successfully set quantity',
       })
     } catch (error) {
       next(new AppError(`Something went wrong, try again later`, 500))

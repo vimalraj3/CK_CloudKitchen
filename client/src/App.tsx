@@ -1,6 +1,5 @@
 import './App.css'
 import { Suspense, lazy, useEffect } from 'react'
-
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 const Home = lazy(() => import('./Components/home/Home'))
@@ -9,11 +8,11 @@ const Login = lazy(() => import('./Components/Login/Login'))
 const Footer = lazy(() => import('./Components/Footer'))
 const Signup = lazy(() => import('./Components/Signup/signup'))
 const Account = lazy(() => import('./Components/account/Account'))
+const Cart = lazy(() => import('./Components/Cart'))
+const Food = lazy(() => import('./Components/Food/Food'))
 const ResetPassword = lazy(
   () => import('./Components/ResetPassword/ResetPassword')
 )
-const Cart = lazy(() => import('./Components/Cart'))
-const Food = lazy(() => import('./Components/Food/Food'))
 
 import { useAppDispatch, useAppSelector } from './hooks'
 import PageLoading from './Components/Loading/PageLoading'

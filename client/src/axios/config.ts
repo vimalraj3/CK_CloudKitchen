@@ -11,3 +11,11 @@ export const Axios = axios.create({
   baseURL: `${axiosUrl}/api`,
   withCredentials: true,
 })
+
+// Axios.interceptors.request.use((config) => {
+//   config.cancelToken = new axios.CancelToken((cancel) => {
+//     // Create a cancellation token for this request
+//     config.cancel = cancel
+//   })
+//   return config
+// })

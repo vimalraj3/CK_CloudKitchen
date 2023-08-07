@@ -5,6 +5,7 @@ import { DeleteBtn } from '../../UI/IconBtn/DeleteBtn'
 import { Divider } from '@mui/material'
 import React from 'react'
 import { useCart } from '../../../hooks/useCart'
+import toast from 'react-hot-toast'
 
 interface IRestaurantCardItemProps extends IFoodCart {
   id: string

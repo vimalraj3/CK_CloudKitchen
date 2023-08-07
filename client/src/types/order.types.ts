@@ -1,5 +1,4 @@
 import { IFood } from './Food.types'
-import { IRestaurant } from './Restaurant.types'
 import { IUser } from './user.types'
 
 export interface IFoodInfo {
@@ -17,6 +16,5 @@ export interface IFoodInfo {
 export interface IOrder extends IFoodInfo {
   _id: string
   user: IUser
-  restaurant: IRestaurant
   status: string
 }

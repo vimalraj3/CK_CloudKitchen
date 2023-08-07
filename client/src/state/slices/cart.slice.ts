@@ -17,8 +17,6 @@ interface RejectedAction extends Action {
   payload: ServerError
 }
 
-type AppThunkDispatch = ThunkDispatch<RootState, undefined, AnyAction>
-
 interface initialState {
   loading: boolean
   cart: IFoodCart[]
@@ -29,6 +27,7 @@ interface initialState {
 interface ServerResponse {
   cart: ServerResponseICart
   success: boolean
+  message: string
 }
 
 const initialState: initialState = {
@@ -303,7 +302,15 @@ export const cartReducer = createSlice({
       .addMatcher(isRejectedAction, (state, action) => {
         console.log(action.payload, 'action.payload', 'cartReducer')
         state.loading = false
-        toast.error(action.payload.message)
+
+        const emojiRegex =
+          /[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F700}-\u{1F77F}\u{1F780}-\u{1F7FF}\u{1F800}-\u{1F8FF}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FA6F}\u{1FA70}-\u{1FAFF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu
+
+        if (emojiRegex.test(action.payload.message)) {
+          toast(action.payload.message)
+        } else {
+          toast.error(action.payload.message)
+        }
         state.error = action.payload
       })
       .addMatcher(isPending, (state, action: AnyAction) => {
@@ -311,17 +318,17 @@ export const cartReducer = createSlice({
           state.loading = true
         }
       })
-      .addMatcher(isFulfilled, (state, action: AnyAction) => {
-        if (
-          action.type.startsWith('cart') &&
-          action.type.endsWith('fulfilled') &&
-          action.payload.message &&
-          action.payload.message !== 'Network Error' &&
-          action.payload.success
-        ) {
-          toast.success(action.payload.message)
-        }
-      })
+    // .addMatcher(isFulfilled, (state, action: AnyAction) => {
+    //   if (
+    //     action.type.startsWith('cart') &&
+    //     action.type.endsWith('fulfilled') &&
+    //     action.payload.message &&
+    //     action.payload.message !== 'Network Error' &&
+    //     action.payload.success
+    //   ) {
+    //     toast.success(action.payload.message)
+    //   }
+    // })
   },
 })
 

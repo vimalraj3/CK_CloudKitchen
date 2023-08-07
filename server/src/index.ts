@@ -33,11 +33,8 @@ import './controllers/ReviewController'
 
 // dotenv.config()
 const currentDir = process.cwd()
-console.log(currentDir)
 
 if (currentDir.endsWith('server')) {
-  console.log(currentDir)
-
   dotenv.config({ path: path.resolve(currentDir, './src/.env') })
 } else {
   dotenv.config({ path: path.resolve(currentDir, './server/dist/.env') })

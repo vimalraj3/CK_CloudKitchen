@@ -7,8 +7,8 @@ import {
   allyProps,
 } from '../../../UI/Tabs/Tabs'
 import FoodCardCon from '../../Cards/FoodsCard'
-import { Reviews } from '../../../Restaurant/RestaurantOrderPage/Reviews/Reviews'
-import { Description } from '../../../Restaurant/RestaurantOrderPage/Desciption/Description'
+import { Reviews } from '../Reviews/Reviews'
+import { Description } from '../Desciption/Description'
 
 export const RestaurantFoodTabs = () => {
   const [value, setValue] = React.useState(0)
