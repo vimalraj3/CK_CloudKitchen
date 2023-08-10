@@ -3,22 +3,29 @@ import { AddUserAddress, UserAddress } from '../../account/Sections/UserInfo'
 import { DialogBox } from '../../UI/DialogBox'
 import { UserAddressEditForm } from '../../Forms/AddressForms/UserAddressEditForm'
 import { IAddress } from '../../../types/user.types'
-import { useAppSelector, useEditUserAddress } from '../../../hooks'
+import {
+  useAppDispatch,
+  useAppSelector,
+  useEditUserAddress,
+} from '../../../hooks'
 import { Grid, Skeleton } from '@mui/material'
 import { useCheckout } from '../../../hooks/useCheckout'
+import { setAddressId } from '../../../state/slices/checkout.slice'
 
 export const AddressSelector = () => {
   const [dialogBoxOpen, setDialogBoxOpen] = useState(false)
   const { address } = useAppSelector((state) => state.addressState)
 
-  const { handleSetAddressId, addressId } = useCheckout()
-
   const [handleSubmit] = useEditUserAddress()
+
+  const dispatch = useAppDispatch()
+
+  const { addressId } = useAppSelector((state) => state.checkoutState)
 
   const handleSubmitEditForm = (data: IAddress) => {
     if (addressId !== '') {
       handleSubmit(data, false)
-      handleSetAddressId('')
+      dispatch(setAddressId(''))
     } else {
       handleSubmit(data, true)
     }
@@ -60,7 +67,6 @@ export const AddressSelector = () => {
                         {...v}
                         key={i}
                         selector
-                        handleSelector={handleSetAddressId}
                         selectedId={addressId}
                       />
                     </Grid>

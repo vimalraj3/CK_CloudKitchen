@@ -1,13 +1,17 @@
 import { Button, Skeleton } from '@mui/material'
-import { useAppSelector } from '../../../hooks'
+import { useAppDispatch, useAppSelector } from '../../../hooks'
 import React, { useEffect } from 'react'
 import { useCheckout } from '../../../hooks/useCheckout'
+import { placeOrderCheckout } from '../../../state/slices/checkout.slice'
 
 export const CheckoutBox: React.FC = React.memo(() => {
   const { handlePlaceOrder } = useCheckout()
   const { totalPrice, cart, loading } = useAppSelector(
     (state) => state.cartState
   )
+  const { addressId } = useAppSelector((state) => state.checkoutState)
+
+  const dispatch = useAppDispatch()
 
   const { foods } = useAppSelector((state) => state.foodState)
 
@@ -45,7 +49,7 @@ export const CheckoutBox: React.FC = React.memo(() => {
                 },
               }}
               onClick={() => {
-                handlePlaceOrder(foods[0]._id)
+                dispatch(placeOrderCheckout(addressId))
               }}
               aria-label="Buy"
               size={'large'}

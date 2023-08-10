@@ -15,14 +15,7 @@ export const useCheckout = () => {
     dispatch(setAddressId(selectedAddressId))
   }, [])
 
-  const handlePlaceOrder = useCallback(
-    (cartId: string) => {
-      if (addressId !== '' && cartId !== '') {
-        dispatch(placeOrderCheckout({ addressId, cartId }))
-      }
-    },
-    [addressId, dispatch]
-  )
+  const handlePlaceOrder = useCallback(() => {}, [addressId, dispatch])
 
   return {
     handleSetAddressId,

@@ -7,6 +7,12 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+
+env
+.env
+*.env
+# *.env.test
+
 public
 node_modules
 dist
@@ -24,11 +30,3 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-
-*.env.*
-env
-
-env
-.env
-*.env
-*.env.test

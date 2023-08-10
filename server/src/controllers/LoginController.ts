@@ -17,7 +17,6 @@ import { decodedEmail, encodedEmail } from '../utils/encoder'
 import { isAuth } from '../middleware/isAuth'
 import { use } from './decorators'
 import UserAddress, { IAddress, IUserAddress } from '../models/address.model'
-import { log } from 'winston'
 @controller('/auth')
 class LoginController {
   static salt: number = parseInt(process.env.SALT) || 10
@@ -28,19 +27,16 @@ class LoginController {
   async postLogin(req: Request, res: Response, next: NextFunction) {
     try {
       const { email, password } = req.body
-      log('info', 'ping LoginController.postLogin', { email, password })
       let user: any = await User.findOne({
         email,
       }).select('+password')
       // .lean()
 
-      log('info', user)
       if (!user) {
         res.status(404).json({
           success: false,
           message: `User not found, please sign in`,
         })
-        log('info', 'user not found LoginController.postLogin', { user })
         return
       }
 
@@ -54,7 +50,6 @@ class LoginController {
           req.session.uid = user._id.toString()
 
           delete user['password']
-          log('info', 'password matched LoginController.postLogin', { user })
 
           res.status(200).json({
             success: true,
@@ -67,7 +62,6 @@ class LoginController {
         return
       }
     } catch (error) {
-      log('error', 'LoginController.postLogin', { error })
       next(new AppError(`Something went wrong`, 500))
     }
   }
@@ -205,31 +199,36 @@ class LoginController {
 
   @get('/getuser')
   async getUser(req: Request, res: Response, next: NextFunction) {
-    const session = req.session
-    const id = session?.uid || session.passport?.user
-    console.log('id', id)
+    try {
+      const session = req.session
+      const id = session?.uid || session.passport?.user
 
-    if (!id) {
-      next(new AppError(`welcome back, Please login`, 403))
-      return
-    }
+      if (!id) {
+        next(new AppError(`welcome back, Please login`, 400))
+        return
+      }
 
-    const user: HydratedDocument<IUser> | null = await User.findById(id).lean()
+      const user: HydratedDocument<IUser> | null = await User.findById(
+        id
+      ).lean()
 
-    if (!user) {
-      res.status(403).json({
-        success: false,
-        message: `user not found`,
+      if (!user) {
+        res.status(403).json({
+          success: false,
+          message: `user not found`,
+        })
+        return
+      }
+
+      const { _id, restaurant, __v, createdAt, ...filteredUser } = user
+
+      res.status(201).json({
+        success: true,
+        user: filteredUser,
       })
-      return
+    } catch (error) {
+      next(new AppError('Something went wrong', 500))
     }
-
-    const { _id, restaurant, __v, createdAt, ...filteredUser } = user
-
-    res.status(201).json({
-      success: true,
-      user: filteredUser,
-    })
   }
 
   @post('/verify/:token')

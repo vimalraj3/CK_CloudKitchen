@@ -17,6 +17,7 @@ import { EditBtn } from '../../UI/IconBtn/EditBtn'
 import { DeleteBtn } from '../../UI/IconBtn/DeleteBtn'
 import { UserAvatar } from '../../UI/UserAvatar/UserAvatar'
 import { TickCheckbox } from '../../UI/Form/Checkbox/Checkbox'
+import { setAddressId } from '../../../state/slices/checkout.slice'
 
 interface IUserInfo {
   user: UserSession
@@ -55,18 +56,17 @@ export const UserAddress: React.FC<IUserAddress> = memo(
     _id,
     area,
     selector,
-    handleSelector,
     selectedId,
   }) => {
+    const dispatch = useAppDispatch()
+
     return (
       <div
         className={`bg-[#F8F8F8] aspect-video p-3 md:p-5 w-[100%] md:max-w-[250px] rounded-lg ${
           selector && 'cursor-pointer'
         } border-2  ${selectedId === _id && 'border-green-400'}`}
         onClick={() => {
-          if (handleSelector) {
-            handleSelector(_id)
-          }
+          dispatch(setAddressId(_id))
         }}
       >
         <div className="flex items-center justify-between gap-2">
@@ -164,7 +164,7 @@ export const UserInfo: React.FC<IUserInfo> = memo(({ user }) => {
         </div>
         <h4 className="text-lg font-semibold mt-7 font-head">Address</h4>
         <div className="flex flex-col md:flex-row gap-4 md:gap-7 mt-5">
-          {address.map((v, i) => {
+          {address.map((v, i: number) => {
             return (
               <UserAddress
                 {...v}

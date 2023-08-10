@@ -376,7 +376,7 @@ export const foodSlice = createSlice({
       .addMatcher(isRejectedAction, (state, action) => {
         state.loading = false
         console.log(action.payload, 'action.payload food')
-        toast.error(action.payload.message)
+        toast.error(action.payload?.message)
         state.error = action.payload
       })
       .addMatcher(isPending, (state, action) => {
