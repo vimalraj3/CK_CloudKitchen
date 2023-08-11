@@ -88,10 +88,10 @@ app.get('/api/auth/google/callback', passport_1.default.authenticate('google', {
 });
 app.use('/api/', AppRouter_1.AppRouter.getInstance());
 app.use(ErrorHandler_1.ErrorHandler);
-app.use(express_1.default.static(path_1.default.join(__dirname, '../../client/dist')));
-app.get('*', function (req, res) {
-    return res.sendFile(path_1.default.join(__dirname, '../../client/dist/index.html'));
-});
+// app.use(express.static(path.join(__dirname, '../../client/dist')))
+// app.get('*', (req: Request, res: Response) =>
+//   res.sendFile(path.join(__dirname, '../../client/dist/index.html'))
+// )
 process.on('uncaughtException', function (err) {
     console.error('Uncaught Exception:', err.stack);
     process.exit(1);
