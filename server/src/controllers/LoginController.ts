@@ -84,7 +84,7 @@ class LoginController {
         'CK, Password Reset',
         EmailTemplate.resetPassword,
         {
-          link: `${process.env.CLIENT_URL}/signup/verify/${encodedEmail(
+          link: `${process.env.CLI_URL}/signup/verify/${encodedEmail(
             email
           )}`,
           userName: 'Valued user',

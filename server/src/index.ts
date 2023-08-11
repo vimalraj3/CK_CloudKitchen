@@ -100,10 +100,10 @@ app.get(
 app.get(
   '/api/auth/google/callback',
   passport.authenticate('google', {
-    failureRedirect: `${env.SER_URL}/login`,
+    failureRedirect: `${env.CLI_URL}/login`,
   }),
   function (req, res) {
-    res.redirect(`${env.SER_URL}/`)
+    res.redirect(`${env.CLI_URL}/`)
   }
 )
 app.use('/api/', AppRouter.getInstance())

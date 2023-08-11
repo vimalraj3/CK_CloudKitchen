@@ -147,7 +147,7 @@ var LoginController = /** @class */ (function () {
                             return [2 /*return*/];
                         }
                         return [4 /*yield*/, (0, Mailer_1.sendEmail)(email, 'CK, Password Reset', Mailer_1.EmailTemplate.resetPassword, {
-                                link: "".concat(process.env.CLIENT_URL, "/signup/verify/").concat((0, encoder_1.encodedEmail)(email)),
+                                link: "".concat(process.env.CLI_URL, "/signup/verify/").concat((0, encoder_1.encodedEmail)(email)),
                                 userName: 'Valued user',
                             })];
                     case 2:
