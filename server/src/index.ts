@@ -54,17 +54,19 @@ const corsOption: CorsOptions = {
 const SECRET: string = process.env.COOKIE_SECRET
 const DB_URL: string = process.env.DB_URL
 
-var cookieOpt: CookieOptions = {
+let cookieOpt: CookieOptions = {
   maxAge: 3 * 24 * 60 * 60,
   sameSite: 'strict',
   secure: false,
 }
+
 if (process.env.NODE_ENV === 'production') {
   app.set('trust proxy', 1)
   cookieOpt.sameSite = 'none'
   cookieOpt.secure = true
 }
-var sess: SessionOptions = {
+
+let sess: SessionOptions = {
   resave: false,
   saveUninitialized: false,
   secret: SECRET,
