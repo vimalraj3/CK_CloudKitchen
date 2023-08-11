@@ -1,8 +1,6 @@
 import mongoose, { HydratedDocument, Schema, Types } from 'mongoose'
 import { IUser } from './user.model'
-import { IRestaurant } from './Restaurant.model'
-import { IReviewModel } from './reviews.model'
-import { IOrder } from './order.model'
+import { IReview } from './reviews.model'
 
 export interface IFood {
   user: Types.ObjectId | IUser
@@ -21,7 +19,7 @@ export interface IFood {
   createdAt?: Date
   updatedAt?: Date
 
-  reviews?: IReviewModel[] | Types.ObjectId
+  reviews?: IReview[] | Types.ObjectId[]
 
   rating?: number
   totalRating?: number

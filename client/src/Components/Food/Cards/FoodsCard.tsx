@@ -1,47 +1,47 @@
-import React, { memo, useCallback, useEffect } from 'react'
-import { Grid } from '@mui/material'
-import { useAppDispatch, useAppSelector } from '../../../hooks'
-import { useNavigate } from 'react-router-dom'
+import React, { memo, useCallback, useEffect } from "react";
+import { Grid } from "@mui/material";
+import { useAppDispatch, useAppSelector } from "../../../hooks";
+import { useNavigate } from "react-router-dom";
 
-import { addToCart } from '../../../state/slices/cart.slice'
-import { FoodCard } from './FoodCard'
-import { FoodCardSkeleton } from './Loading'
-import { FoodNotFound } from './NotFound'
-import { getAllFoods } from '../../../state/slices/food.slice'
-import toast from 'react-hot-toast'
+import { addToCart } from "../../../state/slices/cart.slice";
+import { FoodCard } from "./FoodCard";
+import { FoodCardSkeleton } from "./Loading";
+import { FoodNotFound } from "./NotFound";
+import { getAllFoods } from "../../../state/slices/food.slice";
+import toast from "react-hot-toast";
 
 const FoodCardCon: React.FC = memo(() => {
-  const email = useAppSelector((state) => state.userState.data.email)
-  const { foods, loading, error } = useAppSelector((state) => state.foodState)
+  const email = useAppSelector((state) => state.userState.data.email);
+  const { foods, loading, error } = useAppSelector((state) => state.foodState);
 
-  const dispatch = useAppDispatch()
-  const navigate = useNavigate()
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const handleCart = useCallback(
     (foodId: string) => {
-      console.log(email)
+      console.log(email);
 
       if (!email) {
-        navigate('/login')
-        return
+        navigate("/login");
+        return;
       }
 
-      if (!foodId) return
+      if (!foodId) return;
 
-      const data = dispatch(addToCart({ foodId, quantity: 1 }))
+      const data = dispatch(addToCart({ foodId, quantity: 1 }));
 
       toast.promise(
         data,
         {
-          loading: 'Adding to cart',
+          loading: "Adding to cart",
           success: (data) => {
             if (!data.payload?.success) {
-              throw data.payload?.message
+              throw data.payload?.message;
             }
-            return `${data.payload?.message.trim()}`
+            return `${data.payload?.message.trim()}`;
           },
           error: (err) => {
-            return `${err}`
+            return `${err}`;
           },
         },
         {
@@ -51,25 +51,25 @@ const FoodCardCon: React.FC = memo(() => {
           error: {
             duration: 2000,
           },
-        }
-      )
+        },
+      );
     },
-    [dispatch]
-  )
+    [dispatch],
+  );
 
   const handleClick = (id: string) => {
-    navigate(`/food/${id}`)
-  }
+    navigate(`/food/${id}`);
+  };
 
   useEffect(() => {
     if (!foods && !error) {
-      dispatch(getAllFoods())
+      dispatch(getAllFoods());
     }
-    console.log(foods, loading, error, 'foods')
-  })
+    console.log(foods, loading, error, "foods");
+  });
 
   return (
-    <div className="w-[100%] max-w-[1200px] mx-auto mt-5">
+    <div className="mx-auto mt-5 w-[100%] max-w-[1200px]">
       {loading ? (
         <FoodCardSkeleton />
       ) : foods?.length === 0 ? (
@@ -85,12 +85,12 @@ const FoodCardCon: React.FC = memo(() => {
                   handleAddToCart={handleCart}
                   handleClick={handleClick}
                 />
-              )
+              );
             })}
           </Grid>
         </div>
       )}
     </div>
-  )
-})
-export default FoodCardCon
+  );
+});
+export default FoodCardCon;

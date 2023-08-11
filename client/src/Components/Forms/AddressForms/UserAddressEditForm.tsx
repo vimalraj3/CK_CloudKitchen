@@ -1,37 +1,37 @@
-import { Form, Input } from '../../UI/Form'
-import * as yup from 'yup'
-import { Text } from '../../UI/Text'
-import { IAddress } from '../../../types/user.types'
+import { Form, Input } from "../../UI/Form";
+import * as yup from "yup";
+import { Text } from "../../UI/Text";
+import { IAddress } from "../../../types/user.types";
 
-type UserAddressFormFields = IAddress
+type UserAddressFormFields = IAddress;
 
 interface IUserAddressEditForm {
-  address?: IAddress
-  handleSubmit: (data: UserAddressFormFields) => void
+  address?: IAddress;
+  handleSubmit: (data: UserAddressFormFields) => void;
 }
 
-const defaultAddress: Omit<IAddress, '_id'> = {
-  addressName: '',
-  houseNo: '',
-  streetName: '',
-  area: '',
-  city: '',
-  state: '',
-  zipCode: '',
-}
+const defaultAddress: Omit<IAddress, "_id"> = {
+  addressName: "",
+  houseNo: "",
+  streetName: "",
+  area: "",
+  city: "",
+  state: "",
+  zipCode: "",
+};
 
 const userEditFormSchema = yup.object().shape({
-  addressName: yup.string().required('address name is required'),
-  houseNo: yup.string().required('houseNo is required'),
-  streetName: yup.string().required('street name is required'),
-  area: yup.string().required('area is required'),
-  city: yup.string().required('city name is required'),
-  state: yup.string().required('state name is required'),
+  addressName: yup.string().required("address name is required"),
+  houseNo: yup.string().required("houseNo is required"),
+  streetName: yup.string().required("street name is required"),
+  area: yup.string().required("area is required"),
+  city: yup.string().required("city name is required"),
+  state: yup.string().required("state name is required"),
   zipCode: yup
     .string()
-    .required('Zip code is required')
-    .matches(/^\d{6}$/, 'Invalid zip code'),
-})
+    .required("Zip code is required")
+    .matches(/^\d{6}$/, "Invalid zip code"),
+});
 
 export const UserAddressEditForm: React.FC<IUserAddressEditForm> = ({
   address,
@@ -48,9 +48,9 @@ export const UserAddressEditForm: React.FC<IUserAddressEditForm> = ({
           <>
             <div>
               <Input
-                aria-label={'address name'}
+                aria-label={"address name"}
                 label="Address name"
-                {...register('addressName')}
+                {...register("addressName")}
               />
               {errors.addressName && (
                 <Text
@@ -62,9 +62,9 @@ export const UserAddressEditForm: React.FC<IUserAddressEditForm> = ({
             </div>
             <div>
               <Input
-                aria-label={'address name'}
+                aria-label={"address name"}
                 label="House no"
-                {...register('houseNo')}
+                {...register("houseNo")}
               />
               {errors.houseNo && (
                 <Text
@@ -76,9 +76,9 @@ export const UserAddressEditForm: React.FC<IUserAddressEditForm> = ({
             </div>
             <div>
               <Input
-                aria-label={'street name'}
+                aria-label={"street name"}
                 label="Street name"
-                {...register('streetName')}
+                {...register("streetName")}
               />
               {errors.streetName && (
                 <Text
@@ -89,7 +89,7 @@ export const UserAddressEditForm: React.FC<IUserAddressEditForm> = ({
               )}
             </div>
             <div>
-              <Input aria-label={'area '} label="area" {...register('area')} />
+              <Input aria-label={"area "} label="area" {...register("area")} />
               {errors.area && (
                 <Text
                   message={errors.area.message as string}
@@ -99,7 +99,7 @@ export const UserAddressEditForm: React.FC<IUserAddressEditForm> = ({
               )}
             </div>
             <div>
-              <Input aria-label={'city'} label="city" {...register('city')} />
+              <Input aria-label={"city"} label="city" {...register("city")} />
               {errors.city && (
                 <Text
                   message={errors.city.message as string}
@@ -110,9 +110,9 @@ export const UserAddressEditForm: React.FC<IUserAddressEditForm> = ({
             </div>
             <div>
               <Input
-                aria-label={'state'}
+                aria-label={"state"}
                 label="state"
-                {...register('state')}
+                {...register("state")}
               />
               {errors.state && (
                 <Text
@@ -124,9 +124,9 @@ export const UserAddressEditForm: React.FC<IUserAddressEditForm> = ({
             </div>
             <div>
               <Input
-                aria-label={'Zip code'}
+                aria-label={"Zip code"}
                 label="Zip code"
-                {...register('zipCode')}
+                {...register("zipCode")}
               />
               {errors.zipCode && (
                 <Text
@@ -138,15 +138,15 @@ export const UserAddressEditForm: React.FC<IUserAddressEditForm> = ({
             </div>
             <Input
               type="submit"
-              value={'Edit'}
+              value={"Edit"}
               role="button"
               style={{
-                cursor: 'pointer',
+                cursor: "pointer",
               }}
             />
           </>
-        )
+        );
       }}
     </Form>
-  )
-}
+  );
+};

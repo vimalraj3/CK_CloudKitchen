@@ -1,3 +1,3 @@
 export interface IOwner {
-  isOwner: boolean
+  isOwner: boolean;
 }

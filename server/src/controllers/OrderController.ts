@@ -10,6 +10,8 @@ import User, { IUser } from '../models/user.model'
 import Razorpay from 'razorpay'
 import crypto from 'crypto'
 import { log } from 'winston'
+import { EmailTemplate, sendEmail } from '../utils/Mailer'
+import { IFood } from '../models/food.model'
 
 // TODO  Search for a food
 
@@ -66,9 +68,20 @@ class OrderController {
   async checkout(req: Request, res: Response, next: NextFunction) {
     try {
       const { addressId } = req.body
+
+      console.log(
+        addressId,
+        'addressId',
+        // req.body.response.razorpay_order_id,
+        // req.body.response.razorpay_payment_id,
+        // req.body.response.razorpay_order_id,
+        // req.body.id.amount
+        req.body
+      )
+      const amount = req.body.amount / 100
+
       const { razorpay_payment_id, razorpay_order_id, razorpay_signature } =
-        req.body.id.response
-      const amount = req.body.id.amount
+        req.body.response
 
       console.log(
         addressId,
@@ -116,6 +129,7 @@ class OrderController {
 
       if (cart.totalPrice != amount) {
         next(new AppError('Price mismatch', 501))
+        return
       }
 
       const { foods } = cart
@@ -127,19 +141,42 @@ class OrderController {
         address: addressId,
       })
 
+      let links = ''
+      foods.map(({ food }, i) => {
+        links += `${i + 1}. ${process.env.CLI_URL}/review/${req.user?._id}/${
+          (food as HydratedDocument<IFood>)._id
+        } \n`
+      })
+
+      console.log(links, 'links')
+
+      const mail = await sendEmail(
+        req.user.email,
+        'Request for food review',
+        EmailTemplate.review,
+        {
+          userName: user.userName,
+          link: links,
+        }
+      )
       user.orders?.push(order.id)
+
+      user.cart = undefined
 
       const userQueryPushOrder = user.save({
         validateBeforeSave: false,
       })
 
-      await Promise.all([userQueryPushOrder])
+      const cartQueryDelete = Cart.findByIdAndDelete(req.user.cart)
+      await Promise.all([userQueryPushOrder, cartQueryDelete])
 
       res.status(200).json({
         success: true,
         orders: order,
       })
     } catch (error) {
+      console.log(error)
+
       next(new AppError(`Something went wrong, try again later`, 500))
     }
   }
@@ -149,24 +186,6 @@ class OrderController {
   async getMyOrders(req: Request, res: Response, next: NextFunction) {
     try {
       const orders = await Order.find({ user: req.user?._id })
-        .populate('foods.food')
-        .lean()
-
-      res.status(200).json({
-        success: true,
-        orders,
-      })
-    } catch (error) {
-      next(new AppError(`Something went wrong, try again later`, 500))
-    }
-  }
-
-  @get('/restaurantorders')
-  @use(isAuth)
-  @use(isAdmin)
-  async getRestaurantOrders(req: Request, res: Response, next: NextFunction) {
-    try {
-      const orders = await Order.find({ restaurant: req.user?.restaurant })
         .populate('foods.food')
         .lean()
 

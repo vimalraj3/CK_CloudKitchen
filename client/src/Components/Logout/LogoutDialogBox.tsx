@@ -1,9 +1,9 @@
-import React from 'react'
-import { DialogBox } from '../UI/DialogBox'
+import React from "react";
+import { DialogBox } from "../UI/DialogBox";
 interface DialogBoxProps {
-  open: boolean
-  setOpen: (open: boolean) => void
-  handleConfirm: () => void
+  open: boolean;
+  setOpen: (open: boolean) => void;
+  handleConfirm: () => void;
 }
 
 export const LogoutDialogBox: React.FC<DialogBoxProps> = ({
@@ -22,5 +22,5 @@ export const LogoutDialogBox: React.FC<DialogBoxProps> = ({
         <p>Are you sure you want to logout</p>
       </DialogBox>
     </div>
-  )
-}
+  );
+};

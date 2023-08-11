@@ -1,25 +1,25 @@
-import * as React from 'react'
-import Snackbar from '@mui/material/Snackbar'
-import Slide, { SlideProps } from '@mui/material/Slide'
-import { Alert, AlertColor } from '@mui/material'
+import * as React from "react";
+import Snackbar from "@mui/material/Snackbar";
+import Slide, { SlideProps } from "@mui/material/Slide";
+import { Alert, AlertColor } from "@mui/material";
 import {
   IShowToast,
   ToastState,
   IReturnProps,
-} from '../../types/showToast.types'
-import { useAppSelector } from '../../hooks/useAppSelector'
-import { useHandleError } from '../../hooks/useHandleError'
+} from "../../types/showToast.types";
+import { useAppSelector } from "../../hooks/useAppSelector";
+import { useHandleError } from "../../hooks/useHandleError";
 
 function SlideTransition(props: SlideProps) {
-  return <Slide {...props} direction="down" />
+  return <Slide {...props} direction="down" />;
 }
 
 const initialState: ToastState = {
   open: false,
   Transition: SlideTransition,
-  type: 'success',
-  message: 'This is a success message!',
-}
+  type: "success",
+  message: "This is a success message!",
+};
 
 /** *
     useToast hook is used to show toast messages in the application.
@@ -32,59 +32,59 @@ const initialState: ToastState = {
     @returns JSX.Element
 */
 export const ShowToast: React.FC<any> = () => {
-  const [state, setState] = React.useState<ToastState>(initialState)
+  const [state, setState] = React.useState<ToastState>(initialState);
 
-  const userError = useAppSelector((state) => state.userState.error)
-  const addressError = useAppSelector((state) => state.addressState.error)
-  const checkoutError = useAppSelector((state) => state.checkoutState.error)
-  const foodError = useAppSelector((state) => state.foodState.error)
-  const cartError = useAppSelector((state) => state.cartState.error)
+  const userError = useAppSelector((state) => state.userState.error);
+  const addressError = useAppSelector((state) => state.addressState.error);
+  const checkoutError = useAppSelector((state) => state.checkoutState.error);
+  const foodError = useAppSelector((state) => state.foodState.error);
+  const cartError = useAppSelector((state) => state.cartState.error);
 
   const showToast: IShowToast = React.useCallback(
     (message: string, type: string) => {
-      message !== 'Cart not found' &&
-        setState({ open: true, type, message, Transition: SlideTransition })
+      message !== "Cart not found" &&
+        setState({ open: true, type, message, Transition: SlideTransition });
     },
-    []
-  )
+    [],
+  );
 
   React.useEffect(() => {
-    if (userError && userError.message !== '') {
-      showToast(userError.message, userError.success ? 'success' : 'error')
+    if (userError && userError.message !== "") {
+      showToast(userError.message, userError.success ? "success" : "error");
     }
-  }, [userError])
+  }, [userError]);
 
   React.useEffect(() => {
-    if (checkoutError && checkoutError.message !== '') {
+    if (checkoutError && checkoutError.message !== "") {
       showToast(
         checkoutError.message,
-        checkoutError.success ? 'success' : 'error'
-      )
+        checkoutError.success ? "success" : "error",
+      );
     }
-  }, [checkoutError])
+  }, [checkoutError]);
 
   React.useEffect(() => {
     if (
       cartError &&
-      cartError.message !== '' &&
-      cartError.message !== 'Cart not found'
+      cartError.message !== "" &&
+      cartError.message !== "Cart not found"
     ) {
-      showToast(cartError.message, cartError.success ? 'success' : 'error')
+      showToast(cartError.message, cartError.success ? "success" : "error");
     }
-  }, [cartError])
+  }, [cartError]);
 
   React.useEffect(() => {
-    if (foodError && foodError.message !== '') {
-      showToast(foodError.message, foodError.success ? 'success' : 'error')
+    if (foodError && foodError.message !== "") {
+      showToast(foodError.message, foodError.success ? "success" : "error");
     }
-  }, [foodError])
+  }, [foodError]);
 
   const handleClose = () => {
     setState({
       ...state,
       open: false,
-    })
-  }
+    });
+  };
 
   return (
     <Snackbar
@@ -97,10 +97,10 @@ export const ShowToast: React.FC<any> = () => {
       <Alert
         onClose={handleClose}
         severity={state.type as AlertColor}
-        sx={{ width: '100%' }}
+        sx={{ width: "100%" }}
       >
         {state.message}
       </Alert>
     </Snackbar>
-  )
-}
+  );
+};

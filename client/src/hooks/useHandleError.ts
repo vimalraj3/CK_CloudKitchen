@@ -1,13 +1,13 @@
-import { ServerError } from '../types/error.types'
+import { ServerError } from "../types/error.types";
 
 export const useHandleError = () => {
   let serverError: ServerError = {
-    message: '',
+    message: "",
     success: false,
-  }
+  };
 
   const setServerError = (err: ServerError) => {
-    serverError = err
-  }
-  return { serverError, setServerError }
-}
+    serverError = err;
+  };
+  return { serverError, setServerError };
+};

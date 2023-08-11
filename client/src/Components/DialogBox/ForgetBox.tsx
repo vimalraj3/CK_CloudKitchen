@@ -1,54 +1,54 @@
-import * as React from 'react'
-import Button from '@mui/material/Button'
-import Dialog from '@mui/material/Dialog'
-import DialogActions from '@mui/material/DialogActions'
-import DialogContent from '@mui/material/DialogContent'
-import DialogContentText from '@mui/material/DialogContentText'
-import DialogTitle from '@mui/material/DialogTitle'
-import Slide from '@mui/material/Slide'
-import { TransitionProps } from '@mui/material/transitions'
-import { Typography } from '@mui/material'
-import { Input } from '../UI/Form'
-import { IShowToast } from '../../types/showToast.types'
-import { useAppDispatch } from '../../hooks'
-import { forgetPasswordApi } from '../../state/slices/user.slice'
+import * as React from "react";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import Slide from "@mui/material/Slide";
+import { TransitionProps } from "@mui/material/transitions";
+import { Typography } from "@mui/material";
+import { Input } from "../UI/Form";
+import { IShowToast } from "../../types/showToast.types";
+import { useAppDispatch } from "../../hooks";
+import { forgetPasswordApi } from "../../state/slices/user.slice";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
-    children: React.ReactElement<any, any>
+    children: React.ReactElement<any, any>;
   },
-  ref: React.Ref<unknown>
+  ref: React.Ref<unknown>,
 ) {
-  return <Slide direction="up" ref={ref} {...props} />
-})
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 export default function ForgetPassword() {
-  const [open, setOpen] = React.useState<boolean>(false)
-  const [email, setEmail] = React.useState<string>('')
+  const [open, setOpen] = React.useState<boolean>(false);
+  const [email, setEmail] = React.useState<string>("");
 
-  const appDispatch = useAppDispatch()
+  const appDispatch = useAppDispatch();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value)
-  }
+    setEmail(e.target.value);
+  };
 
   const handleClose = () => {
-    setOpen(false)
-  }
+    setOpen(false);
+  };
 
   const handleConfirm = async () => {
-    const forgetPassword = await appDispatch(forgetPasswordApi(email))
+    const forgetPassword = await appDispatch(forgetPasswordApi(email));
     if (forgetPasswordApi.fulfilled.match(forgetPassword)) {
       // navigate(-1)
     }
-  }
+  };
 
   return (
     <div>
       <p
-        className={`text-blue-300 cursor-pointer`}
+        className={`cursor-pointer text-blue-300`}
         onClick={() => {
-          setOpen(true)
+          setOpen(true);
         }}
       >
         Forget password?
@@ -62,7 +62,7 @@ export default function ForgetPassword() {
       >
         <DialogTitle
           sx={{
-            fontFamily: 'Montserrat',
+            fontFamily: "Montserrat",
           }}
         >
           {`Forget Password`}
@@ -72,7 +72,7 @@ export default function ForgetPassword() {
         </DialogContent>
         <DialogActions
           sx={{
-            padding: ' 0 1rem 1rem 1rem',
+            padding: " 0 1rem 1rem 1rem",
           }}
         >
           <Button onClick={handleClose}>Cancel</Button>
@@ -82,7 +82,7 @@ export default function ForgetPassword() {
         </DialogActions>
       </Dialog>
     </div>
-  )
+  );
 }
 
 //  TODO need to improve and implement yup and form data , testing

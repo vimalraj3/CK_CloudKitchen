@@ -11,6 +11,7 @@ const mg = mailgun.client({
 export enum EmailTemplate {
   verification = 'foodie',
   resetPassword = 'resetpassword',
+  review = 'review',
 }
 
 interface IEmailVariables {

@@ -1,24 +1,24 @@
-import { Form, Input } from '../../UI/Form'
-import * as yup from 'yup'
-import { Text } from '../../UI/Text'
-import { memo } from 'react'
+import { Form, Input } from "../../UI/Form";
+import * as yup from "yup";
+import { Text } from "../../UI/Text";
+import { memo } from "react";
 
 interface UserFormFields {
-  email: string
-  userName: string
+  email: string;
+  userName: string;
 }
 
 interface IUserEditForm extends UserFormFields {
-  handleSubmit: (data: UserFormFields) => void
+  handleSubmit: (data: UserFormFields) => void;
 }
 
 const userEditFormSchema = yup.object().shape({
-  email: yup.string().email('Invalid email').required('Email is required'),
+  email: yup.string().email("Invalid email").required("Email is required"),
   userName: yup
     .string()
-    .required('user name is required')
-    .min(5, 'Password must be at least 5 characters'),
-})
+    .required("user name is required")
+    .min(5, "Password must be at least 5 characters"),
+});
 
 export const UserEditForm: React.FC<IUserEditForm> = memo(
   ({ email, userName, handleSubmit }) => {
@@ -32,7 +32,7 @@ export const UserEditForm: React.FC<IUserEditForm> = memo(
           return (
             <>
               <div>
-                <Input type="email" label="Email" {...register('email')} />
+                <Input type="email" label="Email" {...register("email")} />
                 {errors.email && (
                   <Text
                     message={errors.email.message as string}
@@ -42,7 +42,7 @@ export const UserEditForm: React.FC<IUserEditForm> = memo(
                 )}
               </div>
               <div>
-                <Input type="text" label="Username" {...register('userName')} />
+                <Input type="text" label="Username" {...register("userName")} />
                 {errors.userName && (
                   <Text
                     message={errors.userName.message as string}
@@ -53,16 +53,16 @@ export const UserEditForm: React.FC<IUserEditForm> = memo(
               </div>
               <Input
                 type="submit"
-                value={'Edit'}
+                value={"Edit"}
                 role="button"
                 style={{
-                  cursor: 'pointer',
+                  cursor: "pointer",
                 }}
               />
             </>
-          )
+          );
         }}
       </Form>
-    )
-  }
-)
+    );
+  },
+);

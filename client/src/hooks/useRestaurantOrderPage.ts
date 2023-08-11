@@ -1,42 +1,42 @@
-import { useCallback } from 'react'
-import { useAppDispatch } from './useAppDispatch'
+import { useCallback } from "react";
+import { useAppDispatch } from "./useAppDispatch";
 import {
   addToCart,
   clearAndAddToCart,
   setAskClean,
-} from '../state/slices/cart.slice'
-import { useAppSelector } from './useAppSelector'
+} from "../state/slices/cart.slice";
+import { useAppSelector } from "./useAppSelector";
 
 export const useRestaurantOrderPage = () => {
-  const dispatch = useAppDispatch()
-  const { cart } = useAppSelector((state) => state.cartState)
+  const dispatch = useAppDispatch();
+  const { cart } = useAppSelector((state) => state.cartState);
   interface addToCartProps {
-    foodId: string
-    restaurantId: string
-    quantity: number
+    foodId: string;
+    restaurantId: string;
+    quantity: number;
   }
 
   const handleAddToCart = useCallback(
     ({ foodId, restaurantId, quantity }: addToCartProps) => {
-      console.log(cart, 'restaurantId')
-      console.log('cart is empty')
+      console.log(cart, "restaurantId");
+      console.log("cart is empty");
       dispatch(
         addToCart({
           foodId: foodId,
           quantity: quantity,
-        })
-      )
+        }),
+      );
     },
-    []
-  )
+    [],
+  );
 
   const handleAskClean = useCallback(() => {
-    dispatch(setAskClean())
-  }, [])
+    dispatch(setAskClean());
+  }, []);
 
   const handleClearAndAddToCart = useCallback((food: addToCartProps) => {
-    dispatch(clearAndAddToCart(food))
-  }, [])
+    dispatch(clearAndAddToCart(food));
+  }, []);
 
-  return { handleAddToCart, handleAskClean, handleClearAndAddToCart }
-}
+  return { handleAddToCart, handleAskClean, handleClearAndAddToCart };
+};

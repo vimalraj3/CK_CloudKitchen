@@ -1,38 +1,38 @@
-import { IFoodCart } from '../../../types/cart.types'
-import { AddIconBtn } from '../../UI/IconBtn/AddIconBtn'
-import { MinusIconBtn } from '../../UI/IconBtn/MinusIconBtn'
-import { DeleteBtn } from '../../UI/IconBtn/DeleteBtn'
-import { Divider } from '@mui/material'
-import React from 'react'
-import { useCart } from '../../../hooks/useCart'
-import toast from 'react-hot-toast'
+import { IFoodCart } from "../../../types/cart.types";
+import { AddIconBtn } from "../../UI/IconBtn/AddIconBtn";
+import { MinusIconBtn } from "../../UI/IconBtn/MinusIconBtn";
+import { DeleteBtn } from "../../UI/IconBtn/DeleteBtn";
+import { Divider } from "@mui/material";
+import React from "react";
+import { useCart } from "../../../hooks/useCart";
+import toast from "react-hot-toast";
 
 interface IRestaurantCardItemProps extends IFoodCart {
-  id: string
+  id: string;
 }
 
 interface IRestaurantCardItemBtnsProps {
-  id: string
-  quantity: number
+  id: string;
+  quantity: number;
 }
 
 const CardItemBtns: React.FC<IRestaurantCardItemBtnsProps> = React.memo(
   ({ id, quantity }) => {
-    const { handleCartQuantity, handleCartDelete } = useCart()
+    const { handleCartQuantity, handleCartDelete } = useCart();
 
     return (
-      <div className="flex  gap-4 items-center">
+      <div className="flex  items-center gap-4">
         {quantity > 1 && (
           <div
             onClick={() => {
-              handleCartQuantity(id, quantity - 1)
-              console.log(id, quantity, 'quantity sub')
+              handleCartQuantity(id, quantity - 1);
+              console.log(id, quantity, "quantity sub");
             }}
           >
             <MinusIconBtn />
           </div>
         )}
-        <p className="ml-auto text-sm font-para">x{quantity}</p>
+        <p className="ml-auto font-para text-sm">x{quantity}</p>
         <div onClick={() => handleCartQuantity(id, quantity + 1)}>
           <AddIconBtn />
         </div>
@@ -41,36 +41,36 @@ const CardItemBtns: React.FC<IRestaurantCardItemBtnsProps> = React.memo(
           <DeleteBtn />
         </div>
       </div>
-    )
-  }
-)
+    );
+  },
+);
 
 export const RestaurantCardItem: React.FC<IRestaurantCardItemProps> =
   React.memo(({ food, quantity, id }) => {
-    const { image, title, price } = food
+    const { image, title, price } = food;
 
     return (
       <>
         {food.title && (
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between bg-secondary py-4 px-6 rounded-lg">
-            <div className="flex flex-row justify-start items-center gap-4">
+          <div className="flex flex-col items-start justify-between rounded-lg bg-secondary px-6 py-4 md:flex-row md:items-center">
+            <div className="flex flex-row items-center justify-start gap-4">
               <img
                 src={image[0]}
                 alt={title}
-                className="w-16 h-16 rounded-md"
+                className="h-16 w-16 rounded-md"
                 loading="lazy"
               />
               <div className="">
-                <h3 className="font-bold font-head md:text-lg">{title}</h3>
-                <p className="text-sm font-para mt-1">₹ {price}</p>
+                <h3 className="font-head font-bold md:text-lg">{title}</h3>
+                <p className="mt-1 font-para text-sm">₹ {price}</p>
               </div>
             </div>
 
-            <div className="flex w-[100%] md:w-auto justify-center items-center mt-3 md:mt-0">
+            <div className="mt-3 flex w-[100%] items-center justify-center md:mt-0 md:w-auto">
               <CardItemBtns id={id} quantity={quantity} />
             </div>
           </div>
         )}
       </>
-    )
-  })
+    );
+  });

@@ -1,6 +1,6 @@
-import { useCallback } from 'react'
+import { useCallback } from "react";
 
 export const useDeleteUserAddress = () => {
-  const handleDelete = useCallback((addrssId: string) => {}, [])
-  return handleDelete
-}
+  const handleDelete = useCallback((addrssId: string) => {}, []);
+  return handleDelete;
+};

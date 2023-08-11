@@ -1,127 +1,140 @@
 import { NextFunction, Request, Response } from 'express'
 import { get, controller, use, post, del } from './decorators'
-import { bodyValidator } from './decorators/bodyValidator'
 import { isAdmin, isAuth } from '../middleware/isAuth'
 import { AppError } from '../utils/AppError'
-import Restaurant, { IRestaurant } from '../models/Restaurant.model'
-import { HydratedDocument, HydratedSingleSubdocument, Types } from 'mongoose'
-import Cart, { ICart } from '../models/cart.model'
-import Order, { IOrder } from '../models/order.model'
 import User, { IUser } from '../models/user.model'
-import { pushReview } from '../utils/pushReview'
-import Review, { IReviewModel } from '../models/reviews.model'
-import { isAutoAccessorPropertyDeclaration } from 'typescript'
+import Review, { IReview } from '../models/reviews.model'
 import Food, { IFood } from '../models/food.model'
+import { HydratedDocument, Types } from 'mongoose'
 
 // TODO  Search for a food
 
 @controller('/review')
 class ReviewController {
-  @post('/add')
-  @bodyValidator('message', 'rating', 'foodId')
-  @use(isAuth)
-  async addReview(req: Request, res: Response, next: NextFunction) {
+  // @post('/:userId/:orderId')
+  // @use(isAuth)
+  // async addReview(req: Request, res: Response, next: NextFunction) {
+  //   try {
+  //     const reviews: { message: string; foodId: string; rating: string }[] =
+  //       req.body.reviews
+  //     // const { message, rating, foodId } = req.body
+  //     if (!req.user) {
+  //       next(new AppError(`Login to access this resource`, 404))
+  //       return
+  //     }
+
+  //     // * Create or push review
+  //     reviews.map(({ message, rating, foodId }) => {
+  //       pushReview(
+  //         {
+  //           message,
+  //           rating: parseInt(rating),
+  //           user: req.user?._id!,
+  //           verified: true,
+  //           create: new Date(),
+  //           update: new Date(),
+  //         },
+  //         foodId,
+  //         next,
+  //         res
+  //       )
+  //     })
+
+  //     res.status(200).json({
+  //       success: true,
+  //       message: 'Thank you for your review',
+  //     })
+  //   } catch (error) {
+  //     next(new AppError(`Something went wrong, try again later`, 500))
+  //   }
+  // }
+
+  @post('/:userId/:foodId')
+  async addAFoodReview(req: Request, res: Response, next: NextFunction) {
     try {
-      const { message, rating, foodId } = req.body
-      if (!req.user) {
+      const { message, rating } = req.body
+      const { userId, foodId } = req.params
+
+      if (!userId || !foodId) {
         next(new AppError(`Login to access this resource`, 404))
         return
       }
 
       // * Create or push review
-      const foodReview: HydratedDocument<IReviewModel> | null =
-        await pushReview(
+      const existingReview = await Review.findOne({
+        user: userId,
+        food: foodId,
+      })
+
+      if (existingReview) {
+        next(new AppError('You already reviewed this food', 400))
+        return
+      }
+
+      const review: any = await Review.create<IReview>({
+        message,
+        rating,
+        user: userId,
+        food: foodId,
+      })
+
+      const [user, food] = await Promise.all([
+        User.findByIdAndUpdate(userId, { $push: { reviews: review._id } }),
+        Food.findByIdAndUpdate(
+          foodId,
           {
-            message,
-            rating: parseInt(rating),
-            user: req.user._id,
-            verified: true,
-            create: new Date(),
-            update: new Date(),
+            $push: { reviews: review._id },
+            $inc: { totalNumberOfRating: 1 },
           },
-          foodId
-        )
+          { new: true }
+        ).populate('reviews'),
+      ])
 
-      if (!foodReview) return next(new AppError('Something went worng', 500))
+      if (!food || !user) {
+        return next(new AppError('Food not found', 404))
+      }
 
-      const totalRating = foodReview.reviews.reduce(
-        (sum, review) => sum + review.rating,
+      if (!Array.isArray(food.reviews)) {
+        food.reviews = []
+      }
+
+      food.totalRating = food.reviews.reduce(
+        (sum: number, review: any) => sum + review.rating,
         0
       )
 
-      const totalNumberOfRating = foodReview.reviews.length
+      food.totalNumberOfRating = food.reviews.length
 
-      const foodRating = totalRating / totalNumberOfRating
-
-      const foodQuery = Food.findByIdAndUpdate(
-        foodId,
-        {
-          $push: { reviews: foodReview._id },
-          $inc: { totalNumberOfRating: 1 },
-          $set: { rating: foodRating },
-        },
-        { new: true }
-      )
-
-      const userquery = User.findByIdAndUpdate(
-        { _id: req.user._id },
-        { $push: { reviews: foodReview._id } } // Push the new review into the reviews array
-      )
-
-      const [user, food]: [
-        HydratedDocument<IUser> | null,
-        HydratedDocument<IFood> | null
-      ] = await Promise.all([userquery, foodQuery])
+      food.rating = food.totalRating / Math.max(food.totalNumberOfRating, 1)
+      await food.save({ validateBeforeSave: false })
 
       res.status(200).json({
         success: true,
-        reviews: foodReview,
+        message: 'Successfully add review',
       })
     } catch (error) {
+      console.log(error)
       next(new AppError(`Something went wrong, try again later`, 500))
     }
   }
 
-  @del('/:foodId/:reviewId')
+  @del('/:reviewId')
   @use(isAuth)
   async deleteReview(req: Request, res: Response, next: NextFunction) {
     try {
-      const { foodId, reviewId } = req.params
+      const { reviewId } = req.params
 
-      if (!foodId || !reviewId || !req.user)
+      if (!reviewId || !req.user)
         return next(new AppError('Something went wrong', 500))
 
-      const reviews: HydratedDocument<IReviewModel> | null =
-        await Review.findOne({ food: foodId })
-
-      if (!reviews) return next(new AppError('Restaurant not found', 404))
-
-      const review: any = reviews.reviews.find(
-        (review: any) => review._id.toString() === reviewId
-      )
-
-      if (!review) return next(new AppError('Review not found', 404))
-
-      // *   either user own this review or restaurant onw this review can delete it
-      if (
-        !(
-          review.user.toString() === req.user._id.toString() ||
-          reviews.food.toString() === foodId
-        )
-      )
-        return next(new AppError("You're not allowed to delete", 401))
-
-      const updatedRestaurant = await Review.findOneAndUpdate(
-        { food: foodId },
-        {
-          $pull: { reviews: { _id: reviewId } },
-        },
-        { new: true }
-      )
+      await Review.findOneAndDelete({
+        _id: reviewId,
+        user: req.user._id,
+      })
 
       res.status(200).json({
         success: true,
-        reviews: updatedRestaurant,
+        message: 'Successfully deleted the review',
       })
     } catch (error) {
       next(new AppError('Something went wrong, try again later', 500))

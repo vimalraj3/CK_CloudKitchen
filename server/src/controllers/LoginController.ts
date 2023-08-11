@@ -220,7 +220,7 @@ class LoginController {
         return
       }
 
-      const { _id, restaurant, __v, createdAt, ...filteredUser } = user
+      const { _id, __v, createdAt, ...filteredUser } = user
 
       res.status(201).json({
         success: true,

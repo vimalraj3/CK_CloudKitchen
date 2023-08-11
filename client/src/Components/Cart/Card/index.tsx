@@ -1,17 +1,17 @@
-import Container from '../../Container'
-import { useAppSelector } from '../../../hooks'
-import { CardItemLoading } from '../Loading/Loading'
-import { RestaurantCardItem } from './CardItem'
-import { useNavigate } from 'react-router-dom'
-import { CheckoutBox } from '../Checkout/CheckoutBox'
-import { useCart } from '../../../hooks/useCart'
-import React, { useEffect } from 'react'
-import { AddressSelector } from '../Address/AddressSelector'
-import { NotFoundCart } from '../NotFound/NotFoundCart'
+import Container from "../../Container";
+import { useAppSelector } from "../../../hooks";
+import { CardItemLoading } from "../Loading/Loading";
+import { RestaurantCardItem } from "./CardItem";
+import { useNavigate } from "react-router-dom";
+import { CheckoutBox } from "../Checkout/CheckoutBox";
+import { useCart } from "../../../hooks/useCart";
+import React, { useEffect } from "react";
+import { AddressSelector } from "../Address/AddressSelector";
+import { NotFoundCart } from "../NotFound/NotFoundCart";
 interface IRestaurantCardTitleProps {
-  total: number
-  id: string
-  restaurant: string
+  total: number;
+  id: string;
+  restaurant: string;
 }
 
 const RestaurantCardTitle: React.FC<IRestaurantCardTitleProps> = ({
@@ -19,12 +19,12 @@ const RestaurantCardTitle: React.FC<IRestaurantCardTitleProps> = ({
   total,
   id,
 }) => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   return (
     <>
       <div className="flex items-center justify-between gap-2">
         <h3
-          className="font-bold font-head text-md md:text-lg capitalize cursor-pointer"
+          className="text-md cursor-pointer font-head font-bold capitalize md:text-lg"
           onClick={() => navigate(`/restaurant/${id}`)}
         >
           {restaurant}
@@ -34,36 +34,36 @@ const RestaurantCardTitle: React.FC<IRestaurantCardTitleProps> = ({
         </p>
       </div>
     </>
-  )
-}
+  );
+};
 
 const RestaurantCard: React.FC = () => {
-  const { loading, cart, error } = useAppSelector((state) => state.cartState)
+  const { loading, cart, error } = useAppSelector((state) => state.cartState);
 
-  const tempArrayLoading: string[] = [...Array(5).fill('fdsfafdsa')]
+  const tempArrayLoading: string[] = [...Array(5).fill("fdsfafdsa")];
 
   return (
     <div>
       <Container>
         <div className="min-h-[70svh]">
           {
-            <div className="flex flex-col gap-8 md:gap-8 md:w-[100%] mx-auto">
+            <div className="mx-auto flex flex-col gap-8 md:w-[100%] md:gap-8">
               <div className="flex flex-col gap-3 md:gap-4">
                 <div className="flex flex-col gap-3 md:gap-8">
                   {loading && cart.length == 0 ? (
                     tempArrayLoading.map((v, i) => {
-                      return <CardItemLoading key={i} />
+                      return <CardItemLoading key={i} />;
                     })
                   ) : cart.length == 0 ? (
                     <NotFoundCart />
                   ) : (
                     cart.map((v, i) => {
-                      return <RestaurantCardItem key={i} id={v._id} {...v} />
+                      return <RestaurantCardItem key={i} id={v._id} {...v} />;
                     })
                   )}
                 </div>
               </div>
-              <div className="flex gap-8 md:gap-8 flex-col">
+              <div className="flex flex-col gap-8 md:gap-8">
                 {cart.length !== 0 && (
                   <>
                     <div className="w-[100%] md:w-[100%]">
@@ -80,7 +80,7 @@ const RestaurantCard: React.FC = () => {
         </div>
       </Container>
     </div>
-  )
-}
+  );
+};
 
-export default RestaurantCard
+export default RestaurantCard;

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cardo:wght@400;700&family=Montserrat:wght@400;500&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Cardo:wght@400;700&family=Montserrat:wght@400;500&display=swap");
 * {
   margin: 0;
   padding: 0;
@@ -7,13 +7,13 @@
 
 .LogoName {
   font-weight: 700;
-  font-family: 'Cardo', serif;
+  font-family: "Cardo", serif;
   color: #000;
   font-size: 2.5rem;
 }
 
 header > button {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   position: relative;
 }
 
@@ -30,7 +30,7 @@ header > button {
 /* ? product add css */
 
 .drag-text {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-weight: 500;
   font-size: 1.3rem;
 }
@@ -72,14 +72,14 @@ header > button {
 }
 
 .bigText {
-  font-family: 'cardo';
+  font-family: "cardo";
   font-weight: 600;
   font-size: 2rem;
 }
 
 .para {
   color: #555;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
 }
 
 .animateArrow {
@@ -119,7 +119,8 @@ div.scrollbar-hide::-webkit-scrollbar {
   height: 50px;
   display: grid;
   color: #766df4;
-  background: linear-gradient(currentColor 0 0) center/100% 3px,
+  background:
+    linear-gradient(currentColor 0 0) center/100% 3px,
     linear-gradient(currentColor 0 0) center/3px 100%;
   background-repeat: no-repeat;
   animation: s8 2s infinite;
@@ -127,7 +128,7 @@ div.scrollbar-hide::-webkit-scrollbar {
 
 .custom-loader::before,
 .custom-loader::after {
-  content: '';
+  content: "";
   grid-area: 1/1;
   background: repeating-conic-gradient(#0000 0 35deg, currentColor 0 90deg);
   mask: radial-gradient(farthest-side, #0000 calc(100% - 3px), #000 0);
@@ -144,7 +145,7 @@ div.scrollbar-hide::-webkit-scrollbar {
 }
 
 .resimg {
-  background-image: url('https://res.cloudinary.com/dd39ktpmz/image/upload/v1685773766/ck/client_static/hkbcuehiaiwvzkiqqs2n.avif');
+  background-image: url("https://res.cloudinary.com/dd39ktpmz/image/upload/v1685773766/ck/client_static/hkbcuehiaiwvzkiqqs2n.avif");
 }
 .skeleton {
   opacity: 0.5;
@@ -214,7 +215,7 @@ div.scrollbar-hide::-webkit-scrollbar {
 }
 
 .underline-curve:after {
-  content: '';
+  content: "";
   position: absolute;
   width: 100%;
   border-top: solid 3px #ff7e8b;

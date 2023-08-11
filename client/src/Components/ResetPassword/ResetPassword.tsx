@@ -1,53 +1,53 @@
-import React from 'react'
-import Container from '../Container'
-import { Form, Input, PasswordInput } from '../UI/Form'
-import Nav from '../Nav'
-import * as yup from 'yup'
-import { Text } from '../UI/Text'
-import { useNavigate, useParams } from 'react-router-dom'
-import { useAppDispatch } from '../../hooks'
-import { resetPasswordApi } from '../../state/slices/user.slice'
-import { IShowToast } from '../../types/showToast.types'
+import React from "react";
+import Container from "../Container";
+import { Form, Input, PasswordInput } from "../UI/Form";
+import Nav from "../Nav";
+import * as yup from "yup";
+import { Text } from "../UI/Text";
+import { useNavigate, useParams } from "react-router-dom";
+import { useAppDispatch } from "../../hooks";
+import { resetPasswordApi } from "../../state/slices/user.slice";
+import { IShowToast } from "../../types/showToast.types";
 
 const ResetPassword = () => {
-  const navigate = useNavigate()
-  const { token } = useParams()
-  const appDispatch = useAppDispatch()
+  const navigate = useNavigate();
+  const { token } = useParams();
+  const appDispatch = useAppDispatch();
   const schema = yup.object().shape({
     password: yup
       .string()
-      .required('Password is required')
-      .min(5, 'Password must be at least 5 characters'),
+      .required("Password is required")
+      .min(5, "Password must be at least 5 characters"),
     confirmPassword: yup
       .string()
-      .required('Confirm Password is required')
-      .min(5, 'Confirm Password must be at least 5 characters')
-      .oneOf([yup.ref('password')], 'Passwords must match'),
-  })
+      .required("Confirm Password is required")
+      .min(5, "Confirm Password must be at least 5 characters")
+      .oneOf([yup.ref("password")], "Passwords must match"),
+  });
 
   const onSubmit = async (data: any) => {
     if (token) {
       const resetpassword = await appDispatch(
-        resetPasswordApi({ token, password: data.password })
-      )
+        resetPasswordApi({ token, password: data.password }),
+      );
       if (
         resetPasswordApi.fulfilled.match(resetpassword) &&
         resetpassword.payload
       ) {
-        navigate(-1)
+        navigate(-1);
       }
     }
-  }
+  };
 
   return (
     <>
       <Nav dark={true} bgColor="#f8f8f8" />
       <Container>
-        <div className="max-w-sm mx-auto ">
+        <div className="mx-auto max-w-sm ">
           <Text
             size="lg"
             message="Reset password"
-            className="mb-4 font-cardo"
+            className="font-cardo mb-4"
           />
           <Form<{ password: string; confirmPassword: string }>
             onSubmit={onSubmit}
@@ -57,7 +57,7 @@ const ResetPassword = () => {
               <>
                 <div>
                   <PasswordInput
-                    {...register('password', {
+                    {...register("password", {
                       required: true,
                       minLength: 8,
                     })}
@@ -73,7 +73,7 @@ const ResetPassword = () => {
                 <div>
                   <PasswordInput
                     label="Confirm Password"
-                    {...register('confirmPassword', {
+                    {...register("confirmPassword", {
                       required: true,
                       minLength: 8,
                     })}
@@ -90,7 +90,7 @@ const ResetPassword = () => {
                   type="submit"
                   role="button"
                   style={{
-                    cursor: 'pointer',
+                    cursor: "pointer",
                   }}
                 />
               </>
@@ -99,7 +99,7 @@ const ResetPassword = () => {
         </div>
       </Container>
     </>
-  )
-}
+  );
+};
 
-export default ResetPassword
+export default ResetPassword;

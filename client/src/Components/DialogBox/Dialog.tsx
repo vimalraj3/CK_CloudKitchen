@@ -1,34 +1,34 @@
-import * as React from 'react'
-import Button from '@mui/material/Button'
-import Dialog from '@mui/material/Dialog'
-import DialogActions from '@mui/material/DialogActions'
-import DialogContent from '@mui/material/DialogContent'
-import DialogTitle from '@mui/material/DialogTitle'
-import Slide from '@mui/material/Slide'
-import { TransitionProps } from '@mui/material/transitions'
-import { Typography } from '@mui/material'
+import * as React from "react";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import Slide from "@mui/material/Slide";
+import { TransitionProps } from "@mui/material/transitions";
+import { Typography } from "@mui/material";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
-    children: React.ReactElement<any, any>
+    children: React.ReactElement<any, any>;
   },
-  ref: React.Ref<unknown>
+  ref: React.Ref<unknown>,
 ) {
-  return <Slide direction="up" ref={ref} {...props} />
-})
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 interface IDialogBox {
-  isOpen: boolean
-  imgSrc: string | undefined
-  title: string
+  isOpen: boolean;
+  imgSrc: string | undefined;
+  title: string;
 }
 
 export default function DialogBox({ isOpen, imgSrc, title }: IDialogBox) {
-  const [open, setOpen] = React.useState(isOpen)
+  const [open, setOpen] = React.useState(isOpen);
 
   const handleClose = () => {
-    setOpen(false)
-  }
+    setOpen(false);
+  };
 
   return (
     <div>
@@ -41,7 +41,7 @@ export default function DialogBox({ isOpen, imgSrc, title }: IDialogBox) {
       >
         <DialogTitle
           sx={{
-            fontFamily: 'Montserrat',
+            fontFamily: "Montserrat",
           }}
         >
           {title}
@@ -53,16 +53,16 @@ export default function DialogBox({ isOpen, imgSrc, title }: IDialogBox) {
               src={imgSrc}
               loading="lazy"
               alt="Product_img"
-              width={'100%'}
-              height={'100%'}
+              width={"100%"}
+              height={"100%"}
             />
           ) : (
-            <Typography>{'Unable to upload the image'}</Typography>
+            <Typography>{"Unable to upload the image"}</Typography>
           )}
         </DialogContent>
         <DialogActions
           sx={{
-            padding: ' 0 1rem 1rem 1rem',
+            padding: " 0 1rem 1rem 1rem",
           }}
         >
           <Button onClick={handleClose}>Cancel</Button>
@@ -72,5 +72,5 @@ export default function DialogBox({ isOpen, imgSrc, title }: IDialogBox) {
         </DialogActions>
       </Dialog>
     </div>
-  )
+  );
 }

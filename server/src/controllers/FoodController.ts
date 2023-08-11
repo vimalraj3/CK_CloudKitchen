@@ -32,7 +32,7 @@ class FoodController {
       const image = await uploadSingleImageCloudinary(filePath, next)
       if (!image) return next(new AppError('Unable to upload image', 400))
 
-      if (req.user?._id === undefined || !req.user?.restaurant)
+      if (!req.user?._id)
         return next(new AppError('Please login to add a product', 400))
 
       const openTiming = stringToDate(open)
@@ -52,8 +52,7 @@ class FoodController {
 
       if (!food) return next(new AppError('Unable to add Product', 500))
 
-      // ? return the product
-      return res.status(200).json({
+      res.status(200).json({
         success: true,
         food,
       })
@@ -136,7 +135,13 @@ class FoodController {
       const food: HydratedDocument<IFood> | null = await Food.findById<IFood>(
         req.params.id
       )
-        .populate('reviews')
+        .populate({
+          path: 'reviews',
+          populate: {
+            path: 'user',
+            select: 'userName avatar',
+          },
+        })
         .lean()
       if (!food) {
         next(new AppError(`Food not found`, 404))

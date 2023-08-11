@@ -1,99 +1,98 @@
-import { useAppSelector } from '../../../../hooks'
-import { UserAvatar } from '../../../UI/UserAvatar/UserAvatar'
-import { Rating, Skeleton } from '@mui/material'
+import { useAppSelector } from "../../../../hooks";
+import { UserAvatar } from "../../../UI/UserAvatar/UserAvatar";
+import moment, { MomentInput } from "moment";
+import { Rating, Skeleton } from "@mui/material";
+import { useEffect } from "react";
 
 const ReviewsLoading = () => (
-  <div className="flex gap-7 items-center w-[100%] mt-8">
+  <div className="mt-8 flex w-[100%] items-center gap-7">
     <Skeleton variant="circular" width={55} height={44} animation="wave" />
-    <div className="flex flex-col gap-3 w-[100%]">
-      <div className="flex justify-between w-[100%] gap-3">
-        <div className="flex flex-col gap-2 w-[70%]">
+    <div className="flex w-[100%] flex-col gap-3">
+      <div className="flex w-[100%] justify-between gap-3">
+        <div className="flex w-[70%] flex-col gap-2">
           <Skeleton
             variant="text"
-            sx={{ fontSize: '1rem' }}
-            width={'100%'}
+            sx={{ fontSize: "1rem" }}
+            width={"100%"}
             animation="wave"
           />
           <Skeleton
             variant="text"
-            sx={{ fontSize: '1rem' }}
-            width={'100%'}
+            sx={{ fontSize: "1rem" }}
+            width={"100%"}
             animation="wave"
           />
         </div>
         <Skeleton
           variant="text"
-          sx={{ fontSize: '1rem' }}
-          width={'30%'}
+          sx={{ fontSize: "1rem" }}
+          width={"30%"}
           animation="wave"
         />
       </div>
-      <div className="w-[100%] flex flex-col gap-1">
+      <div className="flex w-[100%] flex-col gap-1">
         <Skeleton
           variant="text"
-          sx={{ fontSize: '1rem' }}
-          width={'100%'}
+          sx={{ fontSize: "1rem" }}
+          width={"100%"}
           animation="wave"
         />
         <Skeleton
           variant="text"
-          sx={{ fontSize: '1rem' }}
-          width={'100%'}
+          sx={{ fontSize: "1rem" }}
+          width={"100%"}
           animation="wave"
         />
       </div>
     </div>
   </div>
-)
+);
 
 const NoReviews = () => (
-  <div className="flex flex-col justify-center items-center gap-1">
+  <div className="flex flex-col items-center justify-center gap-1">
     <div className="w-[300px]">
-      <img src="/review.png" alt="review" width={'100%'} />
+      <img src="/review.png" alt="review" width={"100%"} />
     </div>
     <div>
-      <p className="text-center text-xl font-head">Be a first reviewer</p>
+      <p className="text-center font-head text-xl">Be a first reviewer</p>
     </div>
   </div>
-)
+);
 
 //  TODO add illustrator and description page
 
 export const Reviews = () => {
-  const reviews = useAppSelector((state) => state.foodState.reviews)
-  const loading = useAppSelector((state) => state.foodState.loading)
-  console.log(reviews)
-  const options: Intl.DateTimeFormatOptions = {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  }
+  const reviews = useAppSelector((state) => state.foodState.food?.reviews);
+  const loading = useAppSelector((state) => state.foodState.loading);
+  useEffect(() => {
+    console.log(reviews, "reviews");
+  }, [reviews]);
 
   return (
     <div className=" mt-4 px-3 md:px-5">
       {loading ? (
-        new Array(4).fill('11').map((v, i) => <ReviewsLoading key={i} />)
+        new Array(4).fill("623").map((v, i) => <ReviewsLoading key={i} />)
       ) : !reviews || reviews.length == 0 ? (
         <NoReviews />
       ) : (
         reviews.map((review, i) => (
           <div
-            className="flex gap-7 items-start md:items-center w-[100%] mb-8"
+            className="mb-8 flex w-[100%] items-start gap-7 md:items-center"
             key={i}
           >
             <UserAvatar
-              userName={review.user.userName || ''}
+              userName={review.user.userName || ""}
               src={review.user.avatar}
               isComment
             />
-            <div className="flex flex-col gap-1.5 md:gap-2.5 w-[100%]">
-              <div className="flex flex-col md:flex-row gap-1 md:gap-0 md:justify-between md:items-center">
+            <div className="flex w-[100%] flex-col gap-1.5 md:gap-2.5">
+              <div className="flex flex-col gap-1 md:flex-row md:items-center md:justify-between md:gap-0">
                 <div className="flex items-center gap-2">
-                  <p className="md:text-lg font-head font-[500] capitalize">
+                  <p className="font-head font-[500] capitalize md:text-lg">
                     {review.user.userName}
                   </p>
                   <p>-</p>
-                  <div className="md:hidden flex items-center">
+                  <div className="flex items-center md:hidden">
                     <Rating
                       name={`${review.user.userName}_rating`}
                       value={review.rating}
@@ -101,11 +100,8 @@ export const Reviews = () => {
                       size="small"
                     />
                   </div>
-                  <p className="hidden md:block text-sm">
-                    {new Date(review.create).toLocaleDateString(
-                      'en-US',
-                      options
-                    )}
+                  <p className="hidden text-sm md:block">
+                    {moment(review.create).format("MMMM D, YYYY")}
                   </p>
                 </div>
                 <div className="hidden md:block">
@@ -116,8 +112,8 @@ export const Reviews = () => {
                     size="medium"
                   />
                 </div>
-                <p className="md:hidden text-sm text-gray-500">
-                  {new Date(review.create).toLocaleDateString('en-US', options)}
+                <p className="text-sm text-gray-500 md:hidden">
+                  {moment(review.create).format("MMMM D, YYYY")}
                 </p>
               </div>
               <div>
@@ -128,5 +124,5 @@ export const Reviews = () => {
         ))
       )}
     </div>
-  )
-}
+  );
+};

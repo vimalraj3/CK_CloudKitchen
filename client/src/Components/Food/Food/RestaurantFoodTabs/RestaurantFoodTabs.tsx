@@ -1,25 +1,25 @@
-import React from 'react'
-import Box from '@mui/material/Box'
+import React from "react";
+import Box from "@mui/material/Box";
 import {
   StyledTabs,
   StyledTab,
   TabPanel,
   allyProps,
-} from '../../../UI/Tabs/Tabs'
-import FoodCardCon from '../../Cards/FoodsCard'
-import { Reviews } from '../Reviews/Reviews'
-import { Description } from '../Desciption/Description'
+} from "../../../UI/Tabs/Tabs";
+import FoodCardCon from "../../Cards/FoodsCard";
+import { Reviews } from "../Reviews/Reviews";
+import { Description } from "../Desciption/Description";
 
 export const RestaurantFoodTabs = () => {
-  const [value, setValue] = React.useState(0)
+  const [value, setValue] = React.useState(0);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue)
-  }
+    setValue(newValue);
+  };
 
   return (
-    <div className="w-[100%] mt-8">
-      <Box sx={{ bgcolor: '#fff' }}>
+    <div className="mt-8 w-[100%]">
+      <Box sx={{ bgcolor: "#fff" }}>
         <StyledTabs
           value={value}
           onChange={handleChange}
@@ -48,5 +48,5 @@ export const RestaurantFoodTabs = () => {
         </TabPanel>
       </div>
     </div>
-  )
-}
+  );
+};

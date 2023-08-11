@@ -1,50 +1,50 @@
-import { Button } from '@mui/material'
-import React from 'react'
-import { forwardRef, memo } from 'react'
-import { SearchIconBtn } from '../../IconBtn/SearchIconBtn'
-import { useAppDispatch, useAppSelector } from '../../../../hooks'
+import { Button } from "@mui/material";
+import React from "react";
+import { forwardRef, memo } from "react";
+import { SearchIconBtn } from "../../IconBtn/SearchIconBtn";
+import { useAppDispatch, useAppSelector } from "../../../../hooks";
 import {
   getAllFoods,
   setSearch,
   setSortedBy,
-} from '../../../../state/slices/food.slice'
+} from "../../../../state/slices/food.slice";
 
 interface Props {
-  handleSearch: (e: React.ChangeEvent<HTMLInputElement>) => void
-  handleSearchSubmit: (e: React.MouseEvent<HTMLButtonElement>) => void
+  handleSearch: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleSearchSubmit: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 export const Search: React.FC = memo(() => {
-  const { search } = useAppSelector((state) => state.foodState)
+  const { search } = useAppSelector((state) => state.foodState);
 
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(setSearch(e.target.value))
-  }
+    dispatch(setSearch(e.target.value));
+  };
 
   const handleSubmit = () => {
-    dispatch(getAllFoods())
-  }
+    dispatch(getAllFoods());
+  };
 
   return (
-    <div className="flex items-center w-[100%] px-1 justify-center bg-transparent border-1 border-primary  rounded-md">
+    <div className="border-1 flex w-[100%] items-center justify-center rounded-md border-primary bg-transparent  px-1">
       <input
-        id={'search'}
+        id={"search"}
         placeholder={`Search`}
         value={search}
-        name={'search'}
+        name={"search"}
         onChange={handleSearch}
         onKeyDown={(e) => {
-          if (e.key === 'Enter') {
-            handleSubmit()
+          if (e.key === "Enter") {
+            handleSubmit();
           }
         }}
-        className="py-[.54em] px-2 w-[100%] rounded-md focus:outline-none text-md font-para bg-transparent placeholder:text-black"
+        className="text-md w-[100%] rounded-md bg-transparent px-2 py-[.54em] font-para placeholder:text-black focus:outline-none"
       />
       <SearchIconBtn
         handleClick={() => handleSubmit()}
         className="text-primary"
       />
     </div>
-  )
-})
+  );
+});

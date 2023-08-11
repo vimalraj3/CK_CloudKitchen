@@ -1,2 +1,2 @@
-export { SocialCon as Social } from './SocialCon';
-export { SocialIcon } from './SocialIcon'
+export { SocialCon as Social } from "./SocialCon";
+export { SocialIcon } from "./SocialIcon";

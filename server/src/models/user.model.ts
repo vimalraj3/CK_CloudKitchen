@@ -1,7 +1,6 @@
 import mongoose, { Schema, Document, VirtualType, Types, Model } from 'mongoose'
 import { IOrder } from './order.model'
 import { ICart } from './cart.model'
-import { IRestaurant } from './Restaurant.model'
 import { IAddress } from './address.model'
 import { IReview } from './reviews.model'
 
@@ -18,7 +17,6 @@ export interface IUser {
   avatar?: string
   orders?: Types.DocumentArray<Types.ObjectId[] | IOrder[]>
   cart?: Types.ObjectId | ICart
-  restaurant?: Types.ObjectId | IRestaurant
   verified: boolean
   role: userRole
   verifyToken?: string
@@ -66,11 +64,6 @@ const UserSchema: Schema = new Schema<IUser>({
     required: true,
     default: userRole.user,
     enum: roleEnum,
-  },
-  restaurant: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Restaurant',
-    require: false,
   },
   verified: { type: Boolean, required: true, default: false },
   verifyToken: { type: String, required: false, select: false },

@@ -14,5 +14,5 @@ export type IShowToast = (message: string, type: string) => void;
 
 export type IReturnProps = [
   showToast: IShowToast,
-  ToastComponent: React.FC<any>
+  ToastComponent: React.FC<any>,
 ];

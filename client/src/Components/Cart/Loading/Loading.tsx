@@ -1,28 +1,28 @@
-import { Skeleton } from '@mui/material'
-import React from 'react'
+import { Skeleton } from "@mui/material";
+import React from "react";
 
 export const CardItemLoading: React.FC = React.memo(() => {
   return (
     <>
-      <div className="flex flex-col md:flex-row items-center justify-between mt-2 gap-2 bg-secondary py-4 px-6 rounded-lg">
+      <div className="mt-2 flex flex-col items-center justify-between gap-2 rounded-lg bg-secondary px-6 py-4 md:flex-row">
         <div className="flex items-center gap-2">
           <Skeleton
             variant="rounded"
-            height={'4rem'}
-            width={'100%'}
+            height={"4rem"}
+            width={"100%"}
             animation="wave"
           />
-          <div className="w-[150px] md:w-[250px] ml-2 ">
+          <div className="ml-2 w-[150px] md:w-[250px] ">
             <Skeleton
               variant="text"
-              sx={{ fontSize: '1rem' }}
-              width={'100%'}
+              sx={{ fontSize: "1rem" }}
+              width={"100%"}
               animation="wave"
             />
             <Skeleton
               variant="text"
-              sx={{ fontSize: '1rem' }}
-              width={'100%'}
+              sx={{ fontSize: "1rem" }}
+              width={"100%"}
               animation="wave"
             />
           </div>
@@ -31,5 +31,5 @@ export const CardItemLoading: React.FC = React.memo(() => {
         <Skeleton variant="rectangular" width={210} height={40} />
       </div>
     </>
-  )
-})
+  );
+});
