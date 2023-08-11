@@ -2,8 +2,8 @@
   "version": 2,
   "builds": [
     {
-      "src": "tsconfig.json",
-      "use": "@now/node"
+      "src": "src/index.ts",
+      "use": "@vercel/node@1.11.0"
     }
   ],
   "routes": [
