@@ -95,7 +95,7 @@ var ReviewController = /** @class */ (function () {
     // }
     ReviewController.prototype.addAFoodReview = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, message, rating, _b, userId, foodId, existingReview, review, _c, user, food, error_1;
+            var _a, message, rating, _b, userId, foodId, existingReview, review, _c, user, food, sum_1, error_1;
             return __generator(this, function (_d) {
                 switch (_d.label) {
                     case 0:
@@ -141,10 +141,15 @@ var ReviewController = /** @class */ (function () {
                         }
                         food.totalRating = 0;
                         if (Array.isArray(food.reviews)) {
-                            food.totalRating = food.reviews.reduce(function (sum, review) { return sum + review.rating; }, 0);
+                            sum_1 = 0;
+                            food.reviews.forEach(function (ele) {
+                                sum_1 += ele.rating;
+                            });
+                            food.totalRating = sum_1;
                         }
+                        food.totalRating = food.totalRating || 0;
                         food.totalNumberOfRating = food.reviews.length;
-                        food.rating = food.totalRating / Math.max(food.totalNumberOfRating, 1);
+                        food.rating = food.totalRating || 0 / Math.max(food.totalNumberOfRating, 1);
                         return [4 /*yield*/, food.save({ validateBeforeSave: false })];
                     case 4:
                         _d.sent();

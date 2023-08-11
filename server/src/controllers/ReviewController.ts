@@ -98,18 +98,23 @@ class ReviewController {
       }
 
       food.totalRating = 0
+      
       if (Array.isArray(food.reviews)) {
-        food.totalRating = food.reviews.reduce(
-          (sum: number, review: any) => sum + review.rating,
-          0
-        )
+        let sum=0
+     
+     food.reviews.forEach((ele:any)=>{
+sum+=ele.rating
+      })
+      food.totalRating = sum
       }
+      food.totalRating = food.totalRating|| 0
+
 
       food.totalNumberOfRating = food.reviews.length
 
-      food.rating = food.totalRating / Math.max(food.totalNumberOfRating, 1)
+      food.rating = food.totalRating || 0 / Math.max(food.totalNumberOfRating, 1)
       await food.save({ validateBeforeSave: false })
-
+ 
       res.status(200).json({
         success: true,
         message: 'Successfully add review',
