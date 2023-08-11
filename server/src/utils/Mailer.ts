@@ -36,7 +36,7 @@ export const sendEmail = async (
   }
 
   const defaultEmailConfig = {
-    from: `CK, Verification <verify@${process.env.MAILGUN_DOMAIN}>`,
+    from: `CK, ${subject} <verify@${process.env.MAILGUN_DOMAIN}>`,
     to: [to],
     subject,
     template,

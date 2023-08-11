@@ -5,7 +5,6 @@ import { AppError } from '../utils/AppError'
 import User, { IUser } from '../models/user.model'
 import Review, { IReview } from '../models/reviews.model'
 import Food, { IFood } from '../models/food.model'
-import { HydratedDocument, Types } from 'mongoose'
 
 // TODO  Search for a food
 
@@ -98,10 +97,13 @@ class ReviewController {
         food.reviews = []
       }
 
-      food.totalRating = food.reviews.reduce(
-        (sum: number, review: any) => sum + review.rating,
-        0
-      )
+      food.totalRating = 0
+      if (Array.isArray(food.reviews)) {
+        food.totalRating = food.reviews.reduce(
+          (sum: number, review: any) => sum + review.rating,
+          0
+        )
+      }
 
       food.totalNumberOfRating = food.reviews.length
 

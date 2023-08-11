@@ -1,7 +1,6 @@
 import mongoose, { Types } from 'mongoose'
 import { IFood } from './food.model'
 import { IUser } from './user.model'
-import { IRestaurant } from './Restaurant.model'
 
 export interface IFoodCart {
   food: IFood | Types.ObjectId
