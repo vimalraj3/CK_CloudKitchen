@@ -1,15 +1,17 @@
 {
+  "name": "Cloud kitchen backend",
   "version": 2,
+  "public": true,
   "builds": [
     {
-      "src": "src/index.ts",
+      "src": "src/server.ts",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "dist/index.js"
+      "dest": "/src/server.ts"
     }
   ]
 }
