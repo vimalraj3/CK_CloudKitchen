@@ -64,6 +64,13 @@ function index() {
     );
   };
 
+  const handleGoogleLogin = () => {
+    const url =
+      import.meta.env.VITE_REACT_SER_URL ||
+      import.meta.env.VITE_REACT_SER_URL_LOCAL;
+    window.open(`${url}/api/auth/google`, "_self");
+  };
+
   return (
     <>
       <Nav dark={true} bgColor={"#f8f8f8"} />
@@ -135,6 +142,19 @@ function index() {
               }}
             </Form>
 
+            <button
+              className="w-full rounded-md bg-primary py-2 transition-colors hover:bg-primary-300"
+              onClick={handleGoogleLogin}
+            >
+              <div className="flex w-full items-center justify-center gap-1 font-semibold text-white">
+                <p> {`Google `}</p>
+                <img
+                  src="https://res.cloudinary.com/dd39ktpmz/image/upload/v1691860343/ck/client_static/ezjbsgsxigq0nzxechhi.webp"
+                  alt="google icon"
+                  width={"20px"}
+                />
+              </div>
+            </button>
             <Divider margin="0" color="#c1c1c1" size="1px" />
             <div className="flex items-center justify-center">
               <p className="text-sm text-[#9c9c9c]">have account already? </p>
