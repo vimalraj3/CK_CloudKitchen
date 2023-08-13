@@ -100,7 +100,42 @@ export const signUpUser = createAsyncThunk<
     rejectValue: ServerError;
   } // config
 >("user/signup", async (user: SignUp, thunkApi) => {
-  const response = await Axios.post<ServerResponse>("/auth/signup")
+  const response = await Axios.post<ServerResponse>("/auth/signup", user)
+    .then(async (res) => {
+      let userData = res.data.user;
+
+      const userSession: UserSession = {
+        ...defaultUserSession,
+        ...userData,
+        auth: {
+          ...defaultUserSession.auth,
+          isAuth: true,
+          isUser: userData.role === "user" ? true : false,
+          isAdmin: userData.role === "admin" ? true : false,
+        },
+        geo: {
+          region: "puducherry",
+        },
+      };
+
+      return userSession;
+    })
+    .catch((err: ServerError) => {
+      if (isAxiosError(err)) {
+        return thunkApi.rejectWithValue(err.response?.data);
+      }
+    });
+  return response || defaultUserSession;
+});
+
+export const verifiyUser = createAsyncThunk<
+  UserSession, // return type
+  string, // Types for function
+  {
+    rejectValue: ServerError;
+  } // config
+>("user/verifiyUser", async (email: string, thunkApi) => {
+  const response = await Axios.post<ServerResponse>(`/auth/verify/${email}`)
     .then(async (res) => {
       let userData = res.data.user;
 
@@ -286,6 +321,14 @@ export const userSlice = createSlice({
       )
       .addCase(
         signUpUser.fulfilled,
+        (state, action: PayloadAction<UserSession>) => {
+          state.loading = false;
+          state.data = action.payload;
+          sessionStorage.setItem("User", JSON.stringify(action.payload.email));
+        },
+      )
+      .addCase(
+        verifiyUser.fulfilled,
         (state, action: PayloadAction<UserSession>) => {
           state.loading = false;
           state.data = action.payload;

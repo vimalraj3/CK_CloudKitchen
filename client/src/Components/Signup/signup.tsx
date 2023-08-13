@@ -32,10 +32,8 @@ function index() {
       .oneOf([yup.ref("password")], "Passwords do not match"),
   });
 
-  const onSubmit = async (data: ISignupForm) => {
-    console.log(data);
-
-    const { email, userName, password } = data;
+  const onSubmit = async (inputs: ISignupForm) => {
+    const { email, userName, password } = inputs;
     const resultAction = dispatch(
       signUpUser({ email, userName, password } as SignUp),
     );
@@ -44,13 +42,15 @@ function index() {
       resultAction,
       {
         loading: "Sign up in progress",
-        success: (data: any) => {
-          if (!data.payload.success) {
-            throw data.payload.message;
+        success: (data) => {
+          if (data.type.endsWith("/rejected")) {
+            throw (data.payload as any)?.message || "Something went wrong";
           }
+
           navigate("/");
           return `Successfully Signup`;
         },
+
         error: (err) => {
           return `${err}`;
         },

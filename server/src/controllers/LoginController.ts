@@ -67,10 +67,10 @@ class LoginController {
   }
 
   @post('/signup')
-  @bodyValidator('email')
+  @bodyValidator('email', 'password', 'userName')
   async postSignup(req: Request, res: Response, next: NextFunction) {
     try {
-      const { email } = req.body
+      const { email, password, userName } = req.body
 
       const userExist: IUser | null = await User.findOne({ email }).lean()
 
@@ -81,41 +81,54 @@ class LoginController {
 
       const sent = await sendEmail(
         email,
-        'CK, Password Reset',
-        EmailTemplate.resetPassword,
+        'CK, User  verfication',
+        EmailTemplate.verification,
         {
           link: `${process.env.CLI_URL}/signup/verify/${encodedEmail(email)}`,
-          userName: 'Valued user',
+          userName: 'valued user',
         }
       )
 
-      if (sent) {
-        res.status(201).json({
-          success: true,
-          message: `Email sent to ${email} for verification.`,
-        })
-        return
+      const user = await createUser(
+        password,
+        LoginController.salt,
+        userName,
+        email
+      )
+
+      if (!user) {
+        return next(new AppError(`Unable to create a new user`, 500))
       }
-      next(new AppError(`Something went wrong`, 500))
+
+      req.session.uid = user._id.toString()
+
+      res.status(200).json({
+        success: true,
+        user,
+        message: `Email sent to ${email} for verification.`,
+      })
     } catch (error) {
       next(new AppError(`Unable to create user`, 500))
     }
   }
 
-  @post('/setpassword/:token')
-  @bodyValidator('password')
+  @post('/verify/:token')
   async postSetPassword(req: Request, res: Response, next: NextFunction) {
     try {
-      const { password } = req.body
       const { token } = req.params
       const email = decodedEmail(token)
-      const userName = email.split('@')[0]
-      const user = createUser(password, LoginController.salt, userName, email)
+
+      const user = await User.findOneAndUpdate({ email }, { verified: true })
+
       if (!user) {
-        return next(new AppError(`Unable to create a user`, 500))
+        return next(new AppError(`Unable to verify now, try again later`, 500))
       }
+
+      req.session.uid = user._id.toString()
+
       res.status(200).json({
         success: true,
+        message: 'Your are successfully verified',
         user,
       })
     } catch (error) {

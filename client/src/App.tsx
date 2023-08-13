@@ -23,6 +23,8 @@ import { Toaster } from "react-hot-toast";
 import { getAllFoods } from "./state/slices/food.slice";
 import { fetchUser } from "./state/slices/user.slice";
 import { ProtectedRoutes } from "./guard/ProtectedRoutes";
+import { Verified } from "./Components/Verified/Verified";
+import { PageNotFound } from "./Components/PageNotFound/PageNotFound";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -44,6 +46,7 @@ function App() {
 
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
+              <Route path="/signup/verify/:email" element={<Verified />} />
 
               <Route path="/food/:id" element={<Food />} />
               <Route path="/resetpassword/:token" element={<ResetPassword />} />
@@ -54,6 +57,7 @@ function App() {
                 <Route path="/account" element={<Account />} />
                 <Route path="/cart" element={<Cart />} />
               </Route>
+              <Route path="*" element={<PageNotFound />} />
             </Route>
           </Routes>
           <Footer />

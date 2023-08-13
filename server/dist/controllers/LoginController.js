@@ -133,71 +133,81 @@ var LoginController = /** @class */ (function () {
     };
     LoginController.prototype.postSignup = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
-            var email, userExist, sent, error_2;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var _a, email, password, userName, userExist, sent, user, error_2;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
-                        _a.trys.push([0, 3, , 4]);
-                        email = req.body.email;
+                        _b.trys.push([0, 4, , 5]);
+                        _a = req.body, email = _a.email, password = _a.password, userName = _a.userName;
                         return [4 /*yield*/, user_model_1.default.findOne({ email: email }).lean()];
                     case 1:
-                        userExist = _a.sent();
+                        userExist = _b.sent();
                         if (userExist) {
                             next(new AppError_1.AppError("User already exist", 400));
                             return [2 /*return*/];
                         }
-                        return [4 /*yield*/, (0, Mailer_1.sendEmail)(email, 'CK, Password Reset', Mailer_1.EmailTemplate.resetPassword, {
+                        return [4 /*yield*/, (0, Mailer_1.sendEmail)(email, 'CK, User  verfication', Mailer_1.EmailTemplate.verification, {
                                 link: "".concat(process.env.CLI_URL, "/signup/verify/").concat((0, encoder_1.encodedEmail)(email)),
-                                userName: 'Valued user',
+                                userName: 'valued user',
                             })];
                     case 2:
-                        sent = _a.sent();
-                        if (sent) {
-                            res.status(201).json({
-                                success: true,
-                                message: "Email sent to ".concat(email, " for verification."),
-                            });
-                            return [2 /*return*/];
-                        }
-                        next(new AppError_1.AppError("Something went wrong", 500));
-                        return [3 /*break*/, 4];
+                        sent = _b.sent();
+                        return [4 /*yield*/, (0, CreateUser_1.createUser)(password, LoginController_1.salt, userName, email)];
                     case 3:
-                        error_2 = _a.sent();
+                        user = _b.sent();
+                        if (!user) {
+                            return [2 /*return*/, next(new AppError_1.AppError("Unable to create a new user", 500))];
+                        }
+                        req.session.uid = user._id.toString();
+                        res.status(200).json({
+                            success: true,
+                            user: user,
+                            message: "Email sent to ".concat(email, " for verification."),
+                        });
+                        return [3 /*break*/, 5];
+                    case 4:
+                        error_2 = _b.sent();
                         next(new AppError_1.AppError("Unable to create user", 500));
-                        return [3 /*break*/, 4];
-                    case 4: return [2 /*return*/];
+                        return [3 /*break*/, 5];
+                    case 5: return [2 /*return*/];
                 }
             });
         });
     };
     LoginController.prototype.postSetPassword = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
-            var password, token, email, userName, user;
+            var token, email, user, error_3;
             return __generator(this, function (_a) {
-                try {
-                    password = req.body.password;
-                    token = req.params.token;
-                    email = (0, encoder_1.decodedEmail)(token);
-                    userName = email.split('@')[0];
-                    user = (0, CreateUser_1.createUser)(password, LoginController_1.salt, userName, email);
-                    if (!user) {
-                        return [2 /*return*/, next(new AppError_1.AppError("Unable to create a user", 500))];
-                    }
-                    res.status(200).json({
-                        success: true,
-                        user: user,
-                    });
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        token = req.params.token;
+                        email = (0, encoder_1.decodedEmail)(token);
+                        return [4 /*yield*/, user_model_1.default.findOneAndUpdate({ email: email }, { verified: true })];
+                    case 1:
+                        user = _a.sent();
+                        if (!user) {
+                            return [2 /*return*/, next(new AppError_1.AppError("Unable to verify now, try again later", 500))];
+                        }
+                        req.session.uid = user._id.toString();
+                        res.status(200).json({
+                            success: true,
+                            message: 'Your are successfully verified',
+                            user: user,
+                        });
+                        return [3 /*break*/, 3];
+                    case 2:
+                        error_3 = _a.sent();
+                        next(new AppError_1.AppError("Unable to create user", 500));
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
                 }
-                catch (error) {
-                    next(new AppError_1.AppError("Unable to create user", 500));
-                }
-                return [2 /*return*/];
             });
         });
     };
     LoginController.prototype.postForgotPassword = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
-            var email, userExist, sent, error_3;
+            var email, userExist, sent, error_4;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -224,7 +234,7 @@ var LoginController = /** @class */ (function () {
                         }
                         return [3 /*break*/, 4];
                     case 3:
-                        error_3 = _a.sent();
+                        error_4 = _a.sent();
                         next(new AppError_1.AppError("Something went wrong", 500));
                         return [3 /*break*/, 4];
                     case 4: return [2 /*return*/];
@@ -234,7 +244,7 @@ var LoginController = /** @class */ (function () {
     };
     LoginController.prototype.postResetPassword = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
-            var password, token, email, user, hashPassword, error_4;
+            var password, token, email, user, hashPassword, error_5;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -262,7 +272,7 @@ var LoginController = /** @class */ (function () {
                         });
                         return [3 /*break*/, 5];
                     case 4:
-                        error_4 = _a.sent();
+                        error_5 = _a.sent();
                         next(new AppError_1.AppError("Something went wrong", 500));
                         return [3 /*break*/, 5];
                     case 5: return [2 /*return*/];
@@ -288,7 +298,7 @@ var LoginController = /** @class */ (function () {
     LoginController.prototype.getUser = function (req, res, next) {
         var _a;
         return __awaiter(this, void 0, void 0, function () {
-            var session, id, user, _id, __v, createdAt, filteredUser, error_5;
+            var session, id, user, _id, __v, createdAt, filteredUser, error_6;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -317,7 +327,7 @@ var LoginController = /** @class */ (function () {
                         });
                         return [3 /*break*/, 3];
                     case 2:
-                        error_5 = _b.sent();
+                        error_6 = _b.sent();
                         next(new AppError_1.AppError('Something went wrong', 500));
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
@@ -349,7 +359,7 @@ var LoginController = /** @class */ (function () {
     };
     LoginController.prototype.postAddress = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, houseNo_1, addressName_1, streetName_1, city_1, state_1, zipCode_1, area_1, user, givenAddress, isAddressExist, addressFound_1, filter, update, options, updatedUserAddress, newUserAddress, error_6;
+            var _a, houseNo_1, addressName_1, streetName_1, city_1, state_1, zipCode_1, area_1, user, givenAddress, isAddressExist, addressFound_1, filter, update, options, updatedUserAddress, newUserAddress, error_7;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -415,7 +425,7 @@ var LoginController = /** @class */ (function () {
                         });
                         return [3 /*break*/, 7];
                     case 6:
-                        error_6 = _b.sent();
+                        error_7 = _b.sent();
                         next(new AppError_1.AppError("Something went wrong", 500));
                         return [3 /*break*/, 7];
                     case 7: return [2 /*return*/];
@@ -426,7 +436,7 @@ var LoginController = /** @class */ (function () {
     LoginController.prototype.getAddress = function (req, res, next) {
         var _a;
         return __awaiter(this, void 0, void 0, function () {
-            var userId, address, error_7;
+            var userId, address, error_8;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -448,7 +458,7 @@ var LoginController = /** @class */ (function () {
                         });
                         return [3 /*break*/, 3];
                     case 2:
-                        error_7 = _b.sent();
+                        error_8 = _b.sent();
                         next(new AppError_1.AppError('Something went wrong', 500));
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
@@ -459,7 +469,7 @@ var LoginController = /** @class */ (function () {
     LoginController.prototype.delAddress = function (req, res, next) {
         var _a;
         return __awaiter(this, void 0, void 0, function () {
-            var userId, userAddress, addressId_1, newAddress, error_8;
+            var userId, userAddress, addressId_1, newAddress, error_9;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -483,7 +493,7 @@ var LoginController = /** @class */ (function () {
                         });
                         return [3 /*break*/, 4];
                     case 3:
-                        error_8 = _b.sent();
+                        error_9 = _b.sent();
                         next(new AppError_1.AppError('Something went wrong', 500));
                         return [3 /*break*/, 4];
                     case 4: return [2 /*return*/];
@@ -494,7 +504,7 @@ var LoginController = /** @class */ (function () {
     LoginController.prototype.updateAddress = function (req, res, next) {
         var _a;
         return __awaiter(this, void 0, void 0, function () {
-            var userId, update_1, addressId_2, userAddress, updatedAddress, error_9;
+            var userId, update_1, addressId_2, userAddress, updatedAddress, error_10;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -525,7 +535,7 @@ var LoginController = /** @class */ (function () {
                         });
                         return [3 /*break*/, 4];
                     case 3:
-                        error_9 = _b.sent();
+                        error_10 = _b.sent();
                         next(new AppError_1.AppError('Something went wrong', 500));
                         return [3 /*break*/, 4];
                     case 4: return [2 /*return*/];
@@ -544,14 +554,13 @@ var LoginController = /** @class */ (function () {
     ], LoginController.prototype, "postLogin", null);
     __decorate([
         (0, decorators_1.post)('/signup'),
-        (0, bodyValidator_1.bodyValidator)('email'),
+        (0, bodyValidator_1.bodyValidator)('email', 'password', 'userName'),
         __metadata("design:type", Function),
         __metadata("design:paramtypes", [Object, Object, Function]),
         __metadata("design:returntype", Promise)
     ], LoginController.prototype, "postSignup", null);
     __decorate([
-        (0, decorators_1.post)('/setpassword/:token'),
-        (0, bodyValidator_1.bodyValidator)('password'),
+        (0, decorators_1.post)('/verify/:token'),
         __metadata("design:type", Function),
         __metadata("design:paramtypes", [Object, Object, Function]),
         __metadata("design:returntype", Promise)

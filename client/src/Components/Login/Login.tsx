@@ -35,13 +35,16 @@ function index() {
       {
         loading: "Login in progress",
         success: (data: any) => {
-          if (!data.payload.success) {
-            throw data.payload.message;
+          if (data.payload?.email) {
+            navigate("/");
+            return `Successfully login`;
           }
-          navigate("/");
-          return `Successfully login`;
+
+          throw data.payload?.message || "Something went wrong";
         },
         error: (err) => {
+          console.log(err);
+
           return `${err}`;
         },
       },

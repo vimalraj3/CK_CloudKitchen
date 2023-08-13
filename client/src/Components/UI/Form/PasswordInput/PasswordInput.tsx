@@ -27,16 +27,17 @@ export const PasswordInput = memo(
             ref={ref}
             {...props}
           />
-          <button
+          <div
             className="bg-white px-2 font-para"
             onClick={() => setVisible(!visible)}
+            role={"button"}
           >
             {visible ? (
               <i className="fa-solid fa-eye-slash text-primary"></i>
             ) : (
               <i className="fa-solid fa-eye text-primary"></i>
             )}
-          </button>
+          </div>
         </div>
       </div>
     );
