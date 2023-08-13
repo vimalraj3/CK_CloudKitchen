@@ -83,14 +83,11 @@ app.get('/api/auth/google', function (req, res, next) {
 app.get('/api/auth/google/callback', passport_1.default.authenticate('google', {
     failureRedirect: "".concat(process_1.env.CLI_URL, "/login"),
 }), function (req, res) {
+    req.session.save();
     res.redirect("".concat(process_1.env.CLI_URL, "/"));
 });
 app.use('/api/', AppRouter_1.AppRouter.getInstance());
 app.use(ErrorHandler_1.ErrorHandler);
-// app.use(express.static(path.join(__dirname, '../../client/dist')))
-// app.get('*', (req: Request, res: Response) =>
-//   res.sendFile(path.join(__dirname, '../../client/dist/index.html'))
-// )
 process.on('uncaughtException', function (err) {
     console.error('Uncaught Exception:', err.stack);
     process.exit(1);

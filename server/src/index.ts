@@ -103,16 +103,12 @@ app.get(
     failureRedirect: `${env.CLI_URL}/login`,
   }),
   function (req, res) {
+    req.session.save()
     res.redirect(`${env.CLI_URL}/`)
   }
 )
 app.use('/api/', AppRouter.getInstance())
 app.use(ErrorHandler)
-
-// app.use(express.static(path.join(__dirname, '../../client/dist')))
-// app.get('*', (req: Request, res: Response) =>
-//   res.sendFile(path.join(__dirname, '../../client/dist/index.html'))
-// )
 
 process.on('uncaughtException', (err: Error) => {
   console.error('Uncaught Exception:', err.stack)
