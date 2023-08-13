@@ -84,9 +84,7 @@ class LoginController {
         'CK, Password Reset',
         EmailTemplate.resetPassword,
         {
-          link: `${process.env.CLI_URL}/signup/verify/${encodedEmail(
-            email
-          )}`,
+          link: `${process.env.CLI_URL}/signup/verify/${encodedEmail(email)}`,
           userName: 'Valued user',
         }
       )
@@ -201,8 +199,8 @@ class LoginController {
   async getUser(req: Request, res: Response, next: NextFunction) {
     try {
       const session = req.session
-      
-      const id = session?.uid || session.passport?.user
+
+      const id = session?.passport?.user || session?.uid
 
       if (!id) {
         next(new AppError(`welcome back, Please login`, 400))

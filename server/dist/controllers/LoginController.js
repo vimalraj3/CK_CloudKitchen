@@ -294,7 +294,7 @@ var LoginController = /** @class */ (function () {
                     case 0:
                         _b.trys.push([0, 2, , 3]);
                         session = req.session;
-                        id = (session === null || session === void 0 ? void 0 : session.uid) || ((_a = session.passport) === null || _a === void 0 ? void 0 : _a.user);
+                        id = ((_a = session === null || session === void 0 ? void 0 : session.passport) === null || _a === void 0 ? void 0 : _a.user) || (session === null || session === void 0 ? void 0 : session.uid);
                         if (!id) {
                             next(new AppError_1.AppError("welcome back, Please login", 400));
                             return [2 /*return*/];
