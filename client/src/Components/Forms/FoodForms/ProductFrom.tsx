@@ -1,31 +1,11 @@
 import axios from "axios";
 import { useState } from "react";
-import { IShowToast } from "../../../types/showToast.types";
 
 function ProductFrom() {
-  const [image, setImage] = useState();
   const [isOpen, setIsOpen] = useState(false);
   const [value, setValue] = useState<string>();
   const cloudName: string = "dd39ktpmz";
   const presetName: string = "jnniwa4k";
-
-  const handleChange = (event: any) => {
-    const formdata = new FormData();
-
-    formdata.append("file", event.target.files[0]);
-    formdata.append("upload_preset", presetName);
-    axios
-      .post(
-        `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
-        formdata,
-      )
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
 
   return (
     <div className=" mx-auto w-[80%] max-w-[1000px]  flex-col">

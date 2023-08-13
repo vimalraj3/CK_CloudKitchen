@@ -68,9 +68,6 @@ const NoReviews = () => (
 export const Reviews = () => {
   const reviews = useAppSelector((state) => state.foodState.food?.reviews);
   const loading = useAppSelector((state) => state.foodState.loading);
-  useEffect(() => {
-    console.log(reviews, "reviews");
-  }, [reviews]);
 
   return (
     <div className=" mt-4 px-3 md:px-5">

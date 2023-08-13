@@ -24,7 +24,6 @@ export const PriceSelector: React.FC = () => {
           label="min"
           onChange={(e) => {
             handleChangePrice(e.target.value, true);
-            console.log(e.target.value);
           }}
           name="price[min]"
         />

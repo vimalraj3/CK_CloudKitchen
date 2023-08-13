@@ -26,7 +26,6 @@ const CardItemBtns: React.FC<IRestaurantCardItemBtnsProps> = React.memo(
           <div
             onClick={() => {
               handleCartQuantity(id, quantity - 1);
-              console.log(id, quantity, "quantity sub");
             }}
           >
             <MinusIconBtn />

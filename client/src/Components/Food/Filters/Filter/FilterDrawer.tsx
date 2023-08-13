@@ -27,8 +27,6 @@ export const FilterDrawer = () => {
   const dispatch = useAppDispatch();
 
   const handleFilterSubmit = () => {
-    console.log("closing");
-    // console.log(filter, 'filter', 'submitted', sortedBy, 'sortedBy')
     dispatch(getAllFoods());
   };
 

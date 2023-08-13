@@ -18,8 +18,6 @@ export const useRestaurantOrderPage = () => {
 
   const handleAddToCart = useCallback(
     ({ foodId, restaurantId, quantity }: addToCartProps) => {
-      console.log(cart, "restaurantId");
-      console.log("cart is empty");
       dispatch(
         addToCart({
           foodId: foodId,

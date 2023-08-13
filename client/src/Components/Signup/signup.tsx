@@ -44,10 +44,12 @@ function index() {
       resultAction,
       {
         loading: "Sign up in progress",
-        success: (data) => {
+        success: (data: any) => {
+          if (!data.payload.success) {
+            throw data.payload.message;
+          }
           navigate("/");
-
-          return `Successfully login`;
+          return `Successfully Signup`;
         },
         error: (err) => {
           return `${err}`;

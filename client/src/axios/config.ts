@@ -5,7 +5,6 @@ const localhost = import.meta.env.VITE_REACT_SER_URL_LOCAL;
 const currentUrl = window.location.origin;
 
 const axiosUrl = currentUrl.includes("localhost") ? localhost : serverUrl;
-console.log(axiosUrl);
 
 export const Axios = axios.create({
   baseURL: `${axiosUrl}/api`,

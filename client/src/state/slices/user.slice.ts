@@ -314,15 +314,12 @@ export const userSlice = createSlice({
         state.loading = false;
 
         state.error = action.payload;
-        console.log(action.payload, "user error");
 
         if (
           action.payload.message &&
           action.payload.message === "welcome back, Please login"
         ) {
           toast(`👋 ${action.payload.message}`);
-        } else {
-          toast.error(action.payload.message);
         }
       })
       .addMatcher(isPending, (state, action) => {

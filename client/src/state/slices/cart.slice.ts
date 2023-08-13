@@ -133,8 +133,6 @@ export const addToCart = createAsyncThunk<
     dispatch: AppDispatch;
   }
 >("cart/addToCart", async (food, thunkApi) => {
-  console.log(food, "food");
-
   const response = await Axios.post("/cart/add", food)
     .then((res) => res.data)
     .catch((err) => {
@@ -185,8 +183,6 @@ export const updateCartById = createAsyncThunk<
       const { cart } = cartState;
       const { quantity } = args;
       if (quantity >= 1) {
-        console.log(quantity, "quantity");
-
         return true;
       }
       return false;

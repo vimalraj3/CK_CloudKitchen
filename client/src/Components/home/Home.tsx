@@ -13,5 +13,3 @@ export default function Home() {
     </div>
   );
 }
-// TODO - Add the following components to the Home page:
-// TODO - Add Food Component

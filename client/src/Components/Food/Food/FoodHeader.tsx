@@ -79,8 +79,6 @@ export const FoodHeader: React.FC = () => {
   const dispatch = useAppDispatch();
   const handleCart = useCallback(
     (foodId: string) => {
-      console.log(email);
-
       if (!email) {
         navigate("/login");
         return;
@@ -178,43 +176,3 @@ export const FoodHeader: React.FC = () => {
     </>
   );
 };
-{
-  /* <div className="flex flex-col md:flex-row md:justify-between w-[100%] px-3 md:px-5 border-b border-dashed border-primary pb-6 md:py-6">
-<div className="flex flex-col md:flex-row md:gap-6  md:items-center">
-  <div className="hidden md:block md:w-[100px]">
-    <img
-      src={food.image[0]}
-      alt="image"
-      width={'100%'}
-      className="rounded-md"
-    />
-  </div>
-  <div className="flex gap-2 flex-col">
-    <h3 className="font-head font-semibold text-2xl md:text-2xl">
-      {food.title}
-    </h3>
-    <div className="flex items-center justify-between gap-2 mt-1">
-      <p
-        className={`text-gray-500 text-sm md:text-md`}
-      >{`${food.price}`}</p>
-      <div className="flex gap-2 items-center md:hidden">
-        <Rating value={food.rating} size="small" readOnly />
-        <p className="text-sm">{`(${food.totalRating})`}</p>
-      </div>
-    </div>
-    <div className="flex md:hidden items-center gap-2">
-      <p className="text-sm">{`₹ ${food.price} for two`}</p>
-    </div>
-  </div>
-</div>
-<section className="flex gap-4 flex-col">
-  <div className="hidden md:flex gap-2">
-    <Rating value={food.rating} readOnly />
-    <p>{`(${food.totalRating})`}</p>
-  </div>
-  <div className="hidden md:flex items-center justify-end">
-    <p className="text-sm">{`₹ ${food.price} for two`}</p>
-  </div>
-</section>
-</div> */
-}

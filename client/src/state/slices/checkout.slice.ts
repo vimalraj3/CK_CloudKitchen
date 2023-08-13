@@ -72,8 +72,6 @@ export const placeOrderCheckout = createAsyncThunk<
       order_id: order.id,
       handler: async function (response: Razorpay) {
         try {
-          console.log(addressId, "addressId");
-
           const result = await Axios.post("/order/checkout", {
             addressId,
             amount: order.amount,

@@ -34,9 +34,11 @@ function index() {
       resultAction,
       {
         loading: "Login in progress",
-        success: (data) => {
+        success: (data: any) => {
+          if (!data.payload.success) {
+            throw data.payload.message;
+          }
           navigate("/");
-
           return `Successfully login`;
         },
         error: (err) => {

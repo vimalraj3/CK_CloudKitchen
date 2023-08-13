@@ -253,13 +253,9 @@ export const getFoodById = createAsyncThunk<
 >("foods/getFoodById", async (id, thunkApi) => {
   const response = await Axios.get(`/food/${id}`)
     .then(async (res) => {
-      console.log(res.data, "res.data");
-
       return res.data.food;
     })
     .catch((err: ServerError) => {
-      console.log(err, " error");
-
       if (isAxiosError(err)) {
         return thunkApi.rejectWithValue(err.response?.data as ServerError);
       }
@@ -381,7 +377,6 @@ export const foodSlice = createSlice({
       .addMatcher(isPending, (state, action) => {
         if (action.type.startsWith("foods")) {
           state.loading = true;
-          console.log(state.loading, "loading");
         }
       });
   },
