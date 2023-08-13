@@ -39,14 +39,14 @@ const DB_URL: string = process.env.DB_URL
 
 let cookieOpt: CookieOptions = {
   maxAge: 7 * 24 * 60 * 60 * 1000,
-  sameSite: 'strict',
   secure: false,
+  sameSite: 'strict',
 }
 
 if (process.env.NODE_ENV === 'production') {
   app.set('trust proxy', 1)
-  cookieOpt.sameSite = 'none'
   cookieOpt.secure = true
+  cookieOpt.sameSite = 'none'
 }
 
 let sess: SessionOptions = {
