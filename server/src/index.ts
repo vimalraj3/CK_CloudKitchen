@@ -45,7 +45,7 @@ let cookieOpt: CookieOptions = {
 
 if (process.env.NODE_ENV === 'production') {
   app.set('trust proxy', 1)
-  cookieOpt.sameSite = false
+  cookieOpt.sameSite = 'none'
   cookieOpt.secure = true
 }
 
