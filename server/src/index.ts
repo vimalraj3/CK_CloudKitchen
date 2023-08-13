@@ -55,7 +55,7 @@ const SECRET: string = process.env.COOKIE_SECRET
 const DB_URL: string = process.env.DB_URL
 
 let cookieOpt: CookieOptions = {
-  maxAge: 3 * 24 * 60 * 60,
+  maxAge: 7 * 24 * 60 * 60 * 1000,
   sameSite: 'strict',
   secure: false,
 }
@@ -72,7 +72,7 @@ let sess: SessionOptions = {
   secret: SECRET,
   store: new MongoStore({
     mongoUrl: DB_URL,
-    ttl: 3 * 24 * 60 * 60, // 3 days
+    ttl: 7 * 24 * 60 * 60, // 3 days
   }),
   cookie: cookieOpt,
 }

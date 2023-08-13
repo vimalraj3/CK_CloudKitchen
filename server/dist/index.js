@@ -50,7 +50,7 @@ var corsOption = {
 var SECRET = process.env.COOKIE_SECRET;
 var DB_URL = process.env.DB_URL;
 var cookieOpt = {
-    maxAge: 3 * 24 * 60 * 60,
+    maxAge: 7 * 24 * 60 * 60 * 1000,
     sameSite: 'strict',
     secure: false,
 };
@@ -65,7 +65,7 @@ var sess = {
     secret: SECRET,
     store: new connect_mongo_1.default({
         mongoUrl: DB_URL,
-        ttl: 3 * 24 * 60 * 60, // 3 days
+        ttl: 7 * 24 * 60 * 60, // 3 days
     }),
     cookie: cookieOpt,
 };
