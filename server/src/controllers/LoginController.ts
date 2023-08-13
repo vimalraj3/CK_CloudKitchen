@@ -202,6 +202,8 @@ class LoginController {
 
       const id = session?.passport?.user || session?.uid
 
+      console.log('id', id, session)
+
       if (!id) {
         next(new AppError(`welcome back, Please login`, 400))
         return
