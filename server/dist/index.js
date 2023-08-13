@@ -83,7 +83,7 @@ app.get('/api/auth/google', function (req, res, next) {
 app.get('/api/auth/google/callback', passport_1.default.authenticate('google', {
     failureRedirect: "".concat(process_1.env.CLI_URL, "/login"),
 }), function (req, res) {
-    req.session.save();
+    console.log(req.session, 'session after user login');
     res.redirect("".concat(process_1.env.CLI_URL, "/"));
 });
 app.use('/api/', AppRouter_1.AppRouter.getInstance());

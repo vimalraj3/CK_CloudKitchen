@@ -103,7 +103,8 @@ app.get(
     failureRedirect: `${env.CLI_URL}/login`,
   }),
   function (req, res) {
-    req.session.save()
+    console.log(req.session, 'session after user login')
+
     res.redirect(`${env.CLI_URL}/`)
   }
 )
