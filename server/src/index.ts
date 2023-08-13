@@ -72,26 +72,22 @@ let sess: SessionOptions = {
   secret: SECRET,
   store: new MongoStore({
     mongoUrl: DB_URL,
-    ttl: 7 * 24 * 60 * 60, // 3 days
+    ttl: 7 * 24 * 60 * 60,
   }),
   cookie: cookieOpt,
 }
 
 app.use(bodyParser.json())
 app.use(session(sess))
+
+app.use(cors(corsOption))
+
 app.use(passport.initialize())
 app.use(passport.session())
-app.use(cors(corsOption))
 
 app.get(
   '/api/auth/google',
   (req, res, next) => {
-    res.header(
-      'Access-Control-Allow-Methods',
-      'GET, POST, PUT, DELETE, OPTIONS'
-    )
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization')
-    res.header('Access-Control-Allow-Credentials', 'true')
     next()
   },
   passport.authenticate('google', { scope: ['email', 'profile'] })
@@ -104,10 +100,10 @@ app.get(
   }),
   function (req, res) {
     console.log(req.session, 'session after user login')
-
-    res.redirect(`${env.CLI_URL}/`)
+    res.redirect(`${env.CLI_URL}`)
   }
 )
+
 app.use('/api/', AppRouter.getInstance())
 app.use(ErrorHandler)
 

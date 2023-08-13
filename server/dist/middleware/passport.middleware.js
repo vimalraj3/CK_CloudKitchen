@@ -54,7 +54,7 @@ else {
 }
 var options = {
     clientID: process.env.CLIENT_ID,
-    clientSecret: process.env.CLIENT_SECRET || '',
+    clientSecret: process.env.CLIENT_SECRET,
     callbackURL: "".concat(process.env.SER_URL, "/api/auth/google/callback"),
 };
 var CreateUser = function (_a) {

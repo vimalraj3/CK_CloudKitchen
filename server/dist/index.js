@@ -65,26 +65,23 @@ var sess = {
     secret: SECRET,
     store: new connect_mongo_1.default({
         mongoUrl: DB_URL,
-        ttl: 7 * 24 * 60 * 60, // 3 days
+        ttl: 7 * 24 * 60 * 60,
     }),
     cookie: cookieOpt,
 };
 app.use(body_parser_1.default.json());
 app.use((0, express_session_1.default)(sess));
+app.use((0, cors_1.default)(corsOption));
 app.use(passport_1.default.initialize());
 app.use(passport_1.default.session());
-app.use((0, cors_1.default)(corsOption));
 app.get('/api/auth/google', function (req, res, next) {
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    res.header('Access-Control-Allow-Credentials', 'true');
     next();
 }, passport_1.default.authenticate('google', { scope: ['email', 'profile'] }));
 app.get('/api/auth/google/callback', passport_1.default.authenticate('google', {
     failureRedirect: "".concat(process_1.env.CLI_URL, "/login"),
 }), function (req, res) {
     console.log(req.session, 'session after user login');
-    res.redirect("".concat(process_1.env.CLI_URL, "/"));
+    res.redirect("".concat(process_1.env.CLI_URL));
 });
 app.use('/api/', AppRouter_1.AppRouter.getInstance());
 app.use(ErrorHandler_1.ErrorHandler);
