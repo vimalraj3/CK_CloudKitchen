@@ -62,7 +62,6 @@ let sess: SessionOptions = {
 
 app.use(bodyParser.json())
 app.use(session(sess))
-
 app.use(cors(corsOption))
 
 app.use('/api/', AppRouter.getInstance())
