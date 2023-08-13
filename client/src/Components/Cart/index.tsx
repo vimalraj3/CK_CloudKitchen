@@ -8,8 +8,6 @@ import { fetchCartByUserId } from "../../state/slices/cart.slice";
 const index: React.FC = () => {
   const dispatch = useAppDispatch();
 
-  const { cart } = useAppSelector((state) => state.cartState);
-
   const email = useAppSelector((state) => state.userState.data.email);
 
   useEffect(() => {

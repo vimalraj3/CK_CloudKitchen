@@ -33,9 +33,11 @@ function OfferCard() {
   const dispatch = useAppDispatch();
   const scrollTo = useScroll();
   const handleSearch = (searchFor: string) => {
-    dispatch(getAllFoods());
-    scrollTo("foods");
     dispatch(setSearch(searchFor));
+    scrollTo("foods");
+    setTimeout(() => {
+      dispatch(getAllFoods());
+    }, 200);
   };
   return (
     <section className="mx-auto mt-5 flex w-[90%] max-w-[1200px] flex-col items-center justify-evenly md:mt-10 md:flex-row">

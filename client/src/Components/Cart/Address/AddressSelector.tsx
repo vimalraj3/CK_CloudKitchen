@@ -8,13 +8,12 @@ import {
   useEditUserAddress,
 } from "../../../hooks";
 import { Grid, Skeleton } from "@mui/material";
-import { useCheckout } from "../../../hooks/useCheckout";
 import { setAddressId } from "../../../state/slices/checkout.slice";
 import { AddAddress } from "../../account/Sections/Address/AddAddress";
 import { Address } from "../../account/Sections/Address/Address";
+import { setDialogBoxOpen } from "../../../state/slices/dialog.slice";
 
 export const AddressSelector = () => {
-  const [dialogBoxOpen, setDialogBoxOpen] = useState(false);
   const { address } = useAppSelector((state) => state.addressState);
 
   const [handleSubmit] = useEditUserAddress();
@@ -30,7 +29,7 @@ export const AddressSelector = () => {
     } else {
       handleSubmit(data, true);
     }
-    setDialogBoxOpen(false);
+    dispatch(setDialogBoxOpen(false));
   };
 
   return (
