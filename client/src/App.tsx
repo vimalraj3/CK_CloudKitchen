@@ -32,7 +32,7 @@ function App() {
   useEffect(() => {
     dispatch(fetchUser());
     dispatch(getAllFoods());
-  }, []);
+  }, [email]);
 
   return (
     <div className="app scroll-smooth font-para">
