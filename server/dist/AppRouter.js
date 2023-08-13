@@ -8,9 +8,6 @@ var express_1 = __importDefault(require("express"));
 var AppRouter = /** @class */ (function () {
     function AppRouter() {
     }
-    /*
-      return the instance of express.Router
-    */
     AppRouter.getInstance = function () {
         if (!AppRouter.instance) {
             AppRouter.instance = express_1.default.Router();
