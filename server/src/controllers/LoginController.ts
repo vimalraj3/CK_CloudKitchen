@@ -200,7 +200,7 @@ class LoginController {
     try {
       const session = req.session
 
-      const id = session?.passport?.user || session?.uid
+      const id = session?.uid
 
       console.log('id', id, session)
 
