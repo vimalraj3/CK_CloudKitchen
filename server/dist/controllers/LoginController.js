@@ -286,14 +286,15 @@ var LoginController = /** @class */ (function () {
         });
     };
     LoginController.prototype.getUser = function (req, res, next) {
+        var _a;
         return __awaiter(this, void 0, void 0, function () {
             var session, id, user, _id, __v, createdAt, filteredUser, error_5;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
-                        _a.trys.push([0, 2, , 3]);
+                        _b.trys.push([0, 2, , 3]);
                         session = req.session;
-                        id = session === null || session === void 0 ? void 0 : session.uid;
+                        id = ((_a = session === null || session === void 0 ? void 0 : session.passport) === null || _a === void 0 ? void 0 : _a.user) || (session === null || session === void 0 ? void 0 : session.uid);
                         console.log('id', id, session);
                         if (!id) {
                             next(new AppError_1.AppError("welcome back, Please login", 400));
@@ -301,7 +302,7 @@ var LoginController = /** @class */ (function () {
                         }
                         return [4 /*yield*/, user_model_1.default.findById(id).lean()];
                     case 1:
-                        user = _a.sent();
+                        user = _b.sent();
                         if (!user) {
                             res.status(403).json({
                                 success: false,
@@ -316,7 +317,7 @@ var LoginController = /** @class */ (function () {
                         });
                         return [3 /*break*/, 3];
                     case 2:
-                        error_5 = _a.sent();
+                        error_5 = _b.sent();
                         next(new AppError_1.AppError('Something went wrong', 500));
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
