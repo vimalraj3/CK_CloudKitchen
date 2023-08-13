@@ -10,7 +10,6 @@ import { Axios } from "../../axios/config";
 import { ServerError } from "../../types/error.types";
 import { isAxiosError } from "axios";
 import { AppDispatch, RootState } from "../store";
-import { useHandleError } from "../../hooks/useHandleError";
 
 interface RejectedAction extends Action {
   payload: ServerError;
@@ -28,15 +27,6 @@ const initialState: initialState = {
   error: null,
 };
 
-interface ServerResponse {
-  user: IAddress[];
-  success: boolean;
-}
-
-// * ============================================================================
-// ? Centerized error handling
-const { setServerError } = useHandleError();
-
 // * ============================================================================
 // * user fetchUserAddress
 export const fetchUserAddress = createAsyncThunk<
@@ -47,31 +37,18 @@ export const fetchUserAddress = createAsyncThunk<
     state: RootState;
     dispatch: AppDispatch;
   }
->(
-  "address/fetchUserAddress",
-  async (_, thunkApi) => {
-    const response = await Axios.get("/auth/address")
-      .then(async (res) => {
-        return res.data.address;
-      })
-      .catch((err: ServerError) => {
-        if (isAxiosError(err)) {
-          return thunkApi.rejectWithValue(err.response?.data as ServerError);
-        }
-      });
-    return response;
-  },
-  {
-    condition: (args, { getState }) => {
-      const { addressState } = getState();
-      const { address, loading } = addressState;
-      if (address.length == 0) {
-        return true;
+>("address/fetchUserAddress", async (_, thunkApi) => {
+  const response = await Axios.get("/auth/address")
+    .then(async (res) => {
+      return res.data.address;
+    })
+    .catch((err: ServerError) => {
+      if (isAxiosError(err)) {
+        return thunkApi.rejectWithValue(err.response?.data as ServerError);
       }
-      return false;
-    },
-  },
-);
+    });
+  return response;
+});
 
 // * ============================================================================
 // ? Add new user address
@@ -193,8 +170,10 @@ export const addressSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-      .addMatcher(isPending, (state) => {
-        state.loading = true;
+      .addMatcher(isPending, (state, action) => {
+        if (action.type.startsWith("address")) {
+          state.loading = true;
+        }
       });
   },
 });

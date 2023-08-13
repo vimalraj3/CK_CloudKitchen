@@ -42,7 +42,6 @@ const RestaurantCardTitle: React.FC<IRestaurantCardTitleProps> = ({
 };
 
 const RestaurantCardItem: React.FC<IRestaurantCardItemProps> = ({
-  _id,
   title,
   price,
   quantity,
@@ -53,7 +52,7 @@ const RestaurantCardItem: React.FC<IRestaurantCardItemProps> = ({
       <div className="mt-2 flex items-center">
         <div className="flex flex-row items-center justify-start gap-4">
           <img
-            src={image[0]}
+            src={image[0] || ""}
             alt={title}
             className="h-16 w-16 rounded-md"
             loading="lazy"
@@ -73,13 +72,8 @@ export const RestaurantCard: React.FC<IRestaurantCardProps> = ({ orders }) => {
   const date = new Date(orders.date);
   return (
     <div key={date.toLocaleTimeString()}>
-      {/* <RestaurantCardTitle
-        date={date.toLocaleDateString()}
-        total={orders.totalPrice}
-        status={orders.status}
-      /> */}
       <div className="mt-1 flex flex-col gap-3">
-        {orders.foods.map((food, i) => (
+        {orders?.foods?.map((food, i) => (
           <RestaurantCardItem {...food.food} quantity={food.quantity} key={i} />
         ))}
       </div>

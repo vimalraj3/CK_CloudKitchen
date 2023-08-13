@@ -133,13 +133,13 @@ export const FoodHeader: React.FC = () => {
                 />
               </div>
               <div className="flex flex-col gap-2">
-                <h3 className="font-head text-2xl font-semibold md:text-2xl">
+                <h3 className="font-head text-2xl font-semibold capitalize md:text-2xl">
                   {food.title}
                 </h3>
-                <div className="mt-1 flex items-center justify-between gap-2">
+                <div className="mt-1 flex flex-row-reverse items-center justify-between gap-2 md:flex-row">
                   {/* <p className={`text-gray-500 text-sm md:text-md`}>{`${food.restaurantCity}`}</p> */}
                   <div className="hidden items-center justify-end md:flex">
-                    <p className="text-sm">{`₹ ${food.price} for two`}</p>
+                    <p className="text-sm capitalize">{`₹ ${food.price} - per ${food.title}`}</p>
                   </div>
                   <div className="flex items-center gap-2 md:hidden">
                     <Rating value={food.rating} size="small" readOnly />
@@ -147,9 +147,9 @@ export const FoodHeader: React.FC = () => {
                       food.totalNumberOfRating || 0
                     })`}</p>
                   </div>
-                </div>
-                <div className="flex items-center gap-2 md:hidden">
-                  <p className="text-sm">{`₹ ${food.price} for two`}</p>
+                  <div className="flex items-center gap-2 md:hidden">
+                    <p className="text-sm">{`₹ ${food.price}  - per ${food.title}`}</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -158,28 +158,18 @@ export const FoodHeader: React.FC = () => {
                 <Rating value={food.rating} readOnly />
                 <p>{`(${food.totalNumberOfRating || 0})`}</p>
               </div>
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-2">
-                  <Button
-                    variant="outlined"
-                    onClick={() => {
-                      handleCart(food._id);
-                    }}
-                    sx={{
-                      color: "#ff7e8b",
-                      borderColor: "#ff7e8b",
-                      ":hover": {
-                        borderColor: "#ff7e8b",
-                      },
-                    }}
-                    fullWidth
-                  >
-                    <div className="flex items-center gap-2">
-                      <p className=" capitalize md:block">add to cart</p>
-                      <i className="fa-solid fa-cart-shopping"></i>
-                    </div>
-                  </Button>
-                </div>
+              <div className="mt-3 flex items-center gap-4 md:mt-0">
+                <button
+                  onClick={() => {
+                    handleCart(food._id);
+                  }}
+                  className="flex w-full items-center justify-center gap-1 rounded-lg border border-primary px-3 py-2 font-medium  text-primary  transition-colors duration-300 ease-in-out hover:bg-primary-300 hover:font-semibold hover:text-white"
+                >
+                  <div className="flex items-center gap-2">
+                    <p className=" capitalize md:block">add to cart</p>
+                    <i className="fa-solid fa-cart-shopping"></i>
+                  </div>
+                </button>
               </div>
             </section>
           </div>

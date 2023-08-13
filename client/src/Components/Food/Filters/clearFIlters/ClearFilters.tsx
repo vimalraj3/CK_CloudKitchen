@@ -12,17 +12,15 @@ export const ClearFilters = () => {
   return (
     <>
       {canClear && (
-        <div
-          className="flex items-center justify-between rounded-[4px] bg-primary px-1 py-[.45rem]"
-          onClick={() => handleClear()}
-          role="button"
-          aria-label="Clear"
-        >
-          <p className="mx-2 font-para font-semibold text-white">{`Clear`}</p>
-          <div>
-            <CloseIconBtn className="text-white" />
-          </div>
-        </div>
+        <>
+          <button
+            onClick={() => handleClear()}
+            className="flex items-center justify-center gap-2 rounded-xl border border-primary bg-primary py-2  font-medium  text-white transition-colors duration-300 ease-in-out hover:bg-white hover:text-primary"
+          >
+            <p className="font-para font-semibold">{`Clear`}</p>
+            <i className={`fa-solid fa-xmark cursor-pointer`}></i>
+          </button>
+        </>
       )}
     </>
   );

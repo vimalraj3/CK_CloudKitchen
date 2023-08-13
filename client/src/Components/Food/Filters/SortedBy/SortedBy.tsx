@@ -46,54 +46,35 @@ export const SortedByBtn = () => {
 
   return (
     <div className="relative w-[100%]" key={"sorted by btn component"}>
-      <Button
-        variant="outlined"
-        size={"large"}
+      <button
         onClick={() => setOpen(!open)}
-        sx={{
-          color: "#ff7e8b",
-          borderColor: "#ff7e8b",
-          ":hover": {
-            borderColor: "#ff7e8b",
-          },
-        }}
-        fullWidth
-        key={"sorted by btn"}
+        className="flex w-full items-center justify-center  gap-1 rounded-xl border border-primary py-2 font-medium text-primary transition-colors  duration-300 ease-in-out hover:bg-primary-300 hover:font-semibold hover:text-white"
       >
         <div className="flex items-center gap-2 capitalize md:gap-3">
           {`${sortedByTitle}`}
           <i
             className={`fa-solid fa-chevron-down ${
-              open ? "rotate" : "reverse-rotate"
+              open ? "rotate  " : "reverse-rotate "
             }`}
           ></i>
         </div>
-      </Button>
+      </button>
       {open && (
         <div
-          className="slider border-1 absolute top-[100%] z-50 mt-4 w-[100%] rounded-md border-gray-400 bg-white px-5 py-3 md:border-primary"
+          className="slider absolute top-[100%] z-50 mt-4 w-[100%] rounded-xl border border-gray-400 bg-white  px-1 py-1 md:border-primary"
           key={"BtnShow"}
         >
-          <div className="flex flex-col gap-2" key={"BtnContainer"}>
-            {buttonValues.map(({ name, value }, i) => (
-              <>
-                <Button
-                  fullWidth
-                  key={`${name}:${i}`}
-                  onClick={() => handleSortedBySubmit(value)}
-                  sx={{
-                    color: { xs: "#ff7e8b", md: "#ff7e8b" },
-                    borderColor: { xs: "gray", md: "#ff7e8b" },
-                    ":hover": {
-                      bgColor: { xs: "gray", md: "#ff7e8b" },
-                    },
-                  }}
-                >
-                  {name}
-                </Button>
-              </>
-            ))}
-          </div>
+          {buttonValues.map(({ name, value }, i) => (
+            <>
+              <button
+                key={`${name}:${i}`}
+                onClick={() => handleSortedBySubmit(value)}
+                className="flex w-full items-center justify-center gap-1  rounded-lg border-primary py-1 capitalize text-primary transition-colors  duration-300 ease-in-out hover:bg-primary-300 hover:font-semibold hover:text-white"
+              >
+                {name}
+              </button>
+            </>
+          ))}
         </div>
       )}
     </div>

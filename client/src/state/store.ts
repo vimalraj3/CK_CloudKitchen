@@ -5,6 +5,7 @@ import addressReducer from "./slices/address.slice";
 import foodReducer from "./slices/food.slice";
 import cartReducer from "./slices/cart.slice";
 import checkoutReducer from "./slices/checkout.slice";
+import dialogBoxReducer from "./slices/dialog.slice";
 
 const reducer = combineReducers({
   userState: userReducer,
@@ -12,6 +13,7 @@ const reducer = combineReducers({
   foodState: foodReducer,
   cartState: cartReducer,
   checkoutState: checkoutReducer,
+  dialogBoxState: dialogBoxReducer,
 });
 
 export const store = configureStore({

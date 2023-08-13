@@ -201,40 +201,6 @@ export const fetchUser = createAsyncThunk<
   },
 );
 
-// * user fetchUserAddress
-export const fetchUserAddress = createAsyncThunk<
-  IAddress[], // return type
-  void, // Types for function
-  {
-    rejectValue: ServerError;
-    state: RootState;
-    dispatch: AppDispatch;
-  } // config
->(
-  "user/fetchUserAddress",
-  async (_, thunkApi) => {
-    const response = await Axios.get("/auth/address")
-      .then(async (res) => {
-        return res.data.address;
-      })
-      .catch((err: ServerError) => {
-        if (isAxiosError(err)) {
-          return thunkApi.rejectWithValue(err.response?.data);
-        }
-      });
-    return response;
-  },
-  {
-    condition: (args, { getState }) => {
-      const { userState } = getState();
-      const { data } = userState;
-      if (data.address.length === 0) {
-        return true;
-      }
-    },
-  },
-);
-
 // * Thunk action creator for forget password
 export const forgetPasswordApi = createAsyncThunk<
   ServerError, // return type
@@ -339,10 +305,7 @@ export const userSlice = createSlice({
         state.data = defaultUserSession;
         sessionStorage.removeItem("User");
       })
-      .addCase(fetchUserAddress.fulfilled, (state, action) => {
-        state.loading = false;
-        state.data.address = action.payload;
-      })
+
       .addCase(setLocation.fulfilled, (state, action) => {
         state.loading = false;
         state.data.geo.region = action.payload;
@@ -362,8 +325,10 @@ export const userSlice = createSlice({
           toast.error(action.payload.message);
         }
       })
-      .addMatcher(isPending, (state) => {
-        state.loading = true;
+      .addMatcher(isPending, (state, action) => {
+        if (action.type.startsWith("user")) {
+          state.loading = true;
+        }
       });
   },
 });

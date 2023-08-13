@@ -341,7 +341,7 @@ var OrderController = /** @class */ (function () {
                         res.status(200).json({
                             success: true,
                             cart: cart,
-                            message: "cart is empty",
+                            message: "Cart is empty",
                         });
                         return [2 /*return*/];
                     case 3:
@@ -360,7 +360,7 @@ var OrderController = /** @class */ (function () {
                         res.status(200).json({
                             success: true,
                             cart: cart,
-                            message: "Deleted food from cart",
+                            message: "Food removed from cart",
                         });
                         return [3 /*break*/, 6];
                     case 5:

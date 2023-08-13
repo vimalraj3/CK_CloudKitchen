@@ -1,31 +1,22 @@
-import { useState } from "react";
-import { LogoutDialogBox } from "./LogoutDialogBox";
 import { useLogout } from "../../hooks/useLogout";
+import { DialogBox } from "../UI/DialogBox";
 
 export const Logout: React.FC = () => {
-  const { handleLogout } = useLogout();
-  const [open, setOpen] = useState(false);
-
-  const handleConfirm = async () => {
-    setOpen(false);
-    handleLogout();
-  };
+  const { handleLogout, handleLogoutDialogBox } = useLogout();
 
   return (
     <div>
       <div
         className="mb-2 cursor-pointer text-blue-400 underline"
         onClick={() => {
-          setOpen(true);
+          handleLogoutDialogBox();
         }}
       >
         Logout
       </div>
-      <LogoutDialogBox
-        open={open}
-        setOpen={setOpen}
-        handleConfirm={handleConfirm}
-      />
+      <DialogBox handleConfirm={handleLogout}>
+        <p>Are you sure you want to logout </p>
+      </DialogBox>
     </div>
   );
 };

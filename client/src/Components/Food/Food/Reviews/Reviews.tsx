@@ -51,7 +51,11 @@ const ReviewsLoading = () => (
 const NoReviews = () => (
   <div className="flex flex-col items-center justify-center gap-1">
     <div className="w-[300px]">
-      <img src="/review.png" alt="review" width={"100%"} />
+      <img
+        src="https://res.cloudinary.com/dd39ktpmz/image/upload/v1691859559/ck/client_static/fiwtpmszu6uas1vitsin.png"
+        alt="review"
+        width={"100%"}
+      />
     </div>
     <div>
       <p className="text-center font-head text-xl">Be a first reviewer</p>

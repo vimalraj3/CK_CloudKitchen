@@ -1,14 +1,9 @@
-import { Button, Skeleton } from "@mui/material";
+import React from "react";
 import { useAppDispatch, useAppSelector } from "../../../hooks";
-import React, { useEffect } from "react";
-import { useCheckout } from "../../../hooks/useCheckout";
 import { placeOrderCheckout } from "../../../state/slices/checkout.slice";
 
 export const CheckoutBox: React.FC = React.memo(() => {
-  const { handlePlaceOrder } = useCheckout();
-  const { totalPrice, cart, loading } = useAppSelector(
-    (state) => state.cartState,
-  );
+  const { totalPrice, cart } = useAppSelector((state) => state.cartState);
   const { addressId } = useAppSelector((state) => state.checkoutState);
 
   const dispatch = useAppDispatch();
@@ -39,23 +34,19 @@ export const CheckoutBox: React.FC = React.memo(() => {
             </div>
           </div>
 
-          <div className="flex w-[100%] items-center justify-end md:w-auto">
-            <Button
-              variant="contained"
-              sx={{
-                bgcolor: (theme) => theme.palette.success.main,
-                ":hover": {
-                  bgcolor: (theme) => theme.palette.success.main,
-                },
-              }}
+          <div className="mt-3 flex w-full items-center justify-start md:w-auto">
+            <button
+              aria-label="Checkout"
               onClick={() => {
                 dispatch(placeOrderCheckout(addressId));
               }}
-              aria-label="Buy"
-              size={"large"}
+              className="flex w-[200px] items-center justify-center gap-1 rounded-lg border border-primary px-3 py-2 font-medium  text-primary  transition-colors duration-300 ease-in-out hover:bg-primary-300 hover:font-semibold hover:text-white"
             >
-              Buy
-            </Button>
+              <div className="flex items-center gap-2">
+                <p className=" capitalize md:block">Checkout</p>
+                <i className="fa-solid fa-credit-card"></i>
+              </div>
+            </button>
           </div>
         </div>
       ) : (

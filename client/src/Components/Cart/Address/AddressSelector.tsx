@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { AddUserAddress, UserAddress } from "../../account/Sections/UserInfo";
 import { DialogBox } from "../../UI/DialogBox";
 import { UserAddressEditForm } from "../../Forms/AddressForms/UserAddressEditForm";
 import { IAddress } from "../../../types/user.types";
@@ -11,6 +10,8 @@ import {
 import { Grid, Skeleton } from "@mui/material";
 import { useCheckout } from "../../../hooks/useCheckout";
 import { setAddressId } from "../../../state/slices/checkout.slice";
+import { AddAddress } from "../../account/Sections/Address/AddAddress";
+import { Address } from "../../account/Sections/Address/Address";
 
 export const AddressSelector = () => {
   const [dialogBoxOpen, setDialogBoxOpen] = useState(false);
@@ -63,27 +64,17 @@ export const AddressSelector = () => {
                 return (
                   <React.Fragment key={`${i}--${v.addressName}`}>
                     <Grid item xs={12} md={4} lg={4}>
-                      <UserAddress
-                        {...v}
-                        key={i}
-                        selector
-                        selectedId={addressId}
-                      />
+                      <Address {...v} key={i} selector selectedId={addressId} />
                     </Grid>
                   </React.Fragment>
                 );
               })}
               <Grid item xs={12} md={4} lg={4}>
-                <AddUserAddress setDialogBoxOpen={setDialogBoxOpen} />
+                <AddAddress />
               </Grid>
             </Grid>
           </div>
-          <DialogBox
-            open={dialogBoxOpen}
-            setOpen={setDialogBoxOpen}
-            title="Change address"
-            btns={false}
-          >
+          <DialogBox>
             <UserAddressEditForm handleSubmit={handleSubmitEditForm} />
           </DialogBox>
         </div>

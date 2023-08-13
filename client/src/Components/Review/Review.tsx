@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import { getFoodById } from "../../state/slices/food.slice";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { Input, TextArea } from "../UI/Form";
-import { Btn } from "../UI/Btn";
+import { Btn } from "../UI/Btn/Btn";
 import toast from "react-hot-toast";
 import { addReview } from "../../state/slices/checkout.slice";
 
@@ -85,7 +85,7 @@ const Review = () => {
 
               <div>
                 <button
-                  className="hover:bg-primary-300 mt-2 w-full rounded-md bg-primary px-3 py-2 text-lg font-bold text-white"
+                  className="mt-2 w-full rounded-md bg-primary px-3 py-2 text-lg font-bold text-white hover:bg-primary-300"
                   onClick={handleSubmit}
                 >
                   Review

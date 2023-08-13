@@ -29,10 +29,6 @@ const userDropDown = [
     name: "account",
     to: "/account",
   },
-  {
-    name: "logout",
-    to: "/logout",
-  },
 ];
 
 const adminDropDown = [

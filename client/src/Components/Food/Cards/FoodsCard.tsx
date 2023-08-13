@@ -19,8 +19,6 @@ const FoodCardCon: React.FC = memo(() => {
 
   const handleCart = useCallback(
     (foodId: string) => {
-      console.log(email);
-
       if (!email) {
         navigate("/login");
         return;
@@ -54,7 +52,7 @@ const FoodCardCon: React.FC = memo(() => {
         },
       );
     },
-    [dispatch],
+    [dispatch, email],
   );
 
   const handleClick = (id: string) => {
@@ -65,7 +63,6 @@ const FoodCardCon: React.FC = memo(() => {
     if (!foods && !error) {
       dispatch(getAllFoods());
     }
-    console.log(foods, loading, error, "foods");
   });
 
   return (

@@ -269,7 +269,7 @@ class OrderController {
         res.status(200).json({
           success: true,
           cart: cart,
-          message: `cart is empty`,
+          message: `Cart is empty`,
         })
         return
       }
@@ -290,7 +290,7 @@ class OrderController {
       res.status(200).json({
         success: true,
         cart: cart,
-        message: `Deleted food from cart`,
+        message: `Food removed from cart`,
       })
     } catch (error) {
       next(new AppError(`Something went wrong, try again later`, 500))

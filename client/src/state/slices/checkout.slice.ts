@@ -246,9 +246,11 @@ export const checkoutReducer = createSlice({
         }
         state.error = action.payload;
       })
-      .addMatcher(isPending, (state) => {
-        state.loading = true;
-        state.error = null;
+      .addMatcher(isPending, (state, action) => {
+        if (action.type.startsWith("checkout")) {
+          state.loading = true;
+          state.error = null;
+        }
       });
   },
 });

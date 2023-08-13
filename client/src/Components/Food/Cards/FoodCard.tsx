@@ -21,13 +21,12 @@ export const FoodCard: React.FC<IFoodCard> = memo(
       <Grid item xs={12} sm={6} md={4}>
         <div className="aspect-[4/3] w-[100%] rounded-lg bg-white px-4 py-3 transition-shadow ease-in-out md:hover:shadow-xl">
           <section
-            className="w-[100%] cursor-pointer"
+            className={` w-full  cursor-pointer`}
             onClick={() => handleClick(_id)}
           >
             <img
               src={image[0]}
               width={"100%"}
-              height={"100%"}
               alt={title}
               className="rounded-lg"
               loading="lazy"
@@ -46,25 +45,17 @@ export const FoodCard: React.FC<IFoodCard> = memo(
             </div>
           </section>
           <section className="mt-4">
-            <Button
-              variant="outlined"
+            <button
               onClick={() => {
                 handleAddToCart(_id);
               }}
-              sx={{
-                color: "#ff7e8b",
-                borderColor: "#ff7e8b",
-                ":hover": {
-                  borderColor: "#ff7e8b",
-                },
-              }}
-              fullWidth
+              className="flex w-full items-center justify-center gap-1 rounded-lg border border-primary py-2 font-medium  text-primary  transition-colors duration-300 ease-in-out hover:bg-primary-300 hover:font-semibold hover:text-white"
             >
               <div className="flex items-center gap-2">
                 <p className=" capitalize md:block">add to cart</p>
                 <i className="fa-solid fa-cart-shopping"></i>
               </div>
-            </Button>
+            </button>
           </section>
         </div>
       </Grid>

@@ -45,8 +45,8 @@ const CardItemBtns: React.FC<IRestaurantCardItemBtnsProps> = React.memo(
   },
 );
 
-export const RestaurantCardItem: React.FC<IRestaurantCardItemProps> =
-  React.memo(({ food, quantity, id }) => {
+export const CartItem: React.FC<IRestaurantCardItemProps> = React.memo(
+  ({ food, quantity, id }) => {
     const { image, title, price } = food;
 
     return (
@@ -73,4 +73,5 @@ export const RestaurantCardItem: React.FC<IRestaurantCardItemProps> =
         )}
       </>
     );
-  });
+  },
+);

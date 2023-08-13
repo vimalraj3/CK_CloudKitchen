@@ -1,82 +1,75 @@
-import * as React from "react";
-import Button from "@mui/material/Button";
-
 import DialogContent from "@mui/material/DialogContent";
-
-import { DialogBoxCust, DialogBoxCustTitle } from "./DialogBoxCust";
-import { DialogActions, Divider } from "@mui/material";
+import { Dialog, DialogActions, DialogTitle, Slide } from "@mui/material";
+import { TransitionProps } from "@mui/material/transitions";
+import React from "react";
+import { useAppDispatch, useAppSelector } from "../../../hooks";
+import {
+  setDialogBoxOpen,
+  setDialogBoxToInitialState,
+} from "../../../state/slices/dialog.slice";
 
 interface IProps {
-  open: boolean;
-  setOpen: (open: boolean) => void;
-  title: string;
+  // open: boolean;
+  // setOpen: (open: boolean) => void;
+  // title: string;
   children: React.ReactNode;
-  cancelBtnText?: string;
-  successBtnText?: string;
+  // cancelBtnText?: string;
+  // successBtnText?: string;
   handleConfirm?: () => void;
-  btns?: boolean;
+  // btns?: boolean;
 }
-export const DialogBox: React.FC<IProps> = React.memo(
-  ({
-    open,
-    setOpen,
-    title,
-    children,
-    cancelBtnText = "Cancel",
-    successBtnText = "confirm",
-    btns = true,
-    handleConfirm,
-  }) => {
-    // const [isOpen, setIsOpen] = React.useState(open || false)
 
+const Transition = React.forwardRef(function Transition(
+  props: TransitionProps & {
+    children: React.ReactElement<any, any>;
+  },
+  ref: React.Ref<unknown>,
+) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
+export const DialogBox: React.FC<IProps> = React.memo(
+  ({ children, handleConfirm }) => {
+    const { open, title, isBtn } = useAppSelector(
+      (state) => state.dialogBoxState,
+    );
+    const dispatch = useAppDispatch();
     const handleClose = () => {
-      setOpen(false);
+      dispatch(setDialogBoxOpen(false));
+      dispatch(setDialogBoxToInitialState());
     };
 
     return (
-      <div>
-        <DialogBoxCust
-          onClose={handleClose}
-          aria-labelledby="customized-dialog-title"
-          open={open}
-        >
-          <DialogBoxCustTitle id={title} onClose={handleClose}>
-            <p className="textlg font-head">{title}</p>
-          </DialogBoxCustTitle>
-          <Divider />
-          <DialogContent>{children}</DialogContent>
-          {btns && (
-            <>
-              <Divider />
-              <DialogActions className="mt-2 gap-1">
-                <Button
-                  variant="outlined"
-                  sx={{
-                    color: (theme) => theme.palette.error.main,
-                    borderColor: (theme) => theme.palette.error.dark,
-                  }}
-                  onClick={handleClose}
-                >
-                  {cancelBtnText}
-                </Button>
-                <Button
-                  variant="outlined"
-                  sx={{
-                    color: (theme) => theme.palette.success.main,
-                    borderColor: (theme) => theme.palette.success.dark,
-                  }}
-                  onClick={() => {
-                    handleConfirm && handleConfirm();
-                    handleClose();
-                  }}
-                >
-                  {successBtnText}
-                </Button>
-              </DialogActions>
-            </>
+      <Dialog
+        open={open}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleClose}
+        aria-describedby={`Dialog of ${title}`}
+      >
+        <div className="px-5 py-3">
+          <h3 className="font-head text-xl">{title}</h3>
+          <div className="mt-5">{children}</div>
+          {isBtn && (
+            <div className="mt-2 flex w-full gap-2">
+              <button
+                onClick={handleClose}
+                className="mt-2 w-[50%] rounded-md  px-3 py-2 text-lg font-bold text-primary"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  handleConfirm && handleConfirm();
+                }}
+                className="mt-2 w-[50%] rounded-md bg-primary px-3 py-2 text-lg font-bold text-white hover:bg-primary-300"
+              >
+                Confirm
+              </button>
+            </div>
           )}
-        </DialogBoxCust>
-      </div>
+        </div>
+      </Dialog>
     );
   },
 );

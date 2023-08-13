@@ -1,10 +1,9 @@
 import { useEffect } from "react";
-import { useOrders } from "../../../hooks/useOrders";
 import { CardContianer } from "../Cards/CardContianer";
 import { RestaurantCard } from "../Cards/RestaurantCard";
 import { Divider, Skeleton } from "@mui/material";
-import NativeSelectInput from "@mui/material/NativeSelect/NativeSelectInput";
 import { NavLink } from "react-router-dom";
+import { useAppSelector } from "../../../hooks";
 
 const OrdersLoading = () => {
   return (
@@ -12,7 +11,10 @@ const OrdersLoading = () => {
       {Array(3)
         .fill(0)
         .map((_, i) => (
-          <div className="mt-2 flex w-[100%] items-center justify-between">
+          <div
+            className="mt-2 flex w-[100%] items-center justify-between"
+            key={i}
+          >
             <div className="flex flex-row items-center justify-start gap-4">
               <Skeleton
                 variant="rectangular"
@@ -60,11 +62,7 @@ const NoUserOrders = () => (
 );
 
 export const UserOrders = () => {
-  const { handleLoadOrders, orders, loading } = useOrders();
-
-  useEffect(() => {
-    handleLoadOrders();
-  }, []);
+  const { orders, loading } = useAppSelector((state) => state.checkoutState);
 
   return (
     <div id={"userOrders"}>
@@ -75,8 +73,8 @@ export const UserOrders = () => {
           <NoUserOrders key={"Order not found"} />
         ) : (
           <div className="flex flex-col gap-8">
-            {orders.length > 0 &&
-              orders.map((order, i) => (
+            {orders?.length > 0 &&
+              orders?.map((order, i) => (
                 <>
                   <RestaurantCard orders={order} key={order._id} />
                   {i !== orders.length - 1 && <Divider />}

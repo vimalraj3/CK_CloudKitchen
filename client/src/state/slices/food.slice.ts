@@ -349,7 +349,8 @@ export const foodSlice = createSlice({
       .addCase(setSearch.fulfilled, (state, action) => {
         state.search = action.payload;
         state.loading = false;
-        state.canClear = true;
+        if (state.search.length === 0) state.canClear = false;
+        else state.canClear = true;
       })
       .addCase(setPriceFilter.fulfilled, (state, action) => {
         const { isMin, value } = action.payload;
@@ -374,7 +375,6 @@ export const foodSlice = createSlice({
       })
       .addMatcher(isRejectedAction, (state, action) => {
         state.loading = false;
-        console.log(action.payload, "action.payload food");
         toast.error(action.payload?.message);
         state.error = action.payload;
       })

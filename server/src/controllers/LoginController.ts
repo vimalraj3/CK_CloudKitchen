@@ -201,6 +201,7 @@ class LoginController {
   async getUser(req: Request, res: Response, next: NextFunction) {
     try {
       const session = req.session
+      
       const id = session?.uid || session.passport?.user
 
       if (!id) {

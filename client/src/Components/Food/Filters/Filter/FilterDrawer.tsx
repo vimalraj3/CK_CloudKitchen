@@ -46,24 +46,15 @@ export const FilterDrawer = () => {
   return (
     <div className="w-[100%]">
       <React.Fragment key={anchor}>
-        <Button
-          variant="outlined"
-          size={"large"}
+        <button
+          className="flex w-full items-center justify-center gap-1 rounded-xl border border-primary py-2 font-medium  text-primary  transition-colors duration-300 ease-in-out hover:bg-primary-300 hover:font-semibold hover:text-white"
           onClick={() => toggleDrawer(true)}
-          sx={{
-            color: "#ff7e8b",
-            borderColor: "#ff7e8b",
-            ":hover": {
-              borderColor: "#ff7e8b",
-            },
-          }}
-          fullWidth
         >
           <div className="flex items-center gap-2">
             <i className="fa-solid fa-arrow-up-wide-short"></i>
             Filter
           </div>
-        </Button>
+        </button>
         <div onClick={() => toggleDrawer(true)}></div>
         <SwipeableDrawer
           anchor={anchor}

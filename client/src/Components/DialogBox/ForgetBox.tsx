@@ -12,6 +12,8 @@ import { Input } from "../UI/Form";
 import { IShowToast } from "../../types/showToast.types";
 import { useAppDispatch } from "../../hooks";
 import { forgetPasswordApi } from "../../state/slices/user.slice";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -26,7 +28,7 @@ export default function ForgetPassword() {
   const [open, setOpen] = React.useState<boolean>(false);
   const [email, setEmail] = React.useState<string>("");
 
-  const appDispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -36,11 +38,34 @@ export default function ForgetPassword() {
     setOpen(false);
   };
 
+  const navigate = useNavigate();
   const handleConfirm = async () => {
-    const forgetPassword = await appDispatch(forgetPasswordApi(email));
-    if (forgetPasswordApi.fulfilled.match(forgetPassword)) {
-      // navigate(-1)
-    }
+    const forgetPassword = dispatch(forgetPasswordApi(email));
+
+    toast.promise(
+      forgetPassword,
+      {
+        loading: "Sending email...",
+        success: (data) => {
+          if (!data.payload?.success) {
+            throw data.payload?.message;
+          }
+          navigate(-1);
+          return `${data.payload?.message.trim()}`;
+        },
+        error: (err) => {
+          return `${err}`;
+        },
+      },
+      {
+        success: {
+          duration: 2000,
+        },
+        error: {
+          duration: 2000,
+        },
+      },
+    );
   };
 
   return (
@@ -75,10 +100,20 @@ export default function ForgetPassword() {
             padding: " 0 1rem 1rem 1rem",
           }}
         >
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleConfirm} variant="contained">
-            Confirm
-          </Button>
+          <div className="flex w-full gap-2 px-2">
+            <button
+              onClick={handleClose}
+              className="mt-2 w-[50%] rounded-md  px-3 py-2 text-lg font-bold text-primary"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleConfirm}
+              className="mt-2 w-[50%] rounded-md bg-primary px-3 py-2 text-lg font-bold text-white hover:bg-primary-300"
+            >
+              Confirm
+            </button>
+          </div>
         </DialogActions>
       </Dialog>
     </div>
@@ -86,3 +121,11 @@ export default function ForgetPassword() {
 }
 
 //  TODO need to improve and implement yup and form data , testing
+{
+  /* <Button onClick={handleConfirm} variant="contained">
+            Confirm
+          </Button> */
+}
+{
+  /* <Button onClick={handleClose}>Cancel</Button> */
+}

@@ -8,6 +8,7 @@ import { signUpUser } from "../../state/slices/user.slice";
 import { useAppDispatch } from "../../hooks";
 import * as yup from "yup";
 import { Text } from "../UI/Text";
+import toast from "react-hot-toast";
 interface ISignupForm extends SignUp {
   repassword: string;
 }
@@ -35,12 +36,32 @@ function index() {
     console.log(data);
 
     const { email, userName, password } = data;
-    const resultAction = await dispatch(
+    const resultAction = dispatch(
       signUpUser({ email, userName, password } as SignUp),
     );
-    if (signUpUser.fulfilled.match(resultAction)) {
-      navigate(-1);
-    }
+
+    toast.promise(
+      resultAction,
+      {
+        loading: "Sign up in progress",
+        success: (data) => {
+          navigate("/");
+
+          return `Successfully login`;
+        },
+        error: (err) => {
+          return `${err}`;
+        },
+      },
+      {
+        success: {
+          duration: 2000,
+        },
+        error: {
+          duration: 2000,
+        },
+      },
+    );
   };
 
   const handleGoogleLogin = () => {
@@ -107,37 +128,31 @@ function index() {
                         />
                       )}
                     </div>
-                    <Input
-                      type="submit"
+                    <button
+                      role="submit"
                       value={"Sign up"}
-                      role="button"
-                      style={{
-                        cursor: "pointer",
-                      }}
-                    />
+                      className="w-full rounded-md border border-primary py-2 transition-colors"
+                    >
+                      <div className="flex w-full items-center justify-center gap-1  text-primary">
+                        <p> {`Submit `}</p>
+                      </div>
+                    </button>
                   </>
                 );
               }}
             </Form>
 
             <button
-              className="rounded-md p-1"
+              className="w-full rounded-md bg-primary py-2 transition-colors hover:bg-primary-300"
               onClick={handleGoogleLogin}
-              style={{
-                width: "100%",
-                border: "#ff7e8b 2px solid",
-                display: "flex",
-                justifyContent: "center",
-                margin: "  0",
-                color: "#000",
-                fontFamily: "montserrat",
-                backgroundColor: "#f8f8f8",
-                fontWeight: "500",
-                padding: "7px 6px",
-              }}
             >
-              <div className="flex items-center justify-center gap-1">
-                {`Google `} <i className="fa-brands fa-google text-md"></i>
+              <div className="flex w-full items-center justify-center gap-1 font-semibold text-white">
+                <p> {`Google `}</p>
+                <img
+                  src="https://res.cloudinary.com/dd39ktpmz/image/upload/v1691860343/ck/client_static/ezjbsgsxigq0nzxechhi.webp"
+                  alt="google icon"
+                  width={"20px"}
+                />
               </div>
             </button>
             <Divider margin="0" color="#c1c1c1" size="1px" />

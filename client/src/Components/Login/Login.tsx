@@ -12,6 +12,7 @@ import { Login } from "../../types/user.types";
 import { Text } from "../UI/Text";
 import * as yup from "yup";
 import ForgetPassword from "../DialogBox/ForgetBox";
+import toast from "react-hot-toast";
 
 function index() {
   const navigate = useNavigate();
@@ -42,11 +43,30 @@ function index() {
   });
 
   const onSubmit = async (data: Login) => {
-    const resultAction = await dispatch(loginUser(data));
+    const resultAction = dispatch(loginUser(data));
 
-    if (loginUser.fulfilled.match(resultAction)) {
-      navigate(-1);
-    }
+    toast.promise(
+      resultAction,
+      {
+        loading: "Login in progress",
+        success: (data) => {
+          navigate("/");
+
+          return `Successfully login`;
+        },
+        error: (err) => {
+          return `${err}`;
+        },
+      },
+      {
+        success: {
+          duration: 2000,
+        },
+        error: {
+          duration: 2000,
+        },
+      },
+    );
   };
 
   const handleGoogleLogin = () => {
@@ -62,7 +82,7 @@ function index() {
       <Nav dark={true} bgColor="#f8f8f8" />
       <Container>
         <div className="flex min-h-[60svh] justify-center">
-          <div className="flex w-[100%] flex-col items-center justify-center gap-4 px-2 py-2 md:w-[50%] lg:w-[40%] xl:w-[35%]">
+          <div className="flex w-full flex-col items-center justify-center gap-4 px-2 py-2 md:w-[50%] lg:w-[40%] xl:w-[35%]">
             <Form<Login> onSubmit={onSubmit} schema={schema}>
               {({ register, errors }) => (
                 <>
@@ -97,36 +117,29 @@ function index() {
                   <div>
                     <ForgetPassword />
                   </div>
-                  <Input
-                    type="submit"
-                    role="button"
-                    style={{
-                      cursor: "pointer",
-                    }}
-                  />
+                  <button
+                    role="submit"
+                    className="w-full rounded-md border border-primary py-2 transition-colors"
+                  >
+                    <div className="flex w-full items-center justify-center gap-1  text-primary">
+                      <p> {`Submit `}</p>
+                    </div>
+                  </button>
                 </>
               )}
             </Form>
 
             <button
-              className="rounded-md p-1"
+              className="w-full rounded-md bg-primary py-2 transition-colors hover:bg-primary-300"
               onClick={handleGoogleLogin}
-              style={{
-                width: "100%",
-                border: "#ff7e8b 2px solid",
-                display: "flex",
-                justifyContent: "center",
-                margin: "  0",
-                color: "#000",
-                fontFamily: "montserrat",
-                backgroundColor: "#f8f8f8",
-                fontWeight: "500",
-                padding: "7px 6px",
-              }}
             >
-              <div className="flex items-center justify-center gap-1">
-                {`Google `}{" "}
-                <i className="fa-brands fa-google text-lg text-gray-400"></i>
+              <div className="flex w-full items-center justify-center gap-1 font-semibold text-white">
+                <p> {`Google `}</p>
+                <img
+                  src="https://res.cloudinary.com/dd39ktpmz/image/upload/v1691860343/ck/client_static/ezjbsgsxigq0nzxechhi.webp"
+                  alt="google icon"
+                  width={"20px"}
+                />
               </div>
             </button>
             <Divider margin="0" color="#c1c1c1" size="1px" />

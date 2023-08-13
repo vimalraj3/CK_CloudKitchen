@@ -16,7 +16,7 @@ export const PasswordInput = memo(
         <label htmlFor={name} className="mt-2 font-head capitalize">
           {label ? label : name}
         </label>
-        <div className="mt-2 flex  w-[100%] items-center justify-between rounded-md border-2 border-primary bg-white px-2 py-2 ">
+        <div className="mt-2 flex  w-[100%] items-center justify-between rounded-md border border-primary bg-white px-2 py-2 ">
           <input
             type={visible ? "text" : "password"}
             id={name}

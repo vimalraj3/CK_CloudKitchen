@@ -28,7 +28,7 @@ export const Input = memo(
           ref={ref}
           name={name}
           {...props}
-          className="mt-2 w-[100%] rounded-md border-2 border-primary bg-white px-2 py-2 font-para text-sm focus:outline-none"
+          className="mt-2 w-[100%] rounded-md border border-primary bg-white px-2 py-2 font-para text-sm focus:outline-none"
         />
       </div>
     );

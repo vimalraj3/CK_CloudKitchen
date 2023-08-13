@@ -1,43 +1,12 @@
 import Container from "../../Container";
 import { useAppSelector } from "../../../hooks";
 import { CardItemLoading } from "../Loading/Loading";
-import { RestaurantCardItem } from "./CardItem";
-import { useNavigate } from "react-router-dom";
+import { CartItem } from "./CardItem";
 import { CheckoutBox } from "../Checkout/CheckoutBox";
-import { useCart } from "../../../hooks/useCart";
-import React, { useEffect } from "react";
 import { AddressSelector } from "../Address/AddressSelector";
 import { NotFoundCart } from "../NotFound/NotFoundCart";
-interface IRestaurantCardTitleProps {
-  total: number;
-  id: string;
-  restaurant: string;
-}
 
-const RestaurantCardTitle: React.FC<IRestaurantCardTitleProps> = ({
-  restaurant,
-  total,
-  id,
-}) => {
-  const navigate = useNavigate();
-  return (
-    <>
-      <div className="flex items-center justify-between gap-2">
-        <h3
-          className="text-md cursor-pointer font-head font-bold capitalize md:text-lg"
-          onClick={() => navigate(`/restaurant/${id}`)}
-        >
-          {restaurant}
-        </h3>
-        <p className="text-xs md:text-sm">
-          {`Total: `} <span className="ml-1">{`₹ ${total}`}</span>
-        </p>
-      </div>
-    </>
-  );
-};
-
-const RestaurantCard: React.FC = () => {
+const Cart: React.FC = () => {
   const { loading, cart, error } = useAppSelector((state) => state.cartState);
 
   const tempArrayLoading: string[] = [...Array(5).fill("fdsfafdsa")];
@@ -58,7 +27,7 @@ const RestaurantCard: React.FC = () => {
                     <NotFoundCart />
                   ) : (
                     cart.map((v, i) => {
-                      return <RestaurantCardItem key={i} id={v._id} {...v} />;
+                      return <CartItem key={i} id={v._id} {...v} />;
                     })
                   )}
                 </div>
@@ -83,4 +52,4 @@ const RestaurantCard: React.FC = () => {
   );
 };
 
-export default RestaurantCard;
+export default Cart;

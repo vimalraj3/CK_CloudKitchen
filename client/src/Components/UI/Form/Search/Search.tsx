@@ -20,14 +20,14 @@ export const Search: React.FC = memo(() => {
   const dispatch = useAppDispatch();
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(setSearch(e.target.value));
+    dispatch(getAllFoods());
   };
-
   const handleSubmit = () => {
     dispatch(getAllFoods());
   };
 
   return (
-    <div className="border-1 flex w-[100%] items-center justify-center rounded-md border-primary bg-transparent  px-1">
+    <div className="flex w-[100%] items-center justify-center rounded-xl border border-primary bg-transparent  px-1">
       <input
         id={"search"}
         placeholder={`Search`}
@@ -39,12 +39,12 @@ export const Search: React.FC = memo(() => {
             handleSubmit();
           }
         }}
-        className="text-md w-[100%] rounded-md bg-transparent px-2 py-[.54em] font-para placeholder:text-black focus:outline-none"
+        className="text-md w-[100%] rounded-lg bg-transparent px-2 py-2 font-para placeholder:text-black placeholder:text-primary focus:outline-none"
       />
-      <SearchIconBtn
+      {/* <SearchIconBtn
         handleClick={() => handleSubmit()}
         className="text-primary"
-      />
+      /> */}
     </div>
   );
 });

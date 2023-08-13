@@ -1,6 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { UserAvatar } from "../UI/UserAvatar/UserAvatar";
+import { useLogout } from "../../hooks/useLogout";
 
 interface IUserAvatarNavLinks {
   name: string;
@@ -24,6 +25,8 @@ export const UserAvatarNav: React.FC<IUserAvatar> = ({
 }) => {
   const [isUserOptionOpen, setIsUserOptionOpen] =
     React.useState<boolean>(false);
+
+  const { handleLogout } = useLogout();
   return (
     <>
       {isHamBuger ? (
@@ -86,6 +89,17 @@ export const UserAvatarNav: React.FC<IUserAvatar> = ({
                 </div>
               </NavLink>
             ))}
+            <div
+              key={"logout"}
+              onClick={() => {
+                setIsUserOptionOpen(false);
+                handleLogout();
+              }}
+            >
+              <div className="font-moutserrat cursor-pointer rounded-md px-3 py-1.5 text-sm capitalize text-black hover:bg-[#f8f8f8]">
+                <span>{"Logout"}</span>
+              </div>
+            </div>
           </div>
         </div>
       )}

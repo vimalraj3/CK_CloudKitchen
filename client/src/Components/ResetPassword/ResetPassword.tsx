@@ -8,6 +8,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch } from "../../hooks";
 import { resetPasswordApi } from "../../state/slices/user.slice";
 import { IShowToast } from "../../types/showToast.types";
+import toast from "react-hot-toast";
 
 const ResetPassword = () => {
   const navigate = useNavigate();
@@ -27,15 +28,34 @@ const ResetPassword = () => {
 
   const onSubmit = async (data: any) => {
     if (token) {
-      const resetpassword = await appDispatch(
+      const resetpassword = appDispatch(
         resetPasswordApi({ token, password: data.password }),
       );
-      if (
-        resetPasswordApi.fulfilled.match(resetpassword) &&
-        resetpassword.payload
-      ) {
-        navigate(-1);
-      }
+
+      toast.promise(
+        resetpassword,
+        {
+          loading: "Resetting your password",
+          success: (data) => {
+            if (!data.payload?.success) {
+              throw data.payload?.message;
+            }
+            navigate(-1);
+            return `${data.payload?.message.trim()}`;
+          },
+          error: (err) => {
+            return `${err}`;
+          },
+        },
+        {
+          success: {
+            duration: 2000,
+          },
+          error: {
+            duration: 2000,
+          },
+        },
+      );
     }
   };
 

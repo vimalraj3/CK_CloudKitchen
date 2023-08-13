@@ -1,3 +1,7 @@
+import { useAppDispatch } from "../../hooks";
+import { useScroll } from "../../hooks/useScroll";
+import { getAllFoods, setSearch } from "../../state/slices/food.slice";
+
 interface IOfferCard {
   title: string;
   image: string;
@@ -13,7 +17,7 @@ const offerCardData: IOfferCard[] = [
     image:
       "https://res.cloudinary.com/dd39ktpmz/image/upload/v1685954177/ck/client_static/dbwrrfkvkhwwxlqzbuhi.avif",
     bgc: "#EEF5E4",
-    searchFor: "search for Dosa",
+    searchFor: "Dosa",
   },
   {
     title: "Pizza",
@@ -21,11 +25,18 @@ const offerCardData: IOfferCard[] = [
     image:
       "https://res.cloudinary.com/dd39ktpmz/image/upload/v1685954177/ck/client_static/eh4xjrbveum2a9u0x59w.avif",
     bgc: "#F9ECDE",
-    searchFor: "search for Pizza",
+    searchFor: "Pizza",
   },
 ];
 
 function OfferCard() {
+  const dispatch = useAppDispatch();
+  const scrollTo = useScroll();
+  const handleSearch = (searchFor: string) => {
+    dispatch(getAllFoods());
+    scrollTo("foods");
+    dispatch(setSearch(searchFor));
+  };
   return (
     <section className="mx-auto mt-5 flex w-[90%] max-w-[1200px] flex-col items-center justify-evenly md:mt-10 md:flex-row">
       {offerCardData.map(
@@ -50,9 +61,14 @@ function OfferCard() {
                   {title}
                 </h2>
 
-                <div className="categoryBtn flex w-[100%] cursor-pointer items-center">
-                  <p className="font-para md:text-[.7rem] lg:text-[1rem]  ">
-                    {searchFor}
+                <div
+                  className="categoryBtn flex w-[100%] cursor-pointer items-center"
+                  onClick={() => {
+                    handleSearch(searchFor);
+                  }}
+                >
+                  <p className="font-para md:text-[.7rem] lg:text-[1rem] ">
+                    search for {searchFor}
                   </p>
                   <i className="fa-solid fa-arrow-right animateArrow text-[#ff7e8b]"></i>
                 </div>

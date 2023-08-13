@@ -9,11 +9,13 @@ const index: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const { cart } = useAppSelector((state) => state.cartState);
+
+  const email = useAppSelector((state) => state.userState.data.email);
+
   useEffect(() => {
-    if (cart.length > 0) return;
     dispatch(fetchCartByUserId());
     dispatch(fetchUserAddress());
-  }, []);
+  }, [email]);
 
   return (
     <div>

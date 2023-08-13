@@ -86,8 +86,6 @@ app.use(cors(corsOption))
 app.get(
   '/api/auth/google',
   (req, res, next) => {
-    console.log('Api get re')
-
     res.header(
       'Access-Control-Allow-Methods',
       'GET, POST, PUT, DELETE, OPTIONS'

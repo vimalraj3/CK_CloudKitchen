@@ -45,7 +45,7 @@ export const UserAddressEditForm: React.FC<IUserAddressEditForm> = ({
     >
       {({ register, errors }) => {
         return (
-          <>
+          <div className="flex flex-col gap-4">
             <div>
               <Input
                 aria-label={"address name"}
@@ -136,15 +136,13 @@ export const UserAddressEditForm: React.FC<IUserAddressEditForm> = ({
                 />
               )}
             </div>
-            <Input
-              type="submit"
-              value={"Edit"}
-              role="button"
-              style={{
-                cursor: "pointer",
-              }}
-            />
-          </>
+            <button
+              role="submit"
+              className="mt-2 w-full rounded-md bg-primary px-3 py-2 text-lg font-bold text-white hover:bg-primary-300"
+            >
+              Confirm
+            </button>
+          </div>
         );
       }}
     </Form>

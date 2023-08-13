@@ -1,15 +1,20 @@
 import React, { useEffect } from "react";
-import { useAppSelector } from "../../hooks";
-import { InitialUserState } from "../../types/user.types";
+import { useAppDispatch } from "../../hooks";
 import Container from "../Container";
 import Nav from "../Nav";
 const Settings = React.lazy(() => import("./Sections/Settings"));
 import { UserInfo } from "./Sections/UserInfo";
 import { UserOrders } from "./Sections/UserOrders";
-import PageLoading from "../Loading/PageLoading";
+import { getMyOrders } from "../../state/slices/checkout.slice";
+import { fetchUserAddress } from "../../state/slices/address.slice";
 
 const Account: React.FC = () => {
-  const { data }: InitialUserState = useAppSelector((state) => state.userState);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(getMyOrders());
+    dispatch(fetchUserAddress());
+  }, []);
 
   return (
     <div>
@@ -18,7 +23,7 @@ const Account: React.FC = () => {
         <h3 className="font-head text-lg font-bold text-black md:text-4xl">
           Account
         </h3>
-        <UserInfo user={data} />
+        <UserInfo />
         <UserOrders />
         <Settings />
       </Container>
