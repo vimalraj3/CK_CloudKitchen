@@ -1,6 +1,9 @@
 {
   "name": "cloudkitchen",
   "version": "1.0.0",
+  "engines": {
+    "node": "20.x"
+  },
   "description": "### foodie is a platform where connecting home kitchen and cloud kitchen to customers😋.",
   "main": "index.js",
   "scripts": {
